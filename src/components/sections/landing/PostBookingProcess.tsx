@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { motion, Variants } from "framer-motion";
 import { ArrowRight, ArrowDown } from "lucide-react";
 
