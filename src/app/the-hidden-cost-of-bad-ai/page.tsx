@@ -611,7 +611,7 @@ export default function HiddenCostPage() {
         <div className="absolute inset-0 z-0">
           <LazyVideo 
             src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Island%20Vows%20reduce%20size.mp4" 
-            posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/end%20poster.webp"
+            posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/end%20poster%20(1).jpg"
             className="w-full h-full opacity-20"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#071220] via-transparent to-[#071220]"></div>

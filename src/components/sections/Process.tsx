@@ -29,7 +29,7 @@ const processSteps = [
     step: "04",
     title: "Compositing",
     desc: "Multiple generations are layered, masked, and blended. Reflections are corrected, and diamonds are retouched to ensure absolute optical accuracy.",
-    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/end%20poster.webp",
+    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/end%20poster%20(1).jpg",
     type: "image"
   },
   {
