@@ -76,8 +76,8 @@ export default function HiddenCostPage() {
           <span className="text-white/60">It Costs Sales.</span>
         </h1>
         
-        <p className="text-xl md:text-2xl font-serif text-white/60 leading-relaxed max-w-2xl mb-12">
-          The 7 reasons luxury jewelry brands are quietly losing customers—and how the fastest-growing brands are fixing it.
+        <p className="text-xl md:text-2xl font-serif text-white/60 leading-relaxed max-w-3xl mb-12">
+          The 7 Hidden Costs of Average AI Creative (And Why Premium Brands Are Switching to Next-Generation Production.)
         </p>
       </section>
 

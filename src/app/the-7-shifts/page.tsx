@@ -73,7 +73,7 @@ export default function EditorialPage() {
         </div>
 
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif tracking-tight leading-[1.05] mb-8">
-          The 7 Shifts That Separate Premium Brands From Everyone Else
+          The 7 Shifts That Separate Premium Lab-Grown Diamond Brands From Everyone Else
         </h1>
         
         <p className="text-xl md:text-2xl font-serif text-white/60 leading-relaxed max-w-2xl mb-12">
