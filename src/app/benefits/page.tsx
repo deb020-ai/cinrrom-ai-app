@@ -1,4 +1,5 @@
 import Benefits from "@/components/sections/Benefits";
+import Archive from "@/components/sections/Archive";
 import Cta from "@/components/sections/Cta";
 
 export const metadata = {
@@ -10,6 +11,7 @@ export default function BenefitsPage() {
   return (
     <main className="min-h-screen bg-background text-foreground pt-32">
       <Benefits />
+      <Archive />
       <Cta />
     </main>
   );
