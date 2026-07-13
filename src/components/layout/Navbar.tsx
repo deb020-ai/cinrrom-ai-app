@@ -55,9 +55,24 @@ export default function Navbar() {
         <Link href="/#process" className="hover:text-primary transition-colors">Process</Link>
       </div>
 
-      <Link href="#contact" className="text-[10px] font-sans tracking-[0.2em] uppercase border-b border-transparent hover:border-primary transition-colors pb-1">
-        Contact
-      </Link>
+      <a 
+        href="https://cal.com/omnivinci/30min"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hidden md:flex text-[10px] font-sans tracking-[0.2em] uppercase border border-white/20 px-6 py-2.5 rounded-full hover:bg-white hover:text-black transition-all"
+      >
+        Book Call
+      </a>
+
+      {/* Mobile only Contact/Book link since the Sticky CTA handles the button on mobile */}
+      <a 
+        href="https://cal.com/omnivinci/30min"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="md:hidden text-[10px] font-sans tracking-[0.2em] uppercase border-b border-transparent hover:border-primary transition-colors pb-1"
+      >
+        Book
+      </a>
     </motion.nav>
   );
 }

@@ -6,22 +6,22 @@ import { LazyVideo } from "@/components/ui/LazyVideo";
 
 const services = [
   {
-    title: "Luxury Campaign Films",
+    title: "AI Campaign Films",
     media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/The%20Blue%20Dynasty%20reduce%20size.mp4",
     type: "video"
   },
   {
-    title: "Luxury Photography",
+    title: "AI Product Photography",
     media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp",
     type: "image"
   },
   {
-    title: "VFX & Compositing",
+    title: "CGI & VFX Production",
     media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/poster.webp",
     type: "image"
   },
   {
-    title: "CGI Production",
+    title: "Luxury Creative Systems",
     media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Emerald%20Precision%20reduce%20size.mp4",
     type: "video"
   }
