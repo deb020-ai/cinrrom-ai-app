@@ -70,55 +70,51 @@ export default function EditorialPage() {
     <main className="min-h-screen bg-[#071220] text-white font-sans selection:bg-white/20 selection:text-white pt-32 pb-0">
       
       {/* Hero Section */}
-      <section className="px-6 max-w-4xl mx-auto flex flex-col justify-center text-left mb-24">
-        <div className="mb-8">
+      <section className="px-6 max-w-4xl mx-auto flex flex-col justify-center text-left mb-16 md:mb-24">
+        <div className="mb-6 md:mb-8">
           <span className="text-[10px] font-sans tracking-[0.2em] uppercase text-white/50 flex items-center gap-2">
             3 Min Read
           </span>
         </div>
 
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif tracking-tight leading-[1.05] mb-8">
+        <h1 className="text-4xl md:text-7xl lg:text-8xl font-serif tracking-tight leading-[1.05] mb-6 md:mb-8">
           The 7 Shifts That Separate Premium Lab-Grown Diamond Brands From Everyone Else
         </h1>
         
-        <p className="text-xl md:text-2xl font-serif text-white/60 leading-relaxed max-w-2xl mb-12">
+        <p className="text-lg md:text-2xl font-serif text-white/60 leading-relaxed max-w-2xl">
           The next decade won't be won by the brands with the best diamonds. It will be won by the brands that create the strongest perception.
         </p>
       </section>
 
-      {/* Intro Conversion Funnel */}
-      <WhatCinroomDoes />
-      <WhyWorkWithUs />
-
       {/* Educational Glass Grid Section */}
-      <section className="px-6 py-24 md:py-32 bg-[#071220]">
+      <section className="px-6 pb-12 md:pb-24">
         <div className="max-w-[1200px] mx-auto">
           <motion.div 
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
           >
             {shifts.map((shift, index) => (
               <motion.div 
                 key={index}
                 variants={cardVariants}
-                className="group relative p-10 md:p-12 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-500 backdrop-blur-sm overflow-hidden flex flex-col gap-6"
+                className="group relative p-8 md:p-12 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-500 backdrop-blur-sm overflow-hidden flex flex-col gap-4 md:gap-6"
               >
                 {/* Subtle hover gradient behind card */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                 
-                <div className="relative z-10 flex flex-col gap-6 flex-1">
-                  <span className="text-[11px] font-sans tracking-[0.3em] text-blue-400/80 uppercase font-bold">
+                <div className="relative z-10 flex flex-col gap-4 md:gap-6 flex-1">
+                  <span className="text-[10px] md:text-[11px] font-sans tracking-[0.3em] text-blue-400/80 uppercase font-bold">
                     {shift.number} &mdash;
                   </span>
                   
-                  <h3 className="text-2xl font-serif text-white/90 leading-snug">
+                  <h3 className="text-xl md:text-2xl font-serif text-white/90 leading-snug">
                     {shift.title}
                   </h3>
                   
-                  <p className="text-sm md:text-base font-sans text-white/50 leading-relaxed font-light">
+                  <p className="text-xs md:text-base font-sans text-white/50 leading-relaxed font-light">
                     {shift.desc}
                   </p>
                 </div>
@@ -128,8 +124,12 @@ export default function EditorialPage() {
         </div>
       </section>
 
-      {/* Outro Conversion Funnel */}
+      {/* Video Portfolio */}
       <Archive />
+
+      {/* Sales Conversion Funnel */}
+      <WhatCinroomDoes />
+      <WhyWorkWithUs />
       <PostBookingProcess />
       <PrivatePricing />
       <IsThisForYou />

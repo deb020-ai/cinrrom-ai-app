@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export default function PrivateCta() {
   return (
-    <section className="relative min-h-[60vh] w-full flex items-center justify-center overflow-hidden border-t border-white/5">
+    <section className="relative min-h-[40vh] w-full flex items-center justify-center overflow-hidden border-t border-white/5">
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-background/60 z-10"></div>
       

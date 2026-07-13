@@ -39,10 +39,10 @@ const cardVariants: Variants = {
 
 export default function WhatCinroomDoes() {
   return (
-    <section className="px-6 py-24 md:py-32 bg-[#071220]">
+    <section className="px-6 py-12 md:py-24 bg-[#071220]">
       <div className="max-w-[1200px] mx-auto">
-        <div className="mb-16 md:mb-24 text-center max-w-3xl mx-auto flex flex-col gap-6">
-          <h2 className="text-4xl md:text-6xl font-serif text-white tracking-tight">
+        <div className="mb-10 md:mb-16 text-center max-w-3xl mx-auto flex flex-col gap-4">
+          <h2 className="text-3xl md:text-6xl font-serif text-white tracking-tight">
             What CINROOM Does
           </h2>
           <p className="text-xl md:text-2xl font-serif text-white/60 leading-relaxed">

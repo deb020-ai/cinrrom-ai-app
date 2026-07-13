@@ -29,8 +29,8 @@ const itemVariants: Variants = {
 
 export default function IsThisForYou() {
   return (
-    <section className="px-6 py-24 md:py-32 bg-[#071220]">
-      <div className="max-w-[800px] mx-auto flex flex-col md:flex-row gap-16 md:gap-24 items-center md:items-start">
+    <section className="px-6 py-12 md:py-20 bg-[#071220]">
+      <div className="max-w-[800px] mx-auto flex flex-col md:flex-row gap-12 md:gap-24 items-center md:items-start">
         
         <div className="flex-1 flex flex-col gap-6 text-center md:text-left w-full">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white tracking-tight leading-tight">

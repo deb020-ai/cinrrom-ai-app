@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export default function HollywoodTrust() {
   return (
-    <section className="py-16 md:py-24 bg-[#050d18] border-t border-white/5 relative z-10">
+    <section className="py-12 md:py-20 bg-[#050d18] border-t border-white/5 relative z-10">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="mb-12 text-center md:text-left">
           <h2 className="text-sm font-sans tracking-[0.3em] uppercase text-white/40 font-bold">

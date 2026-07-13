@@ -16,15 +16,15 @@ export const metadata = {
 export default function BenefitsPage() {
   return (
     <main className="min-h-screen bg-[#071220] text-foreground pt-0">
-      <div className="pt-32 pb-16 px-6 text-center">
-        <h1 className="text-5xl md:text-6xl font-serif text-white tracking-tight">
+      <div className="pt-24 pb-12 px-6 text-center">
+        <h1 className="text-4xl md:text-6xl font-serif text-white tracking-tight">
           6 Benefits of Using CINROOM
         </h1>
       </div>
-      <WhatCinroomDoes />
-      <WhyWorkWithUs />
       <Benefits />
       <Archive />
+      <WhatCinroomDoes />
+      <WhyWorkWithUs />
       <PostBookingProcess />
       <PrivatePricing />
       <IsThisForYou />

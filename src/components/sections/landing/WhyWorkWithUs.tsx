@@ -39,9 +39,9 @@ const cardVariants: Variants = {
 
 export default function WhyWorkWithUs() {
   return (
-    <section className="px-6 py-24 bg-[#050d18] border-t border-white/5">
+    <section className="px-6 py-12 md:py-20 bg-[#050d18] border-t border-white/5">
       <div className="max-w-[1200px] mx-auto">
-        <div className="mb-16 md:mb-24 text-center max-w-3xl mx-auto">
+        <div className="mb-10 md:mb-16 text-center max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-serif text-white tracking-tight mb-6">
             Why Modern Lab-Grown Brands Work With CINROOM
           </h2>

@@ -42,10 +42,10 @@ const cardVariants: Variants = {
 
 export default function PostBookingProcess() {
   return (
-    <section className="px-6 py-24 md:py-32 bg-[#071220] overflow-hidden">
+    <section className="px-6 py-12 md:py-20 bg-[#071220] overflow-hidden">
       <div className="max-w-[1200px] mx-auto">
-        <div className="mb-16 md:mb-24 text-center max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-serif text-white tracking-tight mb-6">
+        <div className="mb-10 md:mb-16 text-center max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-serif text-white tracking-tight mb-4">
             What Happens After You Book?
           </h2>
         </div>
