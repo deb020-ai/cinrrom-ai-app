@@ -14,8 +14,8 @@ export default function Cta() {
 
       <div className="relative z-20 flex flex-col items-center text-center px-6 max-w-4xl">
         <h2 className="text-4xl md:text-6xl lg:text-7xl font-serif tracking-tight leading-[1.1] mb-16">
-          Your next collection deserves a world, <br />
-          <span className="italic text-secondary/80">not just a campaign.</span>
+          Before they buy the jewelry, <br />
+          <span className="italic text-secondary/80">they must desire it.</span>
         </h2>
         
         <motion.a 
