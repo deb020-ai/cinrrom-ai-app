@@ -23,7 +23,7 @@ export default function PrivatePricing() {
             Launch Your Next Collection
           </h2>
           <div className="text-2xl md:text-4xl font-serif text-white/80 mb-12">
-            Starting from <span className="text-white">₹15,000</span>
+            Starting from <span className="text-white">$500</span>
           </div>
 
           <div className="text-sm md:text-base font-sans tracking-[0.1em] text-white/40 uppercase mb-8">
