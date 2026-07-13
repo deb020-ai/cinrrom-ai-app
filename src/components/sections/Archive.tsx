@@ -30,6 +30,18 @@ export default function Archive() {
     setActiveAudioIndex(current => current === index ? null : index);
   };
 
+  // Mobile carousel tracking
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    if (maxScroll <= 0) return;
+    const scrollRatio = container.scrollLeft / maxScroll;
+    const index = Math.min(exhibitionVideos.length - 1, Math.max(0, Math.round(scrollRatio * (exhibitionVideos.length - 1))));
+    setActiveIndex(index);
+  };
+
   return (
     <>
       {/* MOBILE LAYOUT: Standard horizontal swipe gallery (no 400vh endless scroll) */}
@@ -43,7 +55,10 @@ export default function Archive() {
           </h2>
         </div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 px-6 pb-12">
+        <div 
+          className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 px-6 pb-8"
+          onScroll={handleScroll}
+        >
           {exhibitionVideos.map((video, index) => {
             const isMuted = activeAudioIndex !== index;
             return (
@@ -76,6 +91,16 @@ export default function Archive() {
           })}
           {/* Spacer for final item snap */}
           <div className="w-[10vw] shrink-0"></div>
+        </div>
+
+        {/* Pagination Dots */}
+        <div className="flex justify-center items-center gap-2 pb-4">
+          {exhibitionVideos.map((_, index) => (
+            <div 
+              key={index} 
+              className={`h-1.5 rounded-full transition-all duration-500 ${activeIndex === index ? 'w-6 bg-white' : 'w-1.5 bg-white/20'}`}
+            />
+          ))}
         </div>
       </section>
 
