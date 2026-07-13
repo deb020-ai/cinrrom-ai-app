@@ -19,7 +19,7 @@ export default function HollywoodTrust() {
           className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-6 items-start"
         >
           
-          <a href="https://www.imdb.com/name/nm6820462/" target="_blank" rel="noopener noreferrer" className="flex flex-col gap-3 group border-l border-white/10 pl-5 hover:border-white/30 transition-colors">
+          <a href="https://www.imdb.com/name/nm13973251/" target="_blank" rel="noopener noreferrer" className="flex flex-col gap-3 group border-l border-white/10 pl-5 hover:border-white/30 transition-colors">
             <span className="text-[9px] md:text-[10px] font-sans tracking-[0.25em] uppercase text-white/40 group-hover:text-blue-400 transition-colors">Credential</span>
             <span className="text-base md:text-lg font-serif text-white/90 leading-snug underline decoration-white/20 underline-offset-4 group-hover:decoration-white/60 transition-colors">IMDb Verified</span>
           </a>
@@ -39,7 +39,7 @@ export default function HollywoodTrust() {
             <span className="text-base md:text-lg font-serif text-white/90 leading-snug">IPL Campaigns</span>
           </div>
 
-          <a href="https://www.instagram.com/cinroom.ai/" target="_blank" rel="noopener noreferrer" className="flex flex-col gap-3 group border-l border-white/10 pl-5 hover:border-white/30 transition-colors">
+          <a href="https://www.instagram.com/_keyurx_/" target="_blank" rel="noopener noreferrer" className="flex flex-col gap-3 group border-l border-white/10 pl-5 hover:border-white/30 transition-colors">
             <span className="text-[9px] md:text-[10px] font-sans tracking-[0.25em] uppercase text-white/40 group-hover:text-blue-400 transition-colors">Community</span>
             <span className="text-xl md:text-2xl font-serif text-white/90 leading-none underline decoration-white/20 underline-offset-4 group-hover:decoration-white/60 transition-colors">33K+</span>
           </a>

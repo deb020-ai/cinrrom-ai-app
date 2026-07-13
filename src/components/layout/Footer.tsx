@@ -26,8 +26,8 @@ export default function Footer() {
           <Link href="#services" className="hover:text-primary transition-colors">Services</Link>
           <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <a href="mailto:contact@cinroom.com" className="hover:text-primary transition-colors">Email</a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Instagram</a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">LinkedIn</a>
+          <a href="https://www.instagram.com/_keyurx_/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Instagram</a>
+          <a href="https://www.linkedin.com/in/debabrata-bairagy/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">LinkedIn</a>
         </div>
       </div>
       <div className="mt-16 md:mt-24 text-[9px] text-secondary/40 font-sans tracking-widest uppercase flex justify-between items-center">
