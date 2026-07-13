@@ -47,7 +47,7 @@ export default function Archive() {
           {exhibitionVideos.map((video, index) => {
             const isMuted = activeAudioIndex !== index;
             return (
-              <div key={index} className="flex flex-col gap-4 shrink-0 w-[80vw] snap-center">
+              <div key={index} className="flex flex-col gap-4 shrink-0 w-[70vw] snap-center">
                 <div className="relative aspect-[9/16] w-full overflow-hidden bg-[#111] rounded-sm">
                   <LazyVideo 
                     src={video.src}

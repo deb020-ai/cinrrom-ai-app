@@ -14,8 +14,8 @@ export default function ExhibitionPage() {
       </div>
       
       {/* We reuse the components directly */}
-      <Campaigns />
       <Archive />
+      <Campaigns />
     </div>
   );
 }

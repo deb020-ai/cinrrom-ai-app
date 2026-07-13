@@ -50,7 +50,7 @@ export default function Campaigns() {
         </div>
 
         {/* Massive Immersive Flow */}
-        <div className="flex flex-col gap-24 md:gap-48 items-center">
+        <div className="flex flex-col gap-16 md:gap-48 items-center px-4 md:px-0">
           
           {/* Hero Video - 9:16 Screen Filling */}
           <motion.div 
@@ -76,48 +76,67 @@ export default function Campaigns() {
           </motion.div>
 
           {/* Staggered Massive Images */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 w-full">
             
-            <motion.div 
-              style={{ y: y1 }}
-              className="relative aspect-[3/4] w-full max-w-[700px] mx-auto overflow-hidden bg-[#0a0a0a]"
-            >
-              <Image 
-                src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
-                alt="Magazine Cover"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-
-            <div className="flex flex-col gap-16 md:gap-32 md:pt-48">
+            <div className="flex flex-col gap-4">
               <motion.div 
-                style={{ y: y2 }}
-                className="relative aspect-square w-full max-w-[600px] mx-auto bg-[#111] flex items-center justify-center overflow-hidden"
+                style={{ y: y1 }}
+                className="relative aspect-[3/4] w-full max-w-[700px] mx-auto overflow-hidden bg-[#0a0a0a]"
               >
                 <Image 
-                  src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/post.webp"
-                  alt="The Blue Dynasty Jewelry"
-                  fill
-                  className="object-contain p-8 md:p-16"
-                />
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1 }}
-                className="relative aspect-[3/4] w-full max-w-[700px] mx-auto overflow-hidden"
-              >
-                <Image 
-                  src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/poster.webp"
-                  alt="Campaign Poster"
+                  src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
+                  alt="Magazine Cover"
                   fill
                   className="object-cover"
                 />
               </motion.div>
+              <div className="md:hidden text-center mt-2">
+                <span className="text-[9px] tracking-[0.3em] text-secondary/60 uppercase">01 &mdash; Editorial</span>
+                <p className="font-serif text-white/80 mt-1">Magazine Cover Layout</p>
+              </div>
             </div>
+
+            <div className="flex flex-col gap-12 md:gap-32 md:pt-48">
+              <div className="flex flex-col gap-4">
+                <motion.div 
+                  style={{ y: y2 }}
+                  className="relative aspect-square w-full max-w-[600px] mx-auto bg-[#111] flex items-center justify-center overflow-hidden"
+                >
+                  <Image 
+                    src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/post.webp"
+                    alt="The Blue Dynasty Jewelry"
+                    fill
+                    className="object-contain p-8 md:p-16"
+                  />
+                </motion.div>
+                <div className="md:hidden text-center mt-2">
+                  <span className="text-[9px] tracking-[0.3em] text-secondary/60 uppercase">02 &mdash; Social</span>
+                  <p className="font-serif text-white/80 mt-1">High-Converting Asset</p>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1 }}
+                  className="relative aspect-[3/4] w-full max-w-[700px] mx-auto overflow-hidden"
+                >
+                  <Image 
+                    src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/poster.webp"
+                    alt="Campaign Poster"
+                    fill
+                    className="object-cover"
+                  />
+                </motion.div>
+                <div className="md:hidden text-center mt-2">
+                  <span className="text-[9px] tracking-[0.3em] text-secondary/60 uppercase">03 &mdash; Campaign</span>
+                  <p className="font-serif text-white/80 mt-1">Official Billboard Poster</p>
+                </div>
+              </div>
+            </div>
+
 
           </div>
         </div>

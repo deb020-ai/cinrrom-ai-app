@@ -25,6 +25,7 @@ import CustomCursor from "@/components/ui/CustomCursor";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import StickyMobileCta from "@/components/layout/StickyMobileCta";
 
 export default function RootLayout({
   children,
@@ -41,6 +42,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <StickyMobileCta />
         </SmoothScroll>
       </body>
     </html>

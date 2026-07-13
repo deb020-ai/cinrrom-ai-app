@@ -21,8 +21,8 @@ export default function Home() {
       <TrustStrip />
       <Unforgettable />
       <Manifesto />
-      <Campaigns />
       <Archive />
+      <Campaigns />
       <FounderCredibility />
       <Why />
       <ProductionModel />
