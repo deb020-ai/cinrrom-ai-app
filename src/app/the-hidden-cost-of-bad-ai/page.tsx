@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { ArrowUpRight, ArrowDown, ChevronRight, Check, Plus, GripVertical } from "lucide-react";
 import React from "react";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 
 // Shared FlowNode
 const FlowNode = ({ text, isLast = false, highlight = false, size = 'normal' }: { text: string, isLast?: boolean, highlight?: boolean, size?: 'normal' | 'small' }) => (
@@ -77,7 +78,7 @@ const ComparisonSlider = ({ beforeImage, afterImage }: { beforeImage: string, af
       onMouseDown={(e) => { setIsDragging(true); handleMove(e.clientX); }}
       onTouchStart={(e) => { setIsDragging(true); handleMove(e.touches[0].clientX); }}
     >
-      <Image src={beforeImage} alt="Average AI" fill className="object-cover pointer-events-none" unoptimized />
+      <Image src={beforeImage} alt="Average AI" fill className="object-cover pointer-events-none" />
       <div className="absolute top-6 left-6 z-10 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-[10px] font-sans tracking-[0.2em] uppercase text-white/80 border border-white/10 shadow-lg">
         Average AI
       </div>
@@ -86,7 +87,7 @@ const ComparisonSlider = ({ beforeImage, afterImage }: { beforeImage: string, af
         className="absolute inset-0 overflow-hidden pointer-events-none z-20"
         style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
       >
-        <Image src={afterImage} alt="Luxury Production" fill className="object-cover" unoptimized />
+        <Image src={afterImage} alt="Luxury Production" fill className="object-cover" />
         <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full text-[10px] font-sans tracking-[0.2em] uppercase text-black font-bold shadow-lg">
           Luxury Production
         </div>
@@ -141,9 +142,12 @@ export default function HiddenCostPage() {
       {/* Hero Section */}
       <section className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <video autoPlay muted loop playsInline className="w-full h-full object-cover opacity-20">
-            <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Alpine%20Sapphire.mp4" type="video/mp4" />
-          </video>
+          <LazyVideo 
+            src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Alpine%20Sapphire.mp4" 
+            posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/BANNER/hero.webp"
+            priority={true}
+            className="w-full h-full opacity-20"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-[#071220]/50 via-[#071220]/80 to-[#071220]"></div>
         </div>
 
@@ -273,8 +277,8 @@ export default function HiddenCostPage() {
             <SectionTitle num="01" title="Hidden Cost of Bad AI" />
             
             <ComparisonSlider 
-              beforeImage="https://images.unsplash.com/photo-1599643477873-10eb0883fcc4?auto=format&fit=crop&q=80&w=1200" 
-              afterImage="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=1200" 
+              beforeImage="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/post.webp" 
+              afterImage="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/poster.webp" 
             />
 
             <AskYourself 
@@ -522,9 +526,11 @@ export default function HiddenCostPage() {
           {videos.map((src, idx) => (
             <div key={idx} className="snap-center shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw] flex flex-col gap-4">
               <div className="aspect-[9/16] bg-black/40 rounded-xl overflow-hidden border border-white/10 shadow-xl transition-all">
-                <video autoPlay muted loop playsInline className="w-full h-full object-cover">
-                  <source src={src} type="video/mp4" />
-                </video>
+                <LazyVideo 
+                  src={src} 
+                  posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
+                  className="w-full h-full"
+                />
               </div>
             </div>
           ))}
@@ -603,9 +609,11 @@ export default function HiddenCostPage() {
       {/* Final CTA */}
       <section className="relative py-40 md:py-56 flex flex-col justify-center px-6 overflow-hidden text-center bg-[#071220]">
         <div className="absolute inset-0 z-0">
-          <video autoPlay muted loop playsInline className="w-full h-full object-cover opacity-20">
-            <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Island%20Vows.mp4" type="video/mp4" />
-          </video>
+          <LazyVideo 
+            src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Island%20Vows.mp4" 
+            posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/end%20poster.webp"
+            className="w-full h-full opacity-20"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#071220] via-transparent to-[#071220]"></div>
         </div>
         

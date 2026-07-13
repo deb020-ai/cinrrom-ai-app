@@ -2,6 +2,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 
 const exhibitionVideos = [
   { title: "Sunset Elegance", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Sunset%20Elegance.mp4" },
@@ -48,15 +49,12 @@ export default function Archive() {
             return (
               <div key={index} className="flex flex-col gap-4 shrink-0 w-[80vw] snap-center">
                 <div className="relative aspect-[9/16] w-full overflow-hidden bg-[#111] rounded-sm">
-                  <video 
-                    autoPlay 
-                    muted={isMuted} 
-                    loop 
-                    playsInline
-                    className="w-full h-full object-cover opacity-90"
-                  >
-                    <source src={video.src} type="video/mp4" />
-                  </video>
+                  <LazyVideo 
+                    src={video.src}
+                    posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp" 
+                    muted={isMuted}
+                    className="w-full h-full opacity-90"
+                  />
                   
                   <button 
                     onClick={() => toggleAudio(index)}
@@ -103,15 +101,12 @@ export default function Archive() {
               return (
                 <div key={index} className="flex flex-col gap-6 shrink-0 group">
                   <div className="relative aspect-[9/16] h-[65vh] overflow-hidden bg-[#111]">
-                    <video 
-                      autoPlay 
+                    <LazyVideo 
+                      src={video.src}
+                      posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
                       muted={isMuted} 
-                      loop 
-                      playsInline
-                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
-                    >
-                      <source src={video.src} type="video/mp4" />
-                    </video>
+                      className="w-full h-full opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                    />
                     
                     <button 
                       onClick={() => toggleAudio(index)}

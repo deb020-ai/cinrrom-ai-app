@@ -1,16 +1,18 @@
 import Hero from "@/components/sections/Hero";
-import TrustStrip from "@/components/sections/TrustStrip";
-import Unforgettable from "@/components/sections/Unforgettable";
-import Manifesto from "@/components/sections/Manifesto";
-import Campaigns from "@/components/sections/Campaigns";
-import Archive from "@/components/sections/Archive";
-import FounderCredibility from "@/components/sections/FounderCredibility";
-import Services from "@/components/sections/Services";
-import Process from "@/components/sections/Process";
-import Why from "@/components/sections/Why";
-import ProductionModel from "@/components/sections/ProductionModel";
-import Journal from "@/components/sections/Journal";
-import Cta from "@/components/sections/Cta";
+import dynamic from "next/dynamic";
+
+const TrustStrip = dynamic(() => import("@/components/sections/TrustStrip"));
+const Unforgettable = dynamic(() => import("@/components/sections/Unforgettable"));
+const Manifesto = dynamic(() => import("@/components/sections/Manifesto"));
+const Campaigns = dynamic(() => import("@/components/sections/Campaigns"));
+const Archive = dynamic(() => import("@/components/sections/Archive"));
+const FounderCredibility = dynamic(() => import("@/components/sections/FounderCredibility"));
+const Services = dynamic(() => import("@/components/sections/Services"));
+const Process = dynamic(() => import("@/components/sections/Process"));
+const Why = dynamic(() => import("@/components/sections/Why"));
+const ProductionModel = dynamic(() => import("@/components/sections/ProductionModel"));
+const Journal = dynamic(() => import("@/components/sections/Journal"));
+const Cta = dynamic(() => import("@/components/sections/Cta"));
 
 export default function Home() {
   return (

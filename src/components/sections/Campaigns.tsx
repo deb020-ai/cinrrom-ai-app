@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 
 export default function Campaigns() {
   const containerRef = useRef<HTMLElement>(null);
@@ -59,15 +60,12 @@ export default function Campaigns() {
             transition={{ duration: 1.5 }}
             className="relative w-full max-w-[600px] aspect-[9/16] overflow-hidden group rounded-sm shadow-2xl"
           >
-            <video 
-              autoPlay 
+            <LazyVideo 
+              src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/The%20Blue%20Dynasty.mp4" 
+              posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
               muted={isMuted}
-              loop 
-              playsInline
-              className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-1000"
-            >
-              <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/The%20Blue%20Dynasty.mp4" type="video/mp4" />
-            </video>
+              className="w-full h-full scale-105 group-hover:scale-100 transition-transform duration-1000"
+            />
             
             <button 
               onClick={() => setIsMuted(!isMuted)}
@@ -85,11 +83,10 @@ export default function Campaigns() {
               className="relative aspect-[3/4] w-full max-w-[700px] mx-auto overflow-hidden bg-[#0a0a0a]"
             >
               <Image 
-                src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/magazine%20cover.png"
+                src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
                 alt="Magazine Cover"
                 fill
                 className="object-cover"
-                unoptimized
               />
             </motion.div>
 
@@ -99,11 +96,10 @@ export default function Campaigns() {
                 className="relative aspect-square w-full max-w-[600px] mx-auto bg-[#111] flex items-center justify-center overflow-hidden"
               >
                 <Image 
-                  src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/The%20Blue%20Dynasty%20jel.png"
+                  src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/post.webp"
                   alt="The Blue Dynasty Jewelry"
                   fill
                   className="object-contain p-8 md:p-16"
-                  unoptimized
                 />
               </motion.div>
 
@@ -115,11 +111,10 @@ export default function Campaigns() {
                 className="relative aspect-[3/4] w-full max-w-[700px] mx-auto overflow-hidden"
               >
                 <Image 
-                  src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/poster.png"
+                  src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/poster.webp"
                   alt="Campaign Poster"
                   fill
                   className="object-cover"
-                  unoptimized
                 />
               </motion.div>
             </div>

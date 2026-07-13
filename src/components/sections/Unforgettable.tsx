@@ -1,5 +1,6 @@
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 import { useRef } from "react";
 
 export default function Unforgettable() {
@@ -22,15 +23,11 @@ export default function Unforgettable() {
         
         {/* Massive cinematic rotating jewelry video */}
         <motion.div style={{ scale }} className="absolute inset-0 w-full h-full opacity-60">
-          <video 
-            autoPlay 
-            muted 
-            loop 
-            playsInline
-            className="w-full h-full object-cover"
-          >
-            <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Emerald%20Precision.mp4" type="video/mp4" />
-          </video>
+          <LazyVideo 
+            src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Emerald%20Precision.mp4"
+            posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
+            className="w-full h-full"
+          />
           {/* Vignette to blend edges into pure black */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_20%,_black_80%)]"></div>
         </motion.div>

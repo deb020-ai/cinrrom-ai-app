@@ -30,7 +30,6 @@ export default function FounderCredibility() {
                   className="object-cover transition-transform duration-[3s] ease-out group-hover:scale-105 grayscale-[40%] contrast-[1.1] brightness-[0.9]"
                   sizes="(max-width: 768px) 100vw, 45vw"
                   quality={90}
-                  unoptimized
                 />
               </motion.div>
             </div>

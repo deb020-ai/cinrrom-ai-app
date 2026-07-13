@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { motion, useScroll } from "framer-motion";
 import Image from "next/image";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 
 const processSteps = [
   {
@@ -91,22 +92,17 @@ export default function Process() {
                     className="absolute inset-0 w-full h-full bg-[#0a0a0a]"
                   >
                     {step.type === "video" ? (
-                      <video 
-                        autoPlay 
-                        muted 
-                        loop 
-                        playsInline
-                        className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-700"
-                      >
-                        <source src={step.media} type="video/mp4" />
-                      </video>
+                      <LazyVideo 
+                        src={step.media}
+                        posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
+                        className="w-full h-full opacity-70 group-hover:opacity-100 transition-opacity duration-700"
+                      />
                     ) : (
                       <Image 
                         src={step.media}
                         alt={step.title}
                         fill
                         className={`object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-700 ${index === 0 ? 'object-contain p-8' : ''}`}
-                        unoptimized
                       />
                     )}
                   </motion.div>

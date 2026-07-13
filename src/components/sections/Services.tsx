@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 
 const services = [
   {
@@ -45,13 +46,9 @@ export default function Services() {
               className="absolute inset-0 w-full h-full"
             >
               {services[hoveredIndex].type === "video" ? (
-                <video 
+                <LazyVideo 
                   src={services[hoveredIndex].media}
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full"
                 />
               ) : (
                 <Image 
@@ -59,7 +56,6 @@ export default function Services() {
                   alt={services[hoveredIndex].title}
                   fill
                   className="object-cover"
-                  unoptimized
                 />
               )}
               <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>

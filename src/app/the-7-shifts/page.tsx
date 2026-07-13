@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, ArrowDown, ChevronRight, Check } from "lucide-react";
 import React from "react";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 
 const FlowNode = ({ text, isLast = false, highlight = false }: { text: string, isLast?: boolean, highlight?: boolean }) => (
   <div className="flex flex-col items-center">
@@ -95,11 +96,13 @@ const AccordionCard = ({ num, concept, headline, summary, paragraphs, animation,
               {/* Diagram (Media) */}
               <div className="relative w-full aspect-[9/16] max-w-sm mx-auto rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/40">
                 {media.type === 'video' ? (
-                  <video autoPlay muted loop playsInline className="w-full h-full object-cover">
-                    <source src={media.src} type="video/mp4" />
-                  </video>
+                  <LazyVideo 
+                    src={media.src} 
+                    posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
+                    className="w-full h-full" 
+                  />
                 ) : (
-                  <Image src={media.src} alt={concept} fill className="object-cover" unoptimized />
+                  <Image src={media.src} alt={concept} fill className="object-cover" />
                 )}
               </div>
 
@@ -395,11 +398,13 @@ export default function EditorialPage() {
             "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Island%20Vows.mp4",
             "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Sunset%20Elegance.mp4"
           ].map((src, idx) => (
-            <div key={idx} className="snap-center shrink-0 w-[60vw] md:w-[40vw] lg:w-[25vw] flex flex-col gap-4">
-              <div className="aspect-[9/16] bg-black/40 rounded-xl overflow-hidden border border-white/10 relative">
-                <video autoPlay muted loop playsInline className="w-full h-full object-cover">
-                  <source src={src} type="video/mp4" />
-                </video>
+            <div key={idx} className="snap-center shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw] flex flex-col gap-4">
+              <div className="aspect-[9/16] bg-black/40 rounded-xl overflow-hidden border border-white/10 shadow-xl transition-all hover:scale-[1.02]">
+                <LazyVideo 
+                  src={src} 
+                  posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
+                  className="w-full h-full"
+                />
               </div>
             </div>
           ))}
