@@ -24,7 +24,7 @@ export default function Unforgettable() {
         {/* Massive cinematic rotating jewelry video */}
         <motion.div style={{ scale }} className="absolute inset-0 w-full h-full opacity-60">
           <LazyVideo 
-            src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Emerald%20Precision.mp4"
+            src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Emerald%20Precision%20reduce%20size.mp4"
             posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
             className="w-full h-full"
           />

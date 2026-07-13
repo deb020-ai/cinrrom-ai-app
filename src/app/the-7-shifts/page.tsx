@@ -213,7 +213,7 @@ export default function EditorialPage() {
               <FlowNode text="Purchase" isLast highlight />
             </div>
           }
-          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/The%20Blue%20Dynasty.mp4' }}
+          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/The%20Blue%20Dynasty%20reduce%20size.mp4' }}
           takeaway="If your brand looks premium before customers compare prices, you've already won half the battle."
         />
 
@@ -237,7 +237,7 @@ export default function EditorialPage() {
               <FlowNode text="Purchase" isLast highlight />
             </div>
           }
-          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Royal%20Radiance%20.mp4' }}
+          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Royal%20Radiance%20%20reduce%20size.mp4' }}
           takeaway="If your brand doesn't impress everyone involved in the decision, someone else probably will."
         />
 
@@ -266,7 +266,7 @@ export default function EditorialPage() {
               <FlowNode text="Brand becomes the differentiator." isLast highlight />
             </div>
           }
-          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Alpine%20Sapphire.mp4' }}
+          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Alpine%20Sapphire%20reduce%20size.mp4' }}
           takeaway="When you stop competing on product specs, you protect your margins."
         />
 
@@ -295,7 +295,7 @@ export default function EditorialPage() {
               </div>
             </div>
           }
-          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Emerald%20Precision.mp4' }}
+          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Emerald%20Precision%20reduce%20size.mp4' }}
           takeaway="Producing more assets from one campaign stretches your marketing budget."
         />
 
@@ -320,7 +320,7 @@ export default function EditorialPage() {
               <FlowNode text="Higher Conversion" isLast highlight />
             </div>
           }
-          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Golden%20Serpent.mp4' }}
+          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Golden%20Serpent%20reduce%20size.mp4' }}
           takeaway="Consistent content gives your marketing team more opportunities to test and improve."
         />
 
@@ -348,7 +348,7 @@ export default function EditorialPage() {
               </div>
             </div>
           }
-          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Island%20Vows.mp4' }}
+          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Island%20Vows%20reduce%20size.mp4' }}
           takeaway="Faster production cycles mean capturing market demand before competitors do."
         />
 
@@ -372,7 +372,7 @@ export default function EditorialPage() {
               <FlowNode text="Premium Pricing" isLast highlight />
             </div>
           }
-          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Sunset%20Elegance.mp4' }}
+          media={{ type: 'video', src: 'https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Sunset%20Elegance%20reduce%20size.mp4' }}
           takeaway="Memorable brands build equity that lasts decades."
         />
 
@@ -390,13 +390,13 @@ export default function EditorialPage() {
         <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:gap-6 px-6 md:px-12 pb-12">
           
           {[
-            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/The%20Blue%20Dynasty.mp4",
-            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Royal%20Radiance%20.mp4",
-            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Alpine%20Sapphire.mp4",
-            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Emerald%20Precision.mp4",
-            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Golden%20Serpent.mp4",
-            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Island%20Vows.mp4",
-            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/Sunset%20Elegance.mp4"
+            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/The%20Blue%20Dynasty%20reduce%20size.mp4",
+            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Royal%20Radiance%20%20reduce%20size.mp4",
+            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Alpine%20Sapphire%20reduce%20size.mp4",
+            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Emerald%20Precision%20reduce%20size.mp4",
+            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Golden%20Serpent%20reduce%20size.mp4",
+            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Island%20Vows%20reduce%20size.mp4",
+            "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Sunset%20Elegance%20reduce%20size.mp4"
           ].map((src, idx) => (
             <div key={idx} className="snap-center shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw] flex flex-col gap-4">
               <div className="aspect-[9/16] bg-black/40 rounded-xl overflow-hidden border border-white/10 shadow-xl transition-all hover:scale-[1.02]">

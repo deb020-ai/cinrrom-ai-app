@@ -35,7 +35,7 @@ const processSteps = [
   {
     title: "Launch",
     desc: "Delivering the final assets integrated perfectly into the luxury ecosystem.",
-    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/The%20Blue%20Dynasty.mp4",
+    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/The%20Blue%20Dynasty%20reduce%20size.mp4",
     type: "video"
   }
 ];
