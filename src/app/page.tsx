@@ -12,6 +12,7 @@ const Process = dynamic(() => import("@/components/sections/Process"));
 const Why = dynamic(() => import("@/components/sections/Why"));
 const ProductionModel = dynamic(() => import("@/components/sections/ProductionModel"));
 const Journal = dynamic(() => import("@/components/sections/Journal"));
+const Benefits = dynamic(() => import("@/components/sections/Benefits"));
 const Cta = dynamic(() => import("@/components/sections/Cta"));
 
 export default function Home() {
@@ -29,6 +30,7 @@ export default function Home() {
       <Services />
       <Process />
       <Journal />
+      <Benefits />
       <Cta />
     </>
   );
