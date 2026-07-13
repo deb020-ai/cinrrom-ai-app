@@ -8,25 +8,28 @@ const processSteps = [
   {
     title: "Discovery",
     desc: "Understanding the maison's heritage, market position, and core ambition.",
-    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/The%20Blue%20Dynasty%20jel.png",
+    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/post.webp",
     type: "image"
   },
   {
-    title: "Strategy",
-    desc: "Defining the cinematic world and identifying the precise audience connection.",
-    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/magazine%20cover.png",
+    step: "02",
+    title: "Direction",
+    desc: "Every frame is storyboarded. Lighting setups are defined, and camera movements are plotted exactly as they would be on a physical soundstage.",
+    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp",
     type: "image"
   },
   {
-    title: "Creative",
-    desc: "Crafting the visual language, narrative arc, and shot architecture.",
-    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/poster.png",
+    step: "03",
+    title: "Generation",
+    desc: "We leverage advanced AI models specifically trained on luxury aesthetics, generating raw materials that respect product proportions and material physics.",
+    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/poster.webp",
     type: "image"
   },
   {
-    title: "Production",
-    desc: "Executing the vision with uncompromising Hollywood-grade precision.",
-    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/end%20poster.png",
+    step: "04",
+    title: "Compositing",
+    desc: "Multiple generations are layered, masked, and blended. Reflections are corrected, and diamonds are retouched to ensure absolute optical accuracy.",
+    media: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/end%20poster.webp",
     type: "image"
   },
   {
