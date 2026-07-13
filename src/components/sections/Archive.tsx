@@ -51,7 +51,6 @@ export default function Archive() {
                 <div className="relative aspect-[9/16] w-full overflow-hidden bg-[#111] rounded-sm">
                   <LazyVideo 
                     src={video.src}
-                    posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp" 
                     muted={isMuted}
                     className="w-full h-full opacity-90"
                   />
@@ -82,9 +81,9 @@ export default function Archive() {
 
       {/* DESKTOP LAYOUT: Cinematic 400vh horizontal scroll tied to vertical scroll */}
       <section ref={targetRef} className="hidden md:block relative h-[400vh] bg-background">
-        <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden border-t border-white/5">
+        <div className="sticky top-0 h-screen w-full flex flex-col overflow-hidden border-t border-white/5 pt-24">
           
-          <div className="absolute top-24 left-12 lg:left-24 z-20 flex flex-col md:flex-row md:items-end justify-between w-[calc(100%-6rem)] lg:w-[calc(100%-12rem)]">
+          <div className="px-12 lg:px-24 mb-12 flex flex-col md:flex-row md:items-end justify-between z-20">
              <div>
                <span className="text-[10px] font-sans tracking-[0.4em] uppercase text-secondary/60 block mb-2">
                   02 &mdash; Archive
@@ -95,15 +94,14 @@ export default function Archive() {
              </div>
           </div>
 
-          <motion.div style={{ x }} className="flex items-center gap-32 pl-12 lg:pl-24">
+          <motion.div style={{ x }} className="flex items-center gap-32 pl-12 lg:pl-24 h-full pb-24">
             {exhibitionVideos.map((video, index) => {
               const isMuted = activeAudioIndex !== index;
               return (
                 <div key={index} className="flex flex-col gap-6 shrink-0 group">
-                  <div className="relative aspect-[9/16] h-[65vh] overflow-hidden bg-[#111]">
+                  <div className="relative aspect-[9/16] h-[60vh] overflow-hidden bg-[#111]">
                     <LazyVideo 
                       src={video.src}
-                      posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
                       muted={isMuted} 
                       className="w-full h-full opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
                     />

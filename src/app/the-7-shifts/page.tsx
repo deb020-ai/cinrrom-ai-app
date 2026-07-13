@@ -402,7 +402,6 @@ export default function EditorialPage() {
               <div className="aspect-[9/16] bg-black/40 rounded-xl overflow-hidden border border-white/10 shadow-xl transition-all hover:scale-[1.02]">
                 <LazyVideo 
                   src={src} 
-                  posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
                   className="w-full h-full"
                 />
               </div>

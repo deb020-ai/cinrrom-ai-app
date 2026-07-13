@@ -60,6 +60,13 @@ export const LazyVideo = ({
           blurDataURL={posterSrc}
         />
       )}
+
+      {/* Loading Spinner for when there is no poster and video is loading */}
+      {!isLoaded && !posterSrc && (
+        <div className="absolute inset-0 flex items-center justify-center bg-[#0a0a0a] z-10">
+          <div className="w-8 h-8 md:w-10 md:h-10 border-[3px] border-white/10 border-t-white/80 rounded-full animate-spin"></div>
+        </div>
+      )}
       
       {/* Actual Video */}
       <video
