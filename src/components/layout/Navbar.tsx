@@ -53,6 +53,7 @@ export default function Navbar() {
         <Link href="/exhibition" className="hover:text-primary transition-colors">Work</Link>
         <Link href="/#services" className="hover:text-primary transition-colors">Services</Link>
         <Link href="/#process" className="hover:text-primary transition-colors">Process</Link>
+        <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
       </div>
 
       <a 

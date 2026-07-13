@@ -24,6 +24,7 @@ export default function Footer() {
         <div className="flex flex-wrap gap-8 text-[10px] font-sans tracking-[0.2em] uppercase text-secondary">
           <Link href="#work" className="hover:text-primary transition-colors">Work</Link>
           <Link href="#services" className="hover:text-primary transition-colors">Services</Link>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <a href="mailto:contact@cinroom.com" className="hover:text-primary transition-colors">Email</a>
           <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Instagram</a>
           <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">LinkedIn</a>
