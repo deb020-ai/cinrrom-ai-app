@@ -1,4 +1,5 @@
 "use client";
+import React, { useRef, useEffect } from "react";
 import { motion, Variants } from "framer-motion";
 
 const points = [
@@ -38,6 +39,63 @@ const cardVariants: Variants = {
 };
 
 export default function WhyWorkWithUs() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll logic for mobile carousel
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    let scrollInterval: NodeJS.Timeout;
+    let isUserInteracting = false;
+
+    const startAutoScroll = () => {
+      scrollInterval = setInterval(() => {
+        if (isUserInteracting) return;
+        
+        // Check if we are at the end, if so, loop back to start
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (container.scrollLeft >= maxScroll - 10) {
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: container.clientWidth * 0.75, behavior: 'smooth' });
+        }
+      }, 3000); // Swipe every 3 seconds
+    };
+
+    const handleTouchStart = () => { isUserInteracting = true; };
+    const handleTouchEnd = () => {
+      isUserInteracting = false;
+      // Reset the timer when they stop touching
+      clearInterval(scrollInterval);
+      startAutoScroll();
+    };
+
+    // Only apply event listeners and interval if it's scrollable (i.e. mobile view)
+    const checkScrollability = () => {
+      if (container.scrollWidth > container.clientWidth) {
+        startAutoScroll();
+        container.addEventListener('touchstart', handleTouchStart);
+        container.addEventListener('touchend', handleTouchEnd);
+        container.addEventListener('mousedown', handleTouchStart);
+        container.addEventListener('mouseup', handleTouchEnd);
+      } else {
+        clearInterval(scrollInterval);
+      }
+    };
+
+    // Give DOM time to render before checking width
+    setTimeout(checkScrollability, 500);
+
+    return () => {
+      clearInterval(scrollInterval);
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchend', handleTouchEnd);
+      container.removeEventListener('mousedown', handleTouchStart);
+      container.removeEventListener('mouseup', handleTouchEnd);
+    };
+  }, []);
+
   return (
     <section className="py-10 md:py-20 bg-[#050d18] border-t border-white/5 overflow-hidden">
       <div className="max-w-[1200px] mx-auto px-4 md:px-6">
@@ -49,6 +107,7 @@ export default function WhyWorkWithUs() {
 
         {/* Horizontal Swipe on Mobile, Grid on Desktop */}
         <motion.div 
+          ref={scrollRef}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
