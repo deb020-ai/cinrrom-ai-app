@@ -2,7 +2,13 @@
 import React from "react";
 import { motion, Variants } from "framer-motion";
 import Archive from "@/components/sections/Archive";
-import Cta from "@/components/sections/Cta";
+import WhatCinroomDoes from "@/components/sections/landing/WhatCinroomDoes";
+import WhyWorkWithUs from "@/components/sections/landing/WhyWorkWithUs";
+import PostBookingProcess from "@/components/sections/landing/PostBookingProcess";
+import PrivatePricing from "@/components/sections/landing/PrivatePricing";
+import IsThisForYou from "@/components/sections/landing/IsThisForYou";
+import HollywoodTrust from "@/components/sections/landing/HollywoodTrust";
+import PrivateCta from "@/components/sections/landing/PrivateCta";
 
 const costs = [
   {
@@ -81,8 +87,12 @@ export default function HiddenCostPage() {
         </p>
       </section>
 
-      {/* Glass Grid Section */}
-      <section className="px-6 pb-32">
+      {/* Intro Conversion Funnel */}
+      <WhatCinroomDoes />
+      <WhyWorkWithUs />
+
+      {/* Educational Glass Grid Section */}
+      <section className="px-6 py-24 md:py-32 bg-[#071220]">
         <div className="max-w-[1200px] mx-auto">
           <motion.div 
             variants={containerVariants}
@@ -119,11 +129,13 @@ export default function HiddenCostPage() {
         </div>
       </section>
 
-      {/* Video Portfolio */}
+      {/* Outro Conversion Funnel */}
       <Archive />
-
-      {/* Final CTA */}
-      <Cta />
+      <PostBookingProcess />
+      <PrivatePricing />
+      <IsThisForYou />
+      <HollywoodTrust />
+      <PrivateCta />
 
     </main>
   );

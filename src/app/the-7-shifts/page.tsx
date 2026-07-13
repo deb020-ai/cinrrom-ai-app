@@ -1,9 +1,14 @@
 "use client";
 import React from "react";
 import { motion, Variants } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 import Archive from "@/components/sections/Archive";
-import Cta from "@/components/sections/Cta";
+import WhatCinroomDoes from "@/components/sections/landing/WhatCinroomDoes";
+import WhyWorkWithUs from "@/components/sections/landing/WhyWorkWithUs";
+import PostBookingProcess from "@/components/sections/landing/PostBookingProcess";
+import PrivatePricing from "@/components/sections/landing/PrivatePricing";
+import IsThisForYou from "@/components/sections/landing/IsThisForYou";
+import HollywoodTrust from "@/components/sections/landing/HollywoodTrust";
+import PrivateCta from "@/components/sections/landing/PrivateCta";
 
 const shifts = [
   {
@@ -81,8 +86,12 @@ export default function EditorialPage() {
         </p>
       </section>
 
-      {/* Glass Grid Section */}
-      <section className="px-6 pb-32">
+      {/* Intro Conversion Funnel */}
+      <WhatCinroomDoes />
+      <WhyWorkWithUs />
+
+      {/* Educational Glass Grid Section */}
+      <section className="px-6 py-24 md:py-32 bg-[#071220]">
         <div className="max-w-[1200px] mx-auto">
           <motion.div 
             variants={containerVariants}
@@ -116,51 +125,16 @@ export default function EditorialPage() {
               </motion.div>
             ))}
           </motion.div>
-
-          {/* Launch Offer Block */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="mt-16 bg-blue-950/20 border border-blue-500/20 rounded-2xl p-10 md:p-14 shadow-[0_0_40px_rgba(59,130,246,0.05)] relative overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-10">
-              <div className="flex flex-col gap-4 max-w-xl">
-                <span className="text-[10px] md:text-xs font-sans tracking-[0.2em] uppercase text-blue-400 font-bold">
-                  Launch Offer
-                </span>
-                <h2 className="text-3xl md:text-4xl font-serif text-white">
-                  Your First Luxury Campaign
-                </h2>
-                <p className="text-lg font-serif text-white/70">
-                  A cinematic 15-second hero film for your next collection. Designed for modern jewelry brands.
-                </p>
-              </div>
-              <div className="flex flex-col gap-4 md:items-end shrink-0">
-                <a 
-                  href="https://cal.com/omnivinci/30min" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-full text-xs font-sans tracking-[0.2em] uppercase hover:scale-105 transition-transform duration-300 shadow-[0_0_30px_rgba(255,255,255,0.15)]"
-                >
-                  Book Strategy Call <ArrowUpRight size={14} />
-                </a>
-                <span className="text-[10px] font-sans tracking-[0.1em] uppercase text-white/40">
-                  Starting from <strong className="text-white">₹15,000</strong>
-                </span>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </section>
 
-      {/* Video Portfolio */}
+      {/* Outro Conversion Funnel */}
       <Archive />
-
-      {/* Final CTA */}
-      <Cta />
+      <PostBookingProcess />
+      <PrivatePricing />
+      <IsThisForYou />
+      <HollywoodTrust />
+      <PrivateCta />
 
     </main>
   );
