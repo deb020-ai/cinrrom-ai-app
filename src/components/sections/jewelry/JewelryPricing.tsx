@@ -74,7 +74,7 @@ export default function JewelryPricing() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-3 bg-white/5 text-white border border-white/10 px-8 py-5 rounded-full text-xs font-sans tracking-[0.2em] uppercase hover:bg-white/10 transition-colors duration-300 w-full"
             >
-              <Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={16} height={16} className="opacity-80" />
+              <Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={16} height={16} className="opacity-80" unoptimized />
               Chat on WhatsApp
             </a>
           </div>
