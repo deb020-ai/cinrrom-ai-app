@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function JewelryFounder() {
   return (
-    <section className="py-24 bg-[#02050a] border-y border-white/5 relative z-10">
+    <section className="py-16 md:py-24 bg-[#02050a] border-y border-white/5 relative z-10">
       <div className="max-w-4xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
           <motion.div 

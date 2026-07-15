@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function JewelryPricing() {
   return (
-    <section className="px-4 py-24 md:py-32 bg-[#02050a] relative overflow-hidden">
+    <section className="px-4 py-16 md:py-32 bg-[#02050a] relative overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] aspect-square bg-blue-900/10 rounded-full blur-[120px] pointer-events-none" />
       
       <div className="max-w-3xl mx-auto relative z-10 flex flex-col items-center">

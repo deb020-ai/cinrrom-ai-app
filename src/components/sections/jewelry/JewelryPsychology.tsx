@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 
 export default function JewelryPsychology() {
   return (
-    <section className="py-32 bg-[#050d18] border-y border-white/5 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+    <section className="py-16 md:py-32 bg-[#050d18] border-y border-white/5 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-10 lg:gap-24">
         
         {/* Editorial Text Side */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center">
@@ -48,7 +48,7 @@ export default function JewelryPsychology() {
         </div>
 
         {/* Visual / Illustration Side */}
-        <div className="w-full lg:w-1/2 relative h-[500px] md:h-[600px] rounded-3xl overflow-hidden group bg-[#02050a] border border-white/10">
+        <div className="w-full lg:w-1/2 relative h-[400px] md:h-[600px] rounded-3xl overflow-hidden group bg-[#02050a] border border-white/10 mt-10 lg:mt-0">
            <video
             autoPlay
             loop

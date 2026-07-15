@@ -20,7 +20,7 @@ export default function JewelryCta() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#02050a] via-[#02050a]/40 to-[#02050a]" />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center py-24">
+      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center py-16 md:py-24">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

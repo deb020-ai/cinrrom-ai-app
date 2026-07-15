@@ -34,9 +34,9 @@ export default function JewelryFaq() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-24 bg-[#050d18]">
+    <section className="py-16 md:py-24 bg-[#050d18]">
       <div className="max-w-3xl mx-auto px-6">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-16">
           <h2 className="text-3xl md:text-5xl font-serif text-white tracking-tight">
             Frequently Asked Questions
           </h2>

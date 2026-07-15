@@ -22,9 +22,9 @@ const reasons = [
 
 export default function JewelryWhyUs() {
   return (
-    <section className="py-24 bg-[#02050a] border-t border-white/5">
+    <section className="py-16 md:py-24 bg-[#02050a] border-t border-white/5">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16 md:mb-24">
+        <div className="text-center mb-10 md:mb-24">
           <h2 className="text-sm font-sans tracking-[0.3em] uppercase text-white/40 mb-4 font-bold">
             Why Brands Choose CINROOM
           </h2>

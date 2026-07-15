@@ -14,9 +14,9 @@ const deliverables = [
 
 export default function JewelryDeliverables() {
   return (
-    <section className="py-24 bg-[#050d18] border-t border-white/5">
+    <section className="py-16 md:py-24 bg-[#050d18] border-t border-white/5">
       <div className="max-w-5xl mx-auto px-6">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-16">
           <h2 className="text-sm font-sans tracking-[0.3em] uppercase text-blue-400 mb-4 font-bold">
             What You Get
           </h2>
