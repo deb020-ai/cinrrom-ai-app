@@ -8,9 +8,6 @@ import JewelryFounder from "@/components/sections/jewelry/JewelryFounder";
 import JewelryPricing from "@/components/sections/jewelry/JewelryPricing";
 import JewelryFaq from "@/components/sections/jewelry/JewelryFaq";
 import JewelryCta from "@/components/sections/jewelry/JewelryCta";
-import SmoothScroll from "@/components/layout/SmoothScroll";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 
 export const metadata = {
   title: "Premium Jewelry Campaign Films | CINROOM",
@@ -19,21 +16,17 @@ export const metadata = {
 
 export default function JewelryCampaignPage() {
   return (
-    <SmoothScroll>
-      <Navbar />
-      <main className="bg-[#02050a] min-h-screen text-white selection:bg-white/20 selection:text-white">
-        <JewelryHero />
-        <JewelryTrust />
-        <JewelryPortfolio />
-        <JewelryDeliverables />
-        <JewelryWhyUs />
-        <JewelryPsychology />
-        <JewelryFounder />
-        <JewelryPricing />
-        <JewelryFaq />
-        <JewelryCta />
-      </main>
-      <Footer />
-    </SmoothScroll>
+    <div className="bg-[#02050a] min-h-screen text-white selection:bg-white/20 selection:text-white">
+      <JewelryHero />
+      <JewelryTrust />
+      <JewelryPortfolio />
+      <JewelryDeliverables />
+      <JewelryWhyUs />
+      <JewelryPsychology />
+      <JewelryFounder />
+      <JewelryPricing />
+      <JewelryFaq />
+      <JewelryCta />
+    </div>
   );
 }
