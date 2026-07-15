@@ -16,7 +16,7 @@ export default function JewelryFounder() {
           >
             <div className="aspect-[3/4] relative rounded-3xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 border border-white/10">
               <Image 
-                src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/images/debabrata-bairagy.jpg" 
+                src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/founder%20image/image000222.png" 
                 alt="Debabrata Bairagy" 
                 fill
                 className="object-cover"
