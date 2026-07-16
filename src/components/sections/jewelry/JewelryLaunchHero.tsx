@@ -1,48 +1,58 @@
 "use client";
-import { motion } from "framer-motion";
-import { ArrowUpRight, Check, Play } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowUpRight, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const portfolio = [
   { title: "The Blue Dynasty", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/The%20Blue%20Dynasty%20reduce%20size.mp4" },
   { title: "Sunset Elegance", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Sunset%20Elegance%20reduce%20size.mp4" },
+  { title: "Island Vows", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Island%20Vows%20reduce%20size.mp4" },
   { title: "Golden Serpent", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Golden%20Serpent%20reduce%20size.mp4" },
-  { title: "Alpine Sapphire", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Alpine%20Sapphire%20reduce%20size.mp4" }
+  { title: "Imran", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Imran%20reduce%20size.mp4" },
+  { title: "Alpine Sapphire", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Alpine%20Sapphire%20reduce%20size.mp4" },
+  { title: "Royal Radiant", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Royal%20Radiant%20reduce%20size.mp4" }
 ];
 
-function HeroVideo({ src, autoPlay = false, className = "" }: { src: string, autoPlay?: boolean, className?: string }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  
-  return (
-    <div 
-      className={`relative rounded-xl overflow-hidden bg-[#050d18] border border-white/10 group cursor-pointer ${className}`}
-      onMouseEnter={() => { if (!autoPlay && window.innerWidth >= 768) videoRef.current?.play().catch(() => {}) }}
-      onMouseLeave={() => { if (!autoPlay && window.innerWidth >= 768) videoRef.current?.pause() }}
-    >
-      <video
-        ref={videoRef}
-        autoPlay={autoPlay}
-        loop
-        muted
-        playsInline
-        preload={autoPlay ? "auto" : "metadata"}
-        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700"
-      >
-        <source src={src} type="video/mp4" />
-      </video>
-      {!autoPlay && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
-            <Play size={16} className="text-white ml-1" />
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function JewelryLaunchHero() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % portfolio.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + portfolio.length) % portfolio.length);
+  };
+
+  // Touch handlers for swipe
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe) {
+      handleNext();
+    }
+    if (isRightSwipe) {
+      handlePrev();
+    }
+  };
+
   return (
     <section className="relative w-full min-h-screen pt-24 pb-16 lg:py-0 flex items-center bg-[#02050a] overflow-hidden">
       {/* Subtle Background Glow */}
@@ -110,28 +120,80 @@ export default function JewelryLaunchHero() {
           </div>
         </motion.div>
 
-        {/* Right Column: Portfolio Grid */}
+        {/* Right Column: Swipeable Carousel */}
         <motion.div 
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="grid grid-cols-2 gap-4 h-[600px] lg:h-[700px] w-full"
+          className="w-full flex justify-center lg:justify-end mt-10 lg:mt-0"
         >
-          {/* Main featured video - autoplays */}
-          <HeroVideo 
-            src={portfolio[0].src} 
-            autoPlay={true} 
-            className="col-span-2 h-full min-h-[300px]" 
-          />
-          {/* Secondary videos - play on hover */}
-          <HeroVideo 
-            src={portfolio[1].src} 
-            className="col-span-1 h-full min-h-[200px]" 
-          />
-          <HeroVideo 
-            src={portfolio[2].src} 
-            className="col-span-1 h-full min-h-[200px]" 
-          />
+          <div 
+            className="relative w-full max-w-[400px] aspect-[9/16] rounded-2xl overflow-hidden bg-[#050d18] border border-white/10 shadow-2xl"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
+            {/* Render ONLY the active video to save massive bandwidth */}
+            <AnimatePresence mode="wait">
+              <motion.video
+                key={currentIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              >
+                <source src={portfolio[currentIndex].src} type="video/mp4" />
+              </motion.video>
+            </AnimatePresence>
+
+            {/* Title Overlay */}
+            <div className="absolute top-6 left-6 right-6 z-20">
+              <div className="bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full inline-block">
+                <p className="text-white font-serif text-sm md:text-base">
+                  {portfolio[currentIndex].title}
+                </p>
+              </div>
+            </div>
+
+            {/* Navigation Controls */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4">
+              <button 
+                onClick={handlePrev}
+                className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-colors"
+                aria-label="Previous video"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              
+              <div className="flex gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full">
+                {portfolio.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === currentIndex ? "bg-white w-4" : "bg-white/30 hover:bg-white/50"}`}
+                    aria-label={`Go to video ${idx + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button 
+                onClick={handleNext}
+                className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-colors"
+                aria-label="Next video"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+            
+            {/* Swipe Indicator (only shows briefly) */}
+            <div className="absolute inset-y-0 left-0 w-1/4 z-10 cursor-pointer" onClick={handlePrev} />
+            <div className="absolute inset-y-0 right-0 w-1/4 z-10 cursor-pointer" onClick={handleNext} />
+          </div>
         </motion.div>
 
       </div>
