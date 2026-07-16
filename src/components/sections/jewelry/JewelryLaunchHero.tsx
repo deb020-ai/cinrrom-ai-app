@@ -53,6 +53,25 @@ export default function JewelryLaunchHero() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const thumbContainerRef = useRef<HTMLDivElement>(null);
+  const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Automatically scroll thumbnails to center the active one
+  useEffect(() => {
+    if (thumbContainerRef.current && thumbRefs.current[currentIndex]) {
+      const container = thumbContainerRef.current;
+      const thumb = thumbRefs.current[currentIndex];
+      
+      // Calculate the scroll position needed to center the thumbnail
+      const containerCenter = container.clientWidth / 2;
+      const thumbCenter = thumb.offsetLeft + (thumb.clientWidth / 2);
+      
+      container.scrollTo({
+        left: thumbCenter - containerCenter,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentIndex]);
 
   // Use IntersectionObserver to accurately detect which item is in the center
   useEffect(() => {
@@ -210,10 +229,17 @@ export default function JewelryLaunchHero() {
           </div>
 
           {/* Thumbnails Row */}
-          <div className="flex gap-3 overflow-x-auto no-scrollbar max-w-[90%] mt-4 pb-4 px-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div 
+            ref={thumbContainerRef}
+            className="flex gap-3 overflow-x-auto no-scrollbar max-w-[90%] lg:max-w-[80%] mt-4 pb-4 px-4 lg:px-0" 
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {/* Added extra spacer divs to allow first and last items to reach the center */}
+            <div className="min-w-[40%] flex-shrink-0" aria-hidden="true" />
             {portfolio.map((item, idx) => (
               <button
                 key={idx}
+                ref={(el) => { thumbRefs.current[idx] = el; }}
                 onClick={() => scrollTo(idx)}
                 className={`relative flex-shrink-0 w-16 h-24 rounded-md overflow-hidden transition-all duration-300 border-2 ${idx === currentIndex ? 'border-blue-400 scale-110 shadow-[0_0_15px_rgba(96,165,250,0.4)] z-10' : 'border-white/10 opacity-50 hover:opacity-100'}`}
               >
@@ -227,6 +253,7 @@ export default function JewelryLaunchHero() {
                 </video>
               </button>
             ))}
+            <div className="min-w-[40%] flex-shrink-0" aria-hidden="true" />
           </div>
 
         </motion.div>
