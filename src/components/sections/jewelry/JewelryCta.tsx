@@ -20,7 +20,7 @@ export default function JewelryCta() {
             playsInline
             className="w-full h-full object-cover opacity-50 scale-105 grayscale hover:grayscale-0 transition-all duration-1000"
           >
-            <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Sunset%20Elegance%20reduce%20size.mp4" type="video/mp4" />
+            <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Sunset%20Elegance%20Reduce%20Size.mp4" type="video/mp4" />
           </video>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#02050a] via-[#02050a]/40 to-[#02050a]" />

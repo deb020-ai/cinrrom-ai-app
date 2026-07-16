@@ -15,7 +15,7 @@ export default function JewelryHero() {
           playsInline
           className="w-full h-full object-cover opacity-40 scale-105"
         >
-          <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/The%20Blue%20Dynasty%20reduce%20size.mp4" type="video/mp4" />
+          <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/The%20Blue%20Dynasty%20Reduce%20Size(3).mp4" type="video/mp4" />
         </video>
         {/* Gradients to blend video into the background */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#02050a] via-transparent to-[#02050a]/80" />

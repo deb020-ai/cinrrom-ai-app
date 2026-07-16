@@ -61,7 +61,7 @@ export default function Campaigns() {
             className="relative w-full max-w-[600px] aspect-[9/16] overflow-hidden group rounded-sm shadow-2xl"
           >
             <LazyVideo 
-              src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/The%20Blue%20Dynasty%20reduce%20size.mp4" 
+              src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/The%20Blue%20Dynasty%20Reduce%20Size(3).mp4" 
               posterSrc="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/The%20Blue%20Dynasty/image/magazine%20cover.webp"
               muted={isMuted}
               className="w-full h-full scale-105 group-hover:scale-100 transition-transform duration-1000"

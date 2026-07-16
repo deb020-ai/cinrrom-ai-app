@@ -44,7 +44,7 @@ export default function JewelryPsychology() {
               playsInline
               className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-1000 scale-105"
             >
-              <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Island%20Vows%20reduce%20size.mp4" type="video/mp4" />
+              <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Island%20Vows%20Reduce%20Size.mp4" type="video/mp4" />
             </video>
           )}
           <div className="absolute inset-0 bg-gradient-to-tr from-[#050d18] via-transparent to-transparent opacity-80" />
