@@ -1,29 +1,28 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef, useEffect } from "react";
 
 const jewelryVideos = [
   { title: "The Blue Dynasty", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/The%20Blue%20Dynasty%20reduce%20size.mp4" },
   { title: "Sunset Elegance", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Sunset%20Elegance%20reduce%20size.mp4" },
-  { title: "Emerald Precision", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Emerald%20Precision%20reduce%20size.mp4" },
-  { title: "Royal Radiance", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Royal%20Radiance%20%20reduce%20size.mp4" },
-  { title: "Golden Serpent", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Golden%20Serpent%20reduce%20size.mp4" },
-  { title: "Alpine Sapphire", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Alpine%20Sapphire%20reduce%20size.mp4" },
   { title: "Island Vows", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Island%20Vows%20reduce%20size.mp4" },
+  { title: "Golden Serpent", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Golden%20Serpent%20reduce%20size.mp4" },
+  { title: "Imran", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Imran%20reduce%20size.mp4" },
+  { title: "Alpine Sapphire", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Alpine%20Sapphire%20reduce%20size.mp4" },
+  { title: "Royal Radiant", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Royal%20Radiant%20reduce%20size.mp4" }
 ];
 
 function MasonryVideo({ src, title }: { src: string; title: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "200px" });
 
   useEffect(() => {
-    // Autoplay when visible for mobile or just use hover on desktop
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && window.innerWidth < 768) {
-            videoRef.current?.play().catch(() => {});
-          } else if (window.innerWidth < 768) {
-            videoRef.current?.pause();
+          if (!entry.isIntersecting && videoRef.current) {
+            videoRef.current.pause();
           }
         });
       },
@@ -36,20 +35,23 @@ function MasonryVideo({ src, title }: { src: string; title: string }) {
 
   return (
     <div 
+      ref={containerRef}
       className="relative w-full rounded-2xl overflow-hidden bg-[#050d18] group cursor-pointer"
       onMouseEnter={() => { if (window.innerWidth >= 768) videoRef.current?.play().catch(() => {}) }}
       onMouseLeave={() => { if (window.innerWidth >= 768) videoRef.current?.pause() }}
     >
-      <video
-        ref={videoRef}
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700"
-      >
-        <source src={src} type="video/mp4" />
-      </video>
+      {isInView && (
+        <video
+          ref={videoRef}
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700"
+        >
+          <source src={src} type="video/mp4" />
+        </video>
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6 md:p-8">
         <h4 className="text-white font-serif text-xl md:text-2xl">{title}</h4>
       </div>

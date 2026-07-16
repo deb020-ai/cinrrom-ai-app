@@ -1,42 +1,29 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
 export default function JewelryPsychology() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "200px" });
+
   return (
-    <section className="py-16 md:py-32 bg-[#050d18] border-y border-white/5 overflow-hidden">
+    <section ref={ref} className="py-16 md:py-32 bg-[#050d18] border-y border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-10 lg:gap-24">
         
         {/* Editorial Text Side */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-sm font-sans tracking-[0.3em] uppercase text-blue-400 mb-6 font-bold"
-          >
-            Buyer Psychology
-          </motion.h2>
-          
-          <motion.h3 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-4xl md:text-6xl font-serif text-white tracking-tight leading-[1.1] mb-10"
-          >
-            Why Premium Visuals Matter.
-          </motion.h3>
-
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="space-y-6 text-base md:text-lg font-sans text-white/60 font-light leading-relaxed"
+            transition={{ duration: 0.8 }}
+            className="space-y-6 text-white/70 font-serif text-lg md:text-xl leading-relaxed"
           >
+            <h2 className="text-3xl md:text-5xl font-serif text-white mb-8 tracking-tight">
+              The Psychology of Premium.
+            </h2>
             <p>
-              Customers don't buy fine jewelry immediately. They compare. They share screenshots. They ask family. They look at your competitors.
+              When a potential customer clicks your Meta Ad, they aren't just looking at the jewelry. They are subconsciously evaluating your brand's status.
             </p>
             <p className="text-white/90 font-medium">
               The brand that feels more premium usually earns trust first.
@@ -49,15 +36,17 @@ export default function JewelryPsychology() {
 
         {/* Visual / Illustration Side */}
         <div className="w-full lg:w-1/2 relative h-[400px] md:h-[600px] rounded-3xl overflow-hidden group bg-[#02050a] border border-white/10 mt-10 lg:mt-0">
-           <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-1000 scale-105"
-          >
-            <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Island%20Vows%20reduce%20size.mp4" type="video/mp4" />
-          </video>
+          {isInView && (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-1000 scale-105"
+            >
+              <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Island%20Vows%20reduce%20size.mp4" type="video/mp4" />
+            </video>
+          )}
           <div className="absolute inset-0 bg-gradient-to-tr from-[#050d18] via-transparent to-transparent opacity-80" />
           
           <div className="absolute bottom-8 left-8 right-8 p-8 backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl">

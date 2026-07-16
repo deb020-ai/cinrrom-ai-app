@@ -1,22 +1,28 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import { useRef } from "react";
 
 export default function JewelryCta() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "200px" });
+
   return (
-    <section className="relative w-full min-h-[500px] flex items-center justify-center overflow-hidden border-t border-white/5">
+    <section ref={ref} className="relative w-full min-h-[500px] flex items-center justify-center overflow-hidden border-t border-white/5">
       {/* Background Video */}
       <div className="absolute inset-0 w-full h-full">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover opacity-50 scale-105 grayscale hover:grayscale-0 transition-all duration-1000"
-        >
-          <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Sunset%20Elegance%20reduce%20size.mp4" type="video/mp4" />
-        </video>
+        {isInView && (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-50 scale-105 grayscale hover:grayscale-0 transition-all duration-1000"
+          >
+            <source src="https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/reduce%20size/Sunset%20Elegance%20reduce%20size.mp4" type="video/mp4" />
+          </video>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#02050a] via-[#02050a]/40 to-[#02050a]" />
       </div>
 
