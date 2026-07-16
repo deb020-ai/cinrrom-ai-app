@@ -14,29 +14,82 @@ const portfolio = [
   { title: "Royal Radiant", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Royal%20Radiance%20%20Reduce%20Size.mp4" }
 ];
 
+// Dedicated component to handle precise play/pause based on active state
+function CarouselVideo({ src, isActive, shouldRender }: { src: string, isActive: boolean, shouldRender: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+    if (isActive) {
+      videoRef.current.play().catch(() => {});
+    } else {
+      videoRef.current.pause();
+    }
+  }, [isActive]);
+
+  if (!shouldRender) {
+    return (
+      <div className="absolute inset-0 bg-[#050d18] flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-blue-500 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <video
+      ref={videoRef}
+      loop
+      muted
+      playsInline
+      preload={isActive ? "auto" : "metadata"}
+      className="absolute inset-0 w-full h-full object-cover"
+    >
+      <source src={src} type="video/mp4" />
+    </video>
+  );
+}
+
 export default function JewelryLaunchHero() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Debounced scroll handler to detect active center item
-  const handleScroll = (e: UIEvent<HTMLDivElement>) => {
-    const container = e.currentTarget;
-    const scrollPosition = container.scrollLeft;
-    const itemWidth = container.clientWidth * 0.8; // 80% width items
-    const newIndex = Math.round(scrollPosition / itemWidth);
-    
-    if (newIndex !== currentIndex && newIndex >= 0 && newIndex < portfolio.length) {
-      setCurrentIndex(newIndex);
-    }
-  };
+  // Use IntersectionObserver to accurately detect which item is in the center
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the entry that is most visible (closest to center)
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+            const index = Number(entry.target.getAttribute('data-index'));
+            if (!isNaN(index) && index !== currentIndex) {
+              setCurrentIndex(index);
+            }
+          }
+        });
+      },
+      {
+        root: container,
+        threshold: 0.6, // Trigger when 60% of the item is visible
+      }
+    );
+
+    itemRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, [currentIndex]);
 
   const scrollTo = (index: number) => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const itemWidth = container.clientWidth * 0.8;
-      container.scrollTo({
-        left: index * itemWidth,
-        behavior: 'smooth'
+    if (itemRefs.current[index]) {
+      itemRefs.current[index]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
       });
       setCurrentIndex(index);
     }
@@ -49,7 +102,7 @@ export default function JewelryLaunchHero() {
         <div className="absolute -top-[20%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-blue-900/10 blur-[120px]" />
       </div>
 
-      <div className="max-w-[1400px] w-full mx-auto px-0 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
+      <div className="max-w-[1400px] w-full mx-auto px-0 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10 min-w-0">
         
         {/* Left Column: The Story & Offer */}
         <motion.div 
@@ -114,43 +167,33 @@ export default function JewelryLaunchHero() {
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full flex flex-col items-center mt-10 lg:mt-0 overflow-hidden"
+          className="w-full flex flex-col items-center mt-10 lg:mt-0 overflow-hidden min-w-0"
         >
           {/* Main Peek-a-boo Carousel */}
           <div 
             ref={scrollContainerRef}
-            onScroll={handleScroll}
-            className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar w-full py-4 px-[10%]"
+            className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar w-full py-6 px-[10vw] lg:px-[5vw]"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {portfolio.map((item, idx) => {
               const isActive = idx === currentIndex;
-              // Only load videos for the active, previous, and next slides to save bandwidth
               const shouldRenderVideo = Math.abs(idx - currentIndex) <= 1;
 
               return (
                 <div 
                   key={idx} 
-                  className={`flex-shrink-0 w-[80%] snap-center aspect-[9/16] px-2 transition-all duration-500 ease-out ${isActive ? 'scale-100 opacity-100' : 'scale-[0.85] opacity-40 hover:opacity-70 cursor-pointer'}`}
+                  ref={(el) => { itemRefs.current[idx] = el; }}
+                  data-index={idx}
+                  className={`flex-shrink-0 w-[80vw] max-w-[320px] lg:max-w-[360px] snap-center aspect-[9/16] px-2 transition-all duration-500 ease-out ${isActive ? 'scale-100 opacity-100' : 'scale-[0.85] opacity-40 hover:opacity-70 cursor-pointer'}`}
                   onClick={() => !isActive && scrollTo(idx)}
                 >
-                  <div className="w-full h-full rounded-2xl overflow-hidden bg-[#050d18] border border-white/10 shadow-2xl relative">
-                    {shouldRenderVideo ? (
-                      <video
-                        autoPlay={isActive}
-                        loop
-                        muted
-                        playsInline
-                        preload={isActive ? "auto" : "metadata"}
-                        className="absolute inset-0 w-full h-full object-cover"
-                      >
-                        <source src={item.src} type="video/mp4" />
-                      </video>
-                    ) : (
-                      <div className="absolute inset-0 bg-[#050d18] flex items-center justify-center">
-                        <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-blue-500 animate-spin" />
-                      </div>
-                    )}
+                  <div className="w-full h-full rounded-2xl overflow-hidden bg-[#050d18] border border-white/10 shadow-2xl relative flex items-center justify-center">
+                    
+                    <CarouselVideo 
+                      src={item.src} 
+                      isActive={isActive} 
+                      shouldRender={shouldRenderVideo} 
+                    />
                     
                     {/* Title Overlay */}
                     <div className={`absolute top-6 left-6 right-6 z-20 transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
@@ -167,14 +210,13 @@ export default function JewelryLaunchHero() {
           </div>
 
           {/* Thumbnails Row */}
-          <div className="flex gap-3 overflow-x-auto no-scrollbar max-w-[80%] mt-6 pb-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="flex gap-3 overflow-x-auto no-scrollbar max-w-[90%] mt-4 pb-4 px-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {portfolio.map((item, idx) => (
               <button
                 key={idx}
                 onClick={() => scrollTo(idx)}
-                className={`relative flex-shrink-0 w-14 h-20 rounded-md overflow-hidden transition-all duration-300 border-2 ${idx === currentIndex ? 'border-blue-400 scale-110 shadow-[0_0_15px_rgba(96,165,250,0.4)]' : 'border-transparent opacity-50 hover:opacity-100'}`}
+                className={`relative flex-shrink-0 w-16 h-24 rounded-md overflow-hidden transition-all duration-300 border-2 ${idx === currentIndex ? 'border-blue-400 scale-110 shadow-[0_0_15px_rgba(96,165,250,0.4)] z-10' : 'border-white/10 opacity-50 hover:opacity-100'}`}
               >
-                {/* We use preload metadata so the browser fetches the first frame to use as a thumbnail */}
                 <video
                   muted
                   playsInline
