@@ -160,39 +160,65 @@ export default function JewelryLaunchHero() {
               </div>
             </div>
 
-            {/* Navigation Controls */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4">
-              <button 
-                onClick={handlePrev}
-                className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-colors"
-                aria-label="Previous video"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              
-              <div className="flex gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full">
-                {portfolio.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentIndex(idx)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === currentIndex ? "bg-white w-4" : "bg-white/30 hover:bg-white/50"}`}
-                    aria-label={`Go to video ${idx + 1}`}
-                  />
-                ))}
-              </div>
-
-              <button 
-                onClick={handleNext}
-                className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-colors"
-                aria-label="Next video"
-              >
-                <ChevronRight size={24} />
-              </button>
+            {/* Idiot-proof Swipe Hint */}
+            <div className="absolute top-1/2 -translate-y-1/2 right-4 z-20 pointer-events-none flex flex-col items-center gap-2 opacity-70 animate-pulse">
+              <span className="text-white text-xs font-sans tracking-[0.2em] font-bold" style={{ writingMode: 'vertical-rl' }}>
+                SWIPE
+              </span>
+              <ChevronRight size={24} className="text-white" />
             </div>
             
-            {/* Swipe Indicator (only shows briefly) */}
-            <div className="absolute inset-y-0 left-0 w-1/4 z-10 cursor-pointer" onClick={handlePrev} />
-            <div className="absolute inset-y-0 right-0 w-1/4 z-10 cursor-pointer" onClick={handleNext} />
+            <div className="absolute top-1/2 -translate-y-1/2 left-4 z-20 pointer-events-none flex flex-col items-center gap-2 opacity-70 animate-pulse">
+              <ChevronLeft size={24} className="text-white" />
+              <span className="text-white text-xs font-sans tracking-[0.2em] font-bold" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
+                SWIPE
+              </span>
+            </div>
+
+            {/* Navigation Controls - Made much more prominent */}
+            <div className="absolute bottom-6 left-0 right-0 z-30 flex flex-col items-center gap-4">
+              {/* Text Hint */}
+              <div className="bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
+                <p className="text-white/90 text-xs font-sans uppercase tracking-[0.1em] font-bold flex items-center gap-2">
+                  <ChevronLeft size={14} />
+                  Swipe for more ({currentIndex + 1}/{portfolio.length})
+                  <ChevronRight size={14} />
+                </p>
+              </div>
+
+              <div className="flex items-center gap-6">
+                <button 
+                  onClick={handlePrev}
+                  className="w-14 h-14 rounded-full bg-black/60 backdrop-blur-md border-2 border-white/20 flex items-center justify-center text-white hover:bg-black/80 hover:scale-110 transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+                  aria-label="Previous video"
+                >
+                  <ChevronLeft size={28} />
+                </button>
+                
+                <div className="flex gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-5 py-3 rounded-full">
+                  {portfolio.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentIndex(idx)}
+                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${idx === currentIndex ? "bg-blue-400 w-6 shadow-[0_0_10px_rgba(96,165,250,0.5)]" : "bg-white/40 hover:bg-white/70"}`}
+                      aria-label={`Go to video ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <button 
+                  onClick={handleNext}
+                  className="w-14 h-14 rounded-full bg-black/60 backdrop-blur-md border-2 border-white/20 flex items-center justify-center text-white hover:bg-black/80 hover:scale-110 transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)] animate-pulse"
+                  aria-label="Next video"
+                >
+                  <ChevronRight size={28} />
+                </button>
+              </div>
+            </div>
+            
+            {/* Swipe Hitboxes */}
+            <div className="absolute inset-y-0 left-0 w-1/3 z-10 cursor-pointer" onClick={handlePrev} />
+            <div className="absolute inset-y-0 right-0 w-1/3 z-10 cursor-pointer" onClick={handleNext} />
           </div>
         </motion.div>
 
