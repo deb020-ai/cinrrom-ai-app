@@ -47,7 +47,7 @@ export default function StickyMobileCta() {
             rel="noopener noreferrer"
             className="flex-[1.5] flex items-center justify-center gap-2 bg-white text-black py-3.5 rounded-xl text-[10px] sm:text-xs font-sans tracking-[0.1em] uppercase font-bold hover:bg-gray-200 transition-colors"
           >
-            Book Strategy Call <ArrowUpRight size={14} />
+            Get Campaign Plan <ArrowUpRight size={14} />
           </a>
         </div>
       ) : (
@@ -58,7 +58,7 @@ export default function StickyMobileCta() {
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 w-full bg-white text-black font-sans tracking-[0.1em] uppercase text-xs md:text-sm px-6 py-4 rounded-full font-bold shadow-2xl"
           >
-            Book Strategy Call <ArrowUpRight size={16} />
+            Get Campaign Plan <ArrowUpRight size={16} />
           </a>
         </div>
       )}

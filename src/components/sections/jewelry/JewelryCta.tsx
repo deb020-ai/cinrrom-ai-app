@@ -50,7 +50,7 @@ export default function JewelryCta({ country = 'in' }: { country?: 'in' | 'us' }
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-full text-xs font-sans tracking-[0.2em] uppercase hover:bg-white/90 transition-all w-full sm:w-auto min-w-[240px]"
           >
-            Book Strategy Call <ArrowUpRight size={16} />
+            Get Your Campaign Plan <ArrowUpRight size={16} />
           </a>
           
           <a

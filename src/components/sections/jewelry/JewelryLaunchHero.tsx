@@ -138,18 +138,23 @@ export default function JewelryLaunchHero({ country = 'in' }: { country?: 'in' |
             <div className="text-lg md:text-xl font-serif text-white/80 leading-relaxed">
               <p>Former Hollywood VFX Artist.</p>
               <p>Worked on <span className="text-white">Spider-Man</span> & <span className="text-white">House of the Dragon</span>.</p>
-              <p>Now helping jewelry brands launch premium campaigns.</p>
+              <p>Helping jewelry brands launch collections faster with cinematic creatives.</p>
             </div>
           </div>
 
           {/* The Core Offer */}
           <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/70 text-xs font-sans mb-6">
+              <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)] animate-pulse" />
+              Trusted by modern jewelry brands
+            </div>
+            
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white tracking-tight leading-[1.1] mb-6">
-              Premium Jewelry Campaign Films.
+              Launch Your Next Jewelry Collection Without a $20K Production Shoot.
             </h1>
             
             <ul className="space-y-3 mb-10">
-              {["1 Premium Campaign Film", "4 High-Converting Meta Image Ads", "Delivered in 48 Hours", `All for a flat ${country === 'us' ? '$399' : '₹15,000'}`].map((item, i) => (
+              {["1 Luxury Campaign Film", "4 Meta Ads Ready to Launch", "Ready in 48 Hours", "No Studio. No Models. No Production Crew.", `All for a flat ${country === 'us' ? '$399' : '₹15,000'}`].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-white/90 font-sans text-sm md:text-base">
                   <Check size={18} className="text-blue-400 shrink-0" />
                   <span>{item}</span>
@@ -165,7 +170,7 @@ export default function JewelryLaunchHero({ country = 'in' }: { country?: 'in' |
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-full text-xs font-sans tracking-[0.2em] uppercase hover:bg-white/90 transition-all w-full sm:w-auto min-w-[240px]"
               >
-                Book Strategy Call <ArrowUpRight size={16} />
+                Get Your Campaign Plan <ArrowUpRight size={16} />
               </a>
               
               <a
