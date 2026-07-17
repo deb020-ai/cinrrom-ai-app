@@ -149,7 +149,7 @@ export default function JewelryLaunchHero() {
             </h1>
             
             <ul className="space-y-3 mb-10">
-              {["1 Premium Campaign Film", "4 Meta Ad Creatives", "Delivered in 48 Hours"].map((item, i) => (
+              {["1 Premium Campaign Film", "4 Meta Ad Creatives", "Delivered in 48 Hours", "All for a flat ₹15,000"].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-white/90 font-sans text-sm md:text-base">
                   <Check size={18} className="text-blue-400 shrink-0" />
                   <span>{item}</span>
@@ -158,7 +158,7 @@ export default function JewelryLaunchHero() {
             </ul>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+            <div className="hidden md:flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
               <a
                 href="https://cal.com/omnivinci/30min"
                 target="_blank"
@@ -203,7 +203,7 @@ export default function JewelryLaunchHero() {
                   key={idx} 
                   ref={(el) => { itemRefs.current[idx] = el; }}
                   data-index={idx}
-                  className={`flex-shrink-0 w-[80vw] max-w-[320px] lg:max-w-[360px] snap-center aspect-[9/16] px-2 transition-all duration-500 ease-out ${isActive ? 'scale-100 opacity-100' : 'scale-[0.85] opacity-40 hover:opacity-70 cursor-pointer'}`}
+                  className={`flex-shrink-0 w-[65vw] md:w-[80vw] max-w-[320px] lg:max-w-[360px] snap-center aspect-[9/16] px-2 transition-all duration-500 ease-out ${isActive ? 'scale-100 opacity-100' : 'scale-[0.85] opacity-40 hover:opacity-70 cursor-pointer'}`}
                   onClick={() => !isActive && scrollTo(idx)}
                 >
                   <div className="w-full h-full rounded-2xl overflow-hidden bg-[#050d18] border border-white/10 shadow-2xl relative flex items-center justify-center">

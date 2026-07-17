@@ -51,7 +51,7 @@ export default function JewelryLaunchPricing() {
             </ul>
           </div>
 
-          <div className="flex flex-col gap-4 w-full max-w-sm mx-auto relative z-10">
+          <div className="hidden md:flex flex-col gap-4 w-full max-w-sm mx-auto relative z-10">
             <a 
               href="https://cal.com/omnivinci/30min" 
               target="_blank" 

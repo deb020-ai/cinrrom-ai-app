@@ -42,7 +42,7 @@ export default function JewelryCta() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
+          className="hidden md:flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
         >
           <a
             href="https://cal.com/omnivinci/30min"
