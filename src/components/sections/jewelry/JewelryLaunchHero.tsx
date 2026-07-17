@@ -150,11 +150,11 @@ export default function JewelryLaunchHero({ country = 'in' }: { country?: 'in' |
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white tracking-tight leading-[1.1] mb-6">
-              Launch Your Next Jewelry Collection Without a $20K Production Shoot.
+              Launch Your Next Jewelry Collection Without a {country === 'us' ? '$20K' : '₹10 Lakh'} Production Shoot.
             </h1>
             
             <ul className="space-y-3 mb-10">
-              {["1 Luxury Campaign Film", "4 Meta Ads Ready to Launch", "Ready in 48 Hours", "No Studio. No Models. No Production Crew.", `All for a flat ${country === 'us' ? '$399' : '₹15,000'}`].map((item, i) => (
+              {["1 Luxury Campaign Film", "4 High-Converting Meta Image Ads", "Ready in 48 Hours", "No Studio. No Models. No Production Crew.", `All for a flat ${country === 'us' ? '$399' : '₹15,000'}`].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-white/90 font-sans text-sm md:text-base">
                   <Check size={18} className="text-blue-400 shrink-0" />
                   <span>{item}</span>

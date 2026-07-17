@@ -38,7 +38,7 @@ export default function JewelryLaunchPricing({ country = 'in' }: { country?: 'in
               </li>
               <li className="flex items-center gap-4 text-sm font-sans text-white/90">
                 <Check size={18} className="text-blue-400 shrink-0" />
-                <span>4 Meta Ads Ready to Launch</span>
+                <span>4 High-Converting Meta Image Ads</span>
               </li>
               <li className="flex items-center gap-4 text-sm font-sans text-white/90">
                 <Check size={18} className="text-blue-400 shrink-0" />
