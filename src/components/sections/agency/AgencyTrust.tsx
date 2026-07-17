@@ -6,13 +6,13 @@ export default function AgencyTrust() {
       title: "33,000+ Instagram Followers",
       description: "Explore our portfolio of luxury campaigns, CGI work, behind-the-scenes content, and creative process.",
       linkText: "View Instagram",
-      linkUrl: "https://instagram.com/cinroom",
+      linkUrl: "https://www.instagram.com/7ctdiamond/",
     },
     {
       title: "25+ IMDb Film Credits",
       description: "View verified Hollywood production credits, professional profile, and filmography.",
       linkText: "View IMDb",
-      linkUrl: "https://www.imdb.com/name/nm10603889/",
+      linkUrl: "https://www.imdb.com/name/nm13973251/",
     },
     {
       title: "Hollywood Production Experience",

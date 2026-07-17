@@ -5,13 +5,13 @@ export default function AgencyPortfolioVerify() {
     {
       title: "View Instagram Portfolio",
       description: "See our latest campaigns, CGI work, and creative direction.",
-      link: "https://instagram.com/cinroom",
+      link: "https://www.instagram.com/7ctdiamond/",
       icon: <ArrowRight size={18} className="text-white/40 group-hover:text-white transition-colors" />
     },
     {
       title: "View IMDb Profile",
       description: "Explore verified Hollywood production credits.",
-      link: "https://www.imdb.com/name/nm10603889/",
+      link: "https://www.imdb.com/name/nm13973251/",
       icon: <ArrowRight size={18} className="text-white/40 group-hover:text-white transition-colors" />
     },
     {
