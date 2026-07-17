@@ -49,7 +49,7 @@ function CarouselVideo({ src, isActive, shouldRender }: { src: string, isActive:
   );
 }
 
-export default function JewelryLaunchHero() {
+export default function JewelryLaunchHero({ country = 'in' }: { country?: 'in' | 'us' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -149,7 +149,7 @@ export default function JewelryLaunchHero() {
             </h1>
             
             <ul className="space-y-3 mb-10">
-              {["1 Premium Campaign Film", "4 Meta Ad Creatives", "Delivered in 48 Hours", "All for a flat ₹15,000"].map((item, i) => (
+              {["1 Premium Campaign Film", "4 Meta Ad Creatives", "Delivered in 48 Hours", `All for a flat ${country === 'us' ? '$300' : '₹15,000'}`].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-white/90 font-sans text-sm md:text-base">
                   <Check size={18} className="text-blue-400 shrink-0" />
                   <span>{item}</span>
@@ -169,7 +169,7 @@ export default function JewelryLaunchHero() {
               </a>
               
               <a
-                href="https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%2015k%20jewelry%20campaign."
+                href={`https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%20${country === 'us' ? '%24300' : '15k'}%20jewelry%20campaign.`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-full text-xs font-sans tracking-[0.2em] uppercase hover:bg-white/20 transition-all w-full sm:w-auto min-w-[240px]"

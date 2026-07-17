@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Check } from "lucide-react";
 import Image from "next/image";
 
-export default function JewelryLaunchPricing() {
+export default function JewelryLaunchPricing({ country = 'in' }: { country?: 'in' | 'us' }) {
   return (
     <section className="px-4 py-16 md:py-32 bg-[#050d18] relative overflow-hidden border-t border-white/5">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] aspect-square bg-blue-900/10 rounded-full blur-[120px] pointer-events-none" />
@@ -23,7 +23,7 @@ export default function JewelryLaunchPricing() {
               Jewelry Launch Kit
             </h2>
             <h3 className="text-5xl md:text-7xl font-serif text-white tracking-tight mb-2">
-              ₹15,000
+              {country === 'us' ? '$300' : '₹15,000'}
             </h3>
             <p className="text-sm md:text-base font-sans text-white/50">
               Everything you need for a premium campaign.
@@ -61,7 +61,7 @@ export default function JewelryLaunchPricing() {
               Book Strategy Call <ArrowUpRight size={14} />
             </a>
             <a 
-              href="https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%2015k%20jewelry%20launch%20kit." 
+              href={`https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%20${country === 'us' ? '%24300' : '15k'}%20jewelry%20launch%20kit.`} 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-3 bg-[#25D366] text-white px-8 py-5 rounded-full text-xs font-sans tracking-[0.2em] uppercase hover:bg-[#20b858] transition-colors duration-300 w-full"

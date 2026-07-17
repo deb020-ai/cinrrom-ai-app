@@ -3,34 +3,36 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 
-const faqs = [
-  {
-    question: "How does the process work?",
-    answer: "It's simple. We start with a brief strategy call or WhatsApp chat to align on your brand's aesthetic. Once confirmed, our creative direction team handles the entire production using our AI workflow, delivering the final premium asset within 48 hours."
-  },
-  {
-    question: "What do you need from us?",
-    answer: "Just high-resolution product images (flat lays or e-commerce shots) and your brand guidelines (logos, fonts, mood board if available). We take care of the rest, transforming simple assets into cinematic campaigns."
-  },
-  {
-    question: "How long does it take?",
-    answer: "For the ₹15,000 Campaign Launch package, delivery is guaranteed within 48 hours of asset receipt and kickoff."
-  },
-  {
-    question: "Can this be used for Meta Ads?",
-    answer: "Absolutely. The video is exported in multiple formats specifically optimized for Meta Ads, Instagram Reels, and your website's hero section, complete with a commercial license."
-  },
-  {
-    question: "Can we request additional videos?",
-    answer: "This package includes one premium 15-second concept and delivery without revisions. If you need multiple concepts or consistent monthly deliverables, we recommend our Creative Partner retainer."
-  },
-  {
-    question: "Can we upgrade later?",
-    answer: "Yes. Many of our clients start with the ₹15,000 package to experience our quality, and then upgrade to our ₹2,00,000/month Creative Partner tier for ongoing monthly campaign production."
-  }
-];
+export default function JewelryFaq({ country = 'in' }: { country?: 'in' | 'us' }) {
+  const price = country === 'us' ? "$300" : "₹15,000";
+  
+  const faqs = [
+    {
+      question: "How does the process work?",
+      answer: "It's simple. We start with a brief strategy call or WhatsApp chat to align on your brand's aesthetic. Once confirmed, our creative direction team handles the entire production using our AI workflow, delivering the final premium asset within 48 hours."
+    },
+    {
+      question: "What do you need from us?",
+      answer: "Just high-resolution product images (flat lays or e-commerce shots) and your brand guidelines (logos, fonts, mood board if available). We take care of the rest, transforming simple assets into cinematic campaigns."
+    },
+    {
+      question: "How long does it take?",
+      answer: `For the ${price} Campaign Launch package, delivery is guaranteed within 48 hours of asset receipt and kickoff.`
+    },
+    {
+      question: "Can this be used for Meta Ads?",
+      answer: "Absolutely. The video is exported in multiple formats specifically optimized for Meta Ads, Instagram Reels, and your website's hero section, complete with a commercial license."
+    },
+    {
+      question: "Can we request additional videos?",
+      answer: "This package includes one premium 15-second concept and delivery without revisions. If you need multiple concepts or consistent monthly deliverables, we recommend our Creative Partner retainer."
+    },
+    {
+      question: "Can we upgrade later?",
+      answer: `Yes. Many of our clients start with the ${price} package to experience our quality, and then upgrade to our Creative Partner tier for ongoing monthly campaign production.`
+    }
+  ];
 
-export default function JewelryFaq() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
