@@ -33,7 +33,7 @@ export default function StickyMobileCta() {
       {isJewelryCampaign ? (
         <div className="bg-[#02050a]/80 backdrop-blur-xl border-t border-white/10 p-3 flex gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
           <a
-            href={`https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%20${isUs ? '%24300' : '15k'}%20jewelry%20launch%20kit.`}
+            href={`https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%20${isUs ? '%24399' : '15k'}%20jewelry%20launch%20kit.`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white py-3.5 rounded-xl text-[10px] sm:text-xs font-sans tracking-[0.1em] uppercase font-bold hover:bg-[#20b858] transition-colors"

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 
 export default function JewelryFaq({ country = 'in' }: { country?: 'in' | 'us' }) {
-  const price = country === 'us' ? "$300" : "₹15,000";
+  const price = country === 'us' ? "$399" : "₹15,000";
   
   const faqs = [
     {

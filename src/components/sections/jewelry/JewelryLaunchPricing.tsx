@@ -23,7 +23,7 @@ export default function JewelryLaunchPricing({ country = 'in' }: { country?: 'in
               Jewelry Launch Kit
             </h2>
             <h3 className="text-5xl md:text-7xl font-serif text-white tracking-tight mb-2">
-              {country === 'us' ? '$300' : '₹15,000'}
+              {country === 'us' ? '$399' : '₹15,000'}
             </h3>
             <p className="text-sm md:text-base font-sans text-white/50">
               Everything you need for a premium campaign.
@@ -38,7 +38,7 @@ export default function JewelryLaunchPricing({ country = 'in' }: { country?: 'in
               </li>
               <li className="flex items-center gap-4 text-sm font-sans text-white/90">
                 <Check size={18} className="text-blue-400 shrink-0" />
-                <span>4 Meta Ad Creatives</span>
+                <span>4 High-Converting Meta Image Ads</span>
               </li>
               <li className="flex items-center gap-4 text-sm font-sans text-white/90">
                 <Check size={18} className="text-blue-400 shrink-0" />
@@ -61,7 +61,7 @@ export default function JewelryLaunchPricing({ country = 'in' }: { country?: 'in
               Book Strategy Call <ArrowUpRight size={14} />
             </a>
             <a 
-              href={`https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%20${country === 'us' ? '%24300' : '15k'}%20jewelry%20launch%20kit.`} 
+              href={`https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%20${country === 'us' ? '%24399' : '15k'}%20jewelry%20launch%20kit.`} 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-3 bg-[#25D366] text-white px-8 py-5 rounded-full text-xs font-sans tracking-[0.2em] uppercase hover:bg-[#20b858] transition-colors duration-300 w-full"
