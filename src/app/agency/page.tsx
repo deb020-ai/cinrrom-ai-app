@@ -4,7 +4,7 @@ import AgencyProblem from "@/components/sections/agency/AgencyProblem";
 import AgencyServices from "@/components/sections/agency/AgencyServices";
 import AgencyWhyUs from "@/components/sections/agency/AgencyWhyUs";
 import AgencyProcess from "@/components/sections/agency/AgencyProcess";
-import AgencyCaseStudies from "@/components/sections/agency/AgencyCaseStudies";
+import AgencyWorkDemo from "@/components/sections/agency/AgencyWorkDemo";
 import AgencyPortfolioVerify from "@/components/sections/agency/AgencyPortfolioVerify";
 import AgencyCapacity from "@/components/sections/agency/AgencyCapacity";
 import AgencyAbout from "@/components/sections/agency/AgencyAbout";
@@ -25,7 +25,7 @@ export default function AgencyLandingPage() {
       <AgencyServices />
       <AgencyWhyUs />
       <AgencyProcess />
-      <AgencyCaseStudies />
+      <AgencyWorkDemo />
       <AgencyPortfolioVerify />
       <AgencyCapacity />
       <AgencyAbout />
