@@ -7,7 +7,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
 export const metadata = {
-  title: "₹15,000 Jewelry Launch Kit | CINROOM",
+  title: "₹20,000 Jewelry Launch Kit | CINROOM",
   description: "Hollywood VFX Artist creating premium campaign films for modern jewelry brands.",
 };
 

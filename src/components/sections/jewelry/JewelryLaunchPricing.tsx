@@ -23,7 +23,7 @@ export default function JewelryLaunchPricing({ country = 'in' }: { country?: 'in
               Jewelry Launch Kit
             </h2>
             <h3 className="text-5xl md:text-7xl font-serif text-white tracking-tight mb-2">
-              {country === 'us' ? '$399' : '₹15,000'}
+              {country === 'us' ? '$399' : '₹20,000'}
             </h3>
             <p className="text-sm md:text-base font-sans text-white/50">
               Everything you need for a premium campaign.
@@ -61,7 +61,7 @@ export default function JewelryLaunchPricing({ country = 'in' }: { country?: 'in
               Get Your Campaign Plan <ArrowUpRight size={14} />
             </a>
             <a 
-              href={`https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%20${country === 'us' ? '%24399' : '15k'}%20jewelry%20launch%20kit.`} 
+              href={`https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%20${country === 'us' ? '%24399' : '20k'}%20jewelry%20launch%20kit.`}
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-3 bg-[#25D366] text-white px-8 py-5 rounded-full text-xs font-sans tracking-[0.2em] uppercase hover:bg-[#20b858] transition-colors duration-300 w-full"

@@ -54,7 +54,7 @@ export default function JewelryCta({ country = 'in' }: { country?: 'in' | 'us' }
           </a>
           
           <a
-            href={`https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%20${country === 'us' ? '%24399' : '15k'}%20jewelry%20campaign.`}
+            href={`https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%20${country === 'us' ? '%24399' : '20k'}%20jewelry%20campaign.`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-full text-xs font-sans tracking-[0.2em] uppercase hover:bg-white/20 transition-all w-full sm:w-auto min-w-[240px]"
