@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function StickyMobileCta() {
   const [isVisible, setIsVisible] = useState(false);
   const pathname = usePathname();
-  const isJewelryCampaign = pathname === "/in/jewelry-campaign";
+  const isJewelryCampaign = pathname === "/in/jewelry-campaign" || pathname === "/in/jewelry-launch";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,39 +25,41 @@ export default function StickyMobileCta() {
 
   return (
     <div 
-      className={`md:hidden fixed bottom-6 left-0 right-0 px-6 z-50 transition-all duration-500 ease-in-out ${
+      className={`md:hidden fixed bottom-0 left-0 w-full z-50 transition-all duration-500 ease-in-out ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0 pointer-events-none"
       }`}
     >
       {isJewelryCampaign ? (
-        <div className="flex flex-col gap-2 shadow-2xl">
+        <div className="bg-[#02050a]/80 backdrop-blur-xl border-t border-white/10 p-3 flex gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+          <a
+            href="https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%2015k%20jewelry%20launch%20kit."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white py-3.5 rounded-xl text-[10px] sm:text-xs font-sans tracking-[0.1em] uppercase font-bold hover:bg-[#20b858] transition-colors"
+          >
+            <Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={16} height={16} className="brightness-0 invert" unoptimized />
+            WhatsApp
+          </a>
+          <a
+            href="https://cal.com/omnivinci/30min"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-[1.5] flex items-center justify-center gap-2 bg-white text-black py-3.5 rounded-xl text-[10px] sm:text-xs font-sans tracking-[0.1em] uppercase font-bold hover:bg-gray-200 transition-colors"
+          >
+            Book Strategy Call <ArrowUpRight size={14} />
+          </a>
+        </div>
+      ) : (
+        <div className="px-6 pb-6">
           <a 
             href="https://cal.com/omnivinci/30min"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full bg-white text-black font-sans tracking-[0.1em] uppercase text-[10px] md:text-sm px-4 py-3 rounded-full font-bold"
+            className="flex items-center justify-center gap-2 w-full bg-white text-black font-sans tracking-[0.1em] uppercase text-xs md:text-sm px-6 py-4 rounded-full font-bold shadow-2xl"
           >
-            Book Strategy Call <ArrowUpRight size={14} />
-          </a>
-          <a 
-            href="https://wa.me/917003071256?text=Hi,%20I%20am%20interested%20in%20the%2015k%20jewelry%20campaign."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full bg-[#25D366] text-white font-sans tracking-[0.1em] uppercase text-[10px] md:text-sm px-4 py-3 rounded-full font-bold shadow-lg"
-          >
-            <Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={14} height={14} className="brightness-0 invert" unoptimized />
-            Chat on WhatsApp
+            Book Strategy Call <ArrowUpRight size={16} />
           </a>
         </div>
-      ) : (
-        <a 
-          href="https://cal.com/omnivinci/30min"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full bg-white text-black font-sans tracking-[0.1em] uppercase text-xs md:text-sm px-6 py-4 rounded-full font-bold shadow-2xl"
-        >
-          Book Strategy Call <ArrowUpRight size={16} />
-        </a>
       )}
     </div>
   );
