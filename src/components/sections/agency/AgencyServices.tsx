@@ -1,13 +1,13 @@
 export default function AgencyServices() {
   const services = [
     "Luxury Campaign Films",
-    "AI Model Campaigns",
+    "AI Video Production",
     "CGI Product Films",
+    "High-Fidelity AI Ads",
+    "AI Model Campaigns",
     "Meta Ad Creatives",
     "Instagram Reels",
-    "Product Launch Videos",
-    "Seasonal Campaigns",
-    "Luxury Lifestyle Images",
+    "Generative AI Imagery",
     "Campaign Photography",
     "Creative Direction"
   ];
