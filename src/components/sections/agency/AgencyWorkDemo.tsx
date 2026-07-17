@@ -3,17 +3,17 @@ import { useRef, useEffect } from "react";
 import { useInView } from "framer-motion";
 
 const workVideos = [
-  { title: "KKR", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/WEB%20ASSETS/VIDEO/kkr_ooh.mp4" },
-  { title: "The Blue Dynasty", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/The%20Blue%20Dynasty%20Reduce%20Size(3).mp4" },
-  { title: "Sunset Elegance", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Sunset%20Elegance%20Reduce%20Size.mp4" },
-  { title: "Island Vows", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Island%20Vows%20Reduce%20Size.mp4" },
-  { title: "Golden Serpent", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Golden%20Serpent%20Reduce%20Size.mp4" },
-  { title: "Emerald Precision", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Emerald%20Precision%20Reduce%20Size%202.mp4" },
-  { title: "Alpine Sapphire", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Alpine%20Sapphire%20Reduce%20Size.mp4" },
-  { title: "Royal Radiant", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Royal%20Radiance%20%20Reduce%20Size.mp4" }
+  { title: "KKR", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/WEB%20ASSETS/VIDEO/kkr_ooh.mp4", aspect: "aspect-[5/4]", width: "w-[85vw] sm:w-[500px] md:w-[600px]" },
+  { title: "The Blue Dynasty", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/The%20Blue%20Dynasty%20Reduce%20Size(3).mp4", aspect: "aspect-[9/16]", width: "w-[75vw] sm:w-[320px] md:w-[350px]" },
+  { title: "Sunset Elegance", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Sunset%20Elegance%20Reduce%20Size.mp4", aspect: "aspect-[9/16]", width: "w-[75vw] sm:w-[320px] md:w-[350px]" },
+  { title: "Island Vows", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Island%20Vows%20Reduce%20Size.mp4", aspect: "aspect-[9/16]", width: "w-[75vw] sm:w-[320px] md:w-[350px]" },
+  { title: "Golden Serpent", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Golden%20Serpent%20Reduce%20Size.mp4", aspect: "aspect-[9/16]", width: "w-[75vw] sm:w-[320px] md:w-[350px]" },
+  { title: "Emerald Precision", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Emerald%20Precision%20Reduce%20Size%202.mp4", aspect: "aspect-[9/16]", width: "w-[75vw] sm:w-[320px] md:w-[350px]" },
+  { title: "Alpine Sapphire", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Alpine%20Sapphire%20Reduce%20Size.mp4", aspect: "aspect-[9/16]", width: "w-[75vw] sm:w-[320px] md:w-[350px]" },
+  { title: "Royal Radiant", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Royal%20Radiance%20%20Reduce%20Size.mp4", aspect: "aspect-[9/16]", width: "w-[75vw] sm:w-[320px] md:w-[350px]" }
 ];
 
-function DemoVideo({ src, title }: { src: string; title: string }) {
+function DemoVideo({ src, title, aspect, width }: { src: string; title: string; aspect: string; width: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "200px" });
@@ -37,7 +37,7 @@ function DemoVideo({ src, title }: { src: string; title: string }) {
   return (
     <div 
       ref={containerRef}
-      className="relative flex-none w-[85vw] sm:w-[400px] md:w-[450px] aspect-[4/5] rounded-2xl overflow-hidden bg-[#050d18] group cursor-pointer snap-center border border-white/10"
+      className={`relative flex-none ${width} ${aspect} rounded-2xl overflow-hidden bg-[#050d18] group cursor-pointer snap-center border border-white/10`}
       onMouseEnter={() => { if (window.innerWidth >= 768) videoRef.current?.play().catch(() => {}) }}
       onMouseLeave={() => { if (window.innerWidth >= 768) videoRef.current?.pause() }}
     >
@@ -82,9 +82,9 @@ export default function AgencyWorkDemo() {
       
       {/* Horizontal Mobile-Optimized Scroll Container */}
       <div className="w-full px-6">
-        <div className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 hide-scrollbar -mx-6 px-6 sm:mx-0 sm:px-0">
+        <div className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 hide-scrollbar -mx-6 px-6 sm:mx-0 sm:px-0 items-center">
           {workVideos.map((video, idx) => (
-            <DemoVideo key={idx} src={video.src} title={video.title} />
+            <DemoVideo key={idx} src={video.src} title={video.title} aspect={video.aspect} width={video.width} />
           ))}
         </div>
       </div>
