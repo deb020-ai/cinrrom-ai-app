@@ -7,7 +7,7 @@ export default function AgencyProblem() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
           
           <h2 className="text-3xl md:text-5xl font-serif text-white tracking-tight mb-8">
-            Growing Is Hard.
+            The More You Sell,<br className="hidden md:block" /> The Harder Delivery Gets.
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">

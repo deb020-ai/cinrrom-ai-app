@@ -11,21 +11,20 @@ export default function AgencyFounderStory() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-lg md:text-xl font-sans font-light text-white/80 leading-relaxed">
             <div className="space-y-6">
-              <p>I spent years working in Hollywood VFX, learning exactly how world-class creative teams operate under pressure.</p>
-              <p>Later, I built one of the most capable creative teams I could in India.</p>
-              <p>But looking at the agency world, we realized something.</p>
+              <p>I loved building creative teams.</p>
+              <p>But I kept seeing the same problem.</p>
+              <p>Great agencies weren't losing clients because they lacked talent.</p>
+              <p>They were drowning in delivery.</p>
             </div>
             
             <div className="space-y-6">
-              <p>Great agencies don't struggle because they lack ideas or sales skills. They struggle because every single new client creates an avalanche of production work.</p>
+              <p>Every new project meant more hiring.</p>
               <div className="bg-black/20 p-4 rounded-xl border border-white/5 text-sm md:text-base space-y-1">
-                <p>• Hiring takes time.</p>
-                <p>• Managing creatives drains energy.</p>
-                <p>• Deadlines never stop.</p>
+                <p>• More management.</p>
+                <p>• More pressure.</p>
               </div>
               <p className="font-medium text-white pt-2">
-                Your team stays focused on winning clients.<br/>
-                <span className="text-blue-400">Mine makes sure the work gets delivered.</span>
+                That's why I built CINROOM.
               </p>
             </div>
           </div>

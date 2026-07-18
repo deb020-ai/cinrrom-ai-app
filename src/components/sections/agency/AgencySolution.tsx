@@ -9,9 +9,7 @@ export default function AgencySolution() {
             We Become Your Production Team.
           </h2>
           
-          <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-lg md:text-xl font-sans font-light text-white/80 mb-12">
-            <p>Your client never knows we exist.</p>
-            <span className="hidden md:block text-white/20">•</span>
+          <div className="flex items-center justify-center text-lg md:text-2xl font-sans font-light text-white/80 mb-12">
             <p>Everything is delivered under your brand.</p>
           </div>
           

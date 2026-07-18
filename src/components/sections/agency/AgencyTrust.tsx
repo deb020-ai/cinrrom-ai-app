@@ -13,6 +13,12 @@ export default function AgencyTrust() {
       description: "Founder has built an audience of 33K+ creatives and marketers on Instagram.",
       linkText: "View Instagram",
       linkUrl: "https://www.instagram.com/7ctdiamond/",
+    },
+    {
+      title: "48-Hour Turnaround",
+      description: "Reliable, blazing-fast delivery times for standard campaign assets.",
+      linkText: "Book A Call",
+      linkUrl: "https://cal.com/omnivinci/30min",
     }
   ];
 
@@ -26,11 +32,11 @@ export default function AgencyTrust() {
             Credibility
           </h2>
           <p className="mt-4 text-lg font-sans text-white/50">
-            Years of high-end VFX and creative production experience.
+            Real results. Real speed.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-6xl mx-auto">
           {cards.map((card, index) => (
             <div key={index} className="p-8 md:p-12 border border-white/10 rounded-2xl md:rounded-3xl bg-white/[0.02] flex flex-col justify-between">
               <div>
