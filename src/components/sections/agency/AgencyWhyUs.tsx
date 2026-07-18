@@ -12,6 +12,7 @@ export default function AgencyWhyUs() {
     "Reliable quality."
   ];
 
+  return (
     <section className="py-16 md:py-24 bg-black border-b border-white/5">
       <div className="max-w-[1200px] mx-auto px-6">
         <h2 className="text-3xl md:text-5xl font-serif text-white tracking-tight text-center mb-12">

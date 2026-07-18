@@ -1,4 +1,5 @@
 export default function AgencyProblem() {
+  return (
     <section className="py-16 md:py-24 bg-black border-b border-white/5">
       <div className="max-w-[1000px] mx-auto px-6">
         <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-[0_8px_40px_rgba(255,255,255,0.03)] relative overflow-hidden">
