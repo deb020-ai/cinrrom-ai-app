@@ -21,7 +21,6 @@ export const metadata: Metadata = {
   description: "We create cinematic worlds for luxury jewelry brands.",
 };
 
-import CustomCursor from "@/components/ui/CustomCursor";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -51,12 +50,11 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="bg-background text-foreground min-h-screen flex flex-col font-sans selection:bg-primary selection:text-background cursor-none">
+      <body className="bg-background text-foreground min-h-screen flex flex-col font-sans selection:bg-primary selection:text-background">
         <noscript>
           <img height="1" width="1" style={{ display: 'none' }} src="https://www.facebook.com/tr?id=1654405178966771&ev=PageView&noscript=1" alt="" />
         </noscript>
         <SmoothScroll>
-          <CustomCursor />
           <Navbar />
           <main className="flex-grow">
             {children}
