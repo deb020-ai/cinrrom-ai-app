@@ -1,6 +1,6 @@
 export default function AgencyTechStack() {
   const tools = [
-    "Nuke", "Unreal Engine", "Blender", "Adobe CC", "Runway", "ComfyUI", "ARRI", "Meta Ads"
+    "ComfyUI", "Flux", "Kling", "Veo", "Midjourney", "DaVinci Resolve", "Cinema 4D", "Blender", "Unreal Engine", "Nuke", "Adobe Creative Cloud"
   ];
 
   return (

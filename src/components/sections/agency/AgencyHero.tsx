@@ -45,9 +45,9 @@ export default function AgencyHero() {
             href="https://cal.com/omnivinci/30min"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 bg-white text-black px-10 py-5 rounded-full text-sm font-sans tracking-[0.2em] uppercase font-bold hover:bg-gray-200 transition-all shadow-[0_0_40px_rgba(255,255,255,0.15)]"
+            className="flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full text-sm font-sans tracking-widest uppercase font-bold hover:bg-gray-200 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.1)]"
           >
-            Book a Partnership Call <ArrowUpRight size={18} />
+            See If We're A Fit <ArrowUpRight size={18} />
           </a>
         </div>
       </div>

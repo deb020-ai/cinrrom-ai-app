@@ -22,7 +22,9 @@ export default function AgencyFounderStory() {
               
               <div className="absolute bottom-6 left-6 z-20">
                 <p className="text-white font-serif text-2xl">Debabrata</p>
-                <p className="text-white/60 font-sans text-sm uppercase tracking-widest">Founder, CINROOM</p>
+                <p className="text-white/60 font-sans text-sm tracking-widest mt-1 hidden md:block">
+                  25+ Hollywood Film Credits • 33K+ Creative Community • Experience Across Global Brands
+                </p>
               </div>
             </div>
             
@@ -31,12 +33,11 @@ export default function AgencyFounderStory() {
           </div>
           
           {/* Story Text */}
-          <div className="text-xl md:text-3xl font-serif text-white/90 leading-tight space-y-8 font-light">
+          <div className="text-xl md:text-2xl font-serif text-white/90 leading-tight space-y-6 font-light">
             <p>Hey, I'm Debabrata.</p>
-            <p className="text-white/60">I spent years working in Hollywood VFX.</p>
-            <p className="text-white/60">Then I built a creative team in India.</p>
-            <p>I kept seeing agencies struggle with delivery.</p>
-            <p className="text-blue-400 font-medium italic">That's why I built CINROOM.</p>
+            <p className="text-white/60 text-lg md:text-xl leading-relaxed">
+              I spent years working in Hollywood VFX, contributing to internationally released films and streaming productions. After collaborating with leading brands in India and globally, I built CINROOM to become the production backend for ambitious creative agencies.
+            </p>
           </div>
           
         </div>
