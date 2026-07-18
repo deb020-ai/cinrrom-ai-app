@@ -24,10 +24,6 @@ export default function AgencyFounderStory() {
               />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80 z-10" />
               
-              <div className="z-20 w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-blue-500/20 transition-all duration-300">
-                <Play className="text-white ml-1" fill="white" size={24} />
-              </div>
-              
               <div className="absolute bottom-6 left-6 z-20">
                 <p className="text-white font-serif text-2xl">Debabrata</p>
                 <p className="text-white/60 font-sans text-sm tracking-widest mt-1 hidden md:block">
