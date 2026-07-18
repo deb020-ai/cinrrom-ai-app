@@ -12,25 +12,26 @@ const workVideos = [
   { title: "Royal Radiant", src: "https://pub-e4b98781681b4d27a8e28caaf73b8ca4.r2.dev/CINROOM%20WEBSITE%20ASSESTS/porfolio/videos/compress/Royal%20Radiance%20%20Reduce%20Size.mp4", aspect: "aspect-[9/16]" }
 ];
 
-function CarouselVideo({ src, isActive, shouldRender }: { src: string, isActive: boolean, shouldRender: boolean }) {
+function CarouselVideo({ src, isActive, isPriority }: { src: string, isActive: boolean, isPriority: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (!videoRef.current) return;
     if (isActive) {
-      videoRef.current.play().catch(() => {});
+      // Ensure the video is loaded when active
+      if (videoRef.current.readyState === 0) {
+        videoRef.current.load();
+      }
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Autoplay was prevented, which is normal on some browsers without interaction
+        });
+      }
     } else {
       videoRef.current.pause();
     }
   }, [isActive]);
-
-  if (!shouldRender) {
-    return (
-      <div className="absolute inset-0 bg-[#050d18] flex items-center justify-center">
-        <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-blue-500 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <video
@@ -38,8 +39,8 @@ function CarouselVideo({ src, isActive, shouldRender }: { src: string, isActive:
       loop
       muted
       playsInline
-      preload={isActive ? "auto" : "metadata"}
-      className="absolute inset-0 w-full h-full object-cover"
+      preload={isPriority ? "auto" : "none"}
+      className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 bg-[#050d18]"
     >
       <source src={src} type="video/mp4" />
     </video>
@@ -130,12 +131,13 @@ export default function AgencyWorkDemo() {
       >
         {workVideos.map((item, idx) => {
           const isActive = idx === currentIndex;
-          const shouldRenderVideo = Math.abs(idx - currentIndex) <= 1;
+          const isPriority = idx === 0; // Only preload the first video immediately
+
           // Assign width based on aspect ratio to ensure they don't break the layout
           const isWide = item.aspect === "aspect-[5/4]";
           const widthClasses = isWide 
-            ? "w-[80vw] md:w-[600px] max-w-[800px]" 
-            : "w-[65vw] md:w-[350px] max-w-[450px]";
+            ? "w-[85vw] md:w-[600px] max-w-[80vw]" 
+            : "w-[70vw] md:w-[350px] max-w-[65vw]";
 
           return (
             <div 
@@ -150,7 +152,7 @@ export default function AgencyWorkDemo() {
                 <CarouselVideo 
                   src={item.src} 
                   isActive={isActive} 
-                  shouldRender={shouldRenderVideo} 
+                  isPriority={isPriority} 
                 />
                 
                 <div className={`absolute top-6 left-6 right-6 z-20 transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
@@ -169,11 +171,10 @@ export default function AgencyWorkDemo() {
       {/* Thumbnails Row */}
       <div 
         ref={thumbContainerRef}
-        className="flex gap-3 overflow-x-auto max-w-[90%] md:max-w-[800px] mt-8 pb-4 px-4" 
+        className="flex gap-2 md:gap-3 overflow-x-auto w-full max-w-[1000px] mt-8 pb-4 px-6 snap-x snap-mandatory" 
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {/* Spacers */}
-        <div className="min-w-[40%] flex-shrink-0" aria-hidden="true" />
+        <div className="w-[50%] flex-shrink-0" aria-hidden="true" />
         {workVideos.map((item, idx) => {
           const isWide = item.aspect === "aspect-[5/4]";
           return (
@@ -181,12 +182,13 @@ export default function AgencyWorkDemo() {
               key={idx}
               ref={(el) => { thumbRefs.current[idx] = el; }}
               onClick={() => scrollTo(idx)}
-              className={`relative flex-shrink-0 ${isWide ? 'w-24' : 'w-16'} h-24 rounded-md overflow-hidden transition-all duration-300 border-2 ${idx === currentIndex ? 'border-blue-400 scale-110 shadow-[0_0_15px_rgba(96,165,250,0.4)] z-10' : 'border-white/10 opacity-50 hover:opacity-100'}`}
+              className={`relative flex-shrink-0 snap-center ${isWide ? 'w-20 md:w-28' : 'w-14 md:w-20'} h-20 md:h-28 rounded-md overflow-hidden transition-all duration-300 border-2 ${idx === currentIndex ? 'border-blue-400 scale-110 shadow-[0_0_15px_rgba(96,165,250,0.4)] z-10' : 'border-white/10 opacity-50 hover:opacity-100'}`}
             >
+              {/* Use an image thumbnail or a poster to prevent loading 8 videos for thumbnails. For now, we use a simple div with title since thumbnails are tiny, or rely on metadata. We will use preload="none" to prevent massive bandwidth usage. */}
               <video
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"
               >
                 <source src={item.src} type="video/mp4" />
@@ -194,7 +196,7 @@ export default function AgencyWorkDemo() {
             </button>
           )
         })}
-        <div className="min-w-[40%] flex-shrink-0" aria-hidden="true" />
+        <div className="w-[50%] flex-shrink-0" aria-hidden="true" />
       </div>
 
       <style jsx global>{`
