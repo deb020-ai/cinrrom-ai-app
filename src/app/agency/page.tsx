@@ -1,35 +1,31 @@
 import AgencyHero from "@/components/sections/agency/AgencyHero";
-import AgencyTrust from "@/components/sections/agency/AgencyTrust";
 import AgencyProblem from "@/components/sections/agency/AgencyProblem";
+import AgencySolution from "@/components/sections/agency/AgencySolution";
 import AgencyServices from "@/components/sections/agency/AgencyServices";
-import AgencyWhyUs from "@/components/sections/agency/AgencyWhyUs";
-import AgencyProcess from "@/components/sections/agency/AgencyProcess";
 import AgencyWorkDemo from "@/components/sections/agency/AgencyWorkDemo";
-import AgencyPortfolioVerify from "@/components/sections/agency/AgencyPortfolioVerify";
-import AgencyCapacity from "@/components/sections/agency/AgencyCapacity";
-import AgencyAbout from "@/components/sections/agency/AgencyAbout";
-import AgencyFaq from "@/components/sections/agency/AgencyFaq";
+import AgencyFounderStory from "@/components/sections/agency/AgencyFounderStory";
+import AgencyWhyUs from "@/components/sections/agency/AgencyWhyUs";
+import AgencyTrust from "@/components/sections/agency/AgencyTrust";
+import AgencyProcess from "@/components/sections/agency/AgencyProcess";
 import AgencyCta from "@/components/sections/agency/AgencyCta";
 
 export const metadata = {
   title: "White-Label Production Partner | CINROOM",
-  description: "Scale your agency without hiring more creatives. Luxury jewelry campaign films delivered in 48 hours under your brand.",
+  description: "Scale your agency without hiring more creatives. Premium creative production delivered under your brand.",
 };
 
 export default function AgencyLandingPage() {
   return (
     <div className="bg-[#02050a] min-h-screen text-white selection:bg-white/20 selection:text-white">
       <AgencyHero />
-      <AgencyTrust />
       <AgencyProblem />
+      <AgencySolution />
       <AgencyServices />
-      <AgencyWhyUs />
-      <AgencyProcess />
       <AgencyWorkDemo />
-      <AgencyPortfolioVerify />
-      <AgencyCapacity />
-      <AgencyAbout />
-      <AgencyFaq />
+      <AgencyFounderStory />
+      <AgencyWhyUs />
+      <AgencyTrust />
+      <AgencyProcess />
       <AgencyCta />
     </div>
   );
