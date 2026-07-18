@@ -7,16 +7,19 @@ export default function AgencyHero() {
       
       <div className="max-w-[1000px] w-full mx-auto px-6 relative z-10 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/50 text-[10px] uppercase tracking-widest font-sans mb-12">
-          Hollywood VFX Experience • White Label • Built for Agencies
+          Built for creative, branding, performance and social media agencies.
         </div>
         
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-white tracking-tighter leading-tight mb-8 max-w-4xl mx-auto drop-shadow-2xl">
           Scale Your Agency to $1M. We'll Handle the Production.
         </h1>
         
-        <div className="text-base md:text-xl font-sans text-white/80 leading-relaxed max-w-3xl mx-auto mb-10 font-light">
-          <p className="inline-block mr-2 font-medium text-white">You close the clients.</p>
-          <p className="inline-block">We deliver the videos, ads, CGI, AI content and campaigns under your brand.</p>
+        <div className="text-base md:text-xl font-sans text-white/80 leading-relaxed max-w-3xl mx-auto mb-10 font-light space-y-3">
+          <div>
+            <p className="inline-block mr-2 font-medium text-white">You close the clients.</p>
+            <p className="inline-block">We deliver the videos, ads, CGI, AI content and campaigns under your brand.</p>
+          </div>
+          <p className="text-lg md:text-2xl font-serif text-white/90">Never turn down work because your team is full.</p>
         </div>
 
         <div className="max-w-4xl mx-auto bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-2xl md:rounded-full p-6 md:px-10 md:py-4 mb-12 shadow-[0_8px_32px_rgba(255,255,255,0.02)]">

@@ -32,7 +32,7 @@ export default function AgencyTrust() {
             Credibility
           </h2>
           <p className="mt-4 text-lg font-sans text-white/50">
-            Real results. Real speed.
+            Built by Hollywood VFX artists. Trusted by growing agencies.
           </p>
         </div>
         
