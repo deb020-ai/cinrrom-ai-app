@@ -1,4 +1,3 @@
-"use client";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
 
 export default function AgencyHero() {

@@ -21,7 +21,6 @@ export const metadata: Metadata = {
   description: "We create cinematic worlds for luxury jewelry brands.",
 };
 
-import SmoothScroll from "@/components/layout/SmoothScroll";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import StickyMobileCta from "@/components/layout/StickyMobileCta";
@@ -54,14 +53,12 @@ export default function RootLayout({
         <noscript>
           <img height="1" width="1" style={{ display: 'none' }} src="https://www.facebook.com/tr?id=1654405178966771&ev=PageView&noscript=1" alt="" />
         </noscript>
-        <SmoothScroll>
-          <Navbar />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-          <StickyMobileCta />
-        </SmoothScroll>
+        <Navbar />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer />
+        <StickyMobileCta />
       </body>
     </html>
   );
