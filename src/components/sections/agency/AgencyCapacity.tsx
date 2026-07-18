@@ -1,38 +1,23 @@
 export default function AgencyCapacity() {
-  const roles = [
-    "Editors",
-    "Motion Designers",
-    "CG Artists",
-    "Photographers",
-    "Retouchers",
-    "Creative Directors"
-  ];
-
   return (
-    <section className="py-32 bg-[#02050a] border-t border-white/5">
-      <div className="max-w-[1000px] mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 className="text-4xl md:text-5xl font-serif text-white tracking-tight mb-12">
-              Built To Scale.
-            </h2>
-            <h3 className="text-xs uppercase tracking-widest text-white/50 mb-6 font-sans">Instead of hiring</h3>
-            <ul className="space-y-3 mb-12">
-              {roles.map((role, i) => (
-                <li key={i} className="flex items-center gap-3 text-white/40 font-sans line-through decoration-white/20">
-                  {role}
-                </li>
-              ))}
-            </ul>
+    <section className="py-16 md:py-24 bg-[#050914] border-b border-white/5">
+      <div className="max-w-[800px] mx-auto px-6 text-center">
+        <h2 className="text-3xl md:text-5xl font-serif text-white tracking-tight mb-12">
+          Capacity
+        </h2>
+        
+        <div className="flex flex-col gap-4 max-w-lg mx-auto">
+          <div className="flex items-center justify-between p-6 bg-white/[0.02] backdrop-blur-md border border-white/10 rounded-2xl">
+            <span className="text-lg md:text-xl font-sans text-white/80">Need 5 videos?</span>
+            <span className="text-[#25D366] text-xl font-bold">✓</span>
           </div>
-          
-          <div className="p-12 border border-white/10 rounded-2xl bg-white/[0.02]">
-            <h3 className="text-2xl md:text-3xl font-serif text-white mb-6 leading-snug">
-              Partner with one production team.
-            </h3>
-            <p className="text-lg font-sans text-white/60 font-light">
-              Scale your agency without increasing payroll.
-            </p>
+          <div className="flex items-center justify-between p-6 bg-white/[0.02] backdrop-blur-md border border-white/10 rounded-2xl">
+            <span className="text-lg md:text-xl font-sans text-white/80">Need 25?</span>
+            <span className="text-[#25D366] text-xl font-bold">✓</span>
+          </div>
+          <div className="flex items-center justify-between p-6 bg-blue-500/10 backdrop-blur-md border border-blue-500/20 rounded-2xl shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+            <span className="text-lg md:text-xl font-sans text-white font-medium">Need 100?</span>
+            <span className="text-blue-400 font-medium italic">Let's build a dedicated workflow.</span>
           </div>
         </div>
       </div>

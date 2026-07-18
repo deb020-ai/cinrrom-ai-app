@@ -10,7 +10,11 @@ export default function AgencyCta() {
           Ready to Take More Clients Without Hiring More People?
         </h2>
         
-        <p className="text-xl md:text-2xl font-sans text-white/60 mb-16 font-light">
+        <p className="text-xl md:text-3xl font-serif text-white/80 mb-6 max-w-2xl mx-auto">
+          Your next client shouldn't make you wonder if your team can keep up.
+        </p>
+        
+        <p className="text-lg md:text-xl font-sans text-white/50 mb-12 font-light">
           Let's become your production team.
         </p>
         
@@ -21,7 +25,7 @@ export default function AgencyCta() {
             rel="noopener noreferrer"
             className="flex items-center gap-3 bg-white text-black px-12 py-6 rounded-full text-sm font-sans tracking-[0.2em] uppercase font-bold hover:bg-gray-200 transition-all shadow-[0_0_50px_rgba(255,255,255,0.2)]"
           >
-            Book a Partnership Call <ArrowUpRight size={18} />
+            See If We're A Fit <ArrowUpRight size={18} />
           </a>
         </div>
       </div>
