@@ -36,7 +36,7 @@ export default function AgencyTrust() {
   ];
 
   return (
-    <section className="py-32 bg-[#02050a] border-t border-white/5 relative overflow-hidden">
+    <section className="py-16 md:py-32 bg-[#02050a] border-t border-white/5 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
       
       <div className="max-w-[1200px] mx-auto px-6 relative z-10">
@@ -50,12 +50,12 @@ export default function AgencyTrust() {
         </div>
         
         {/* Trust Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-32">
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-6 mb-20 md:mb-32">
           {cards.map((card, index) => (
-            <div key={index} className="p-10 border border-white/5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors flex flex-col justify-between">
+            <div key={index} className="p-4 md:p-10 border border-white/5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors flex flex-col justify-between">
               <div>
-                <h3 className="text-2xl font-serif text-white mb-4">{card.title}</h3>
-                <p className="text-base font-sans text-white/50 leading-relaxed font-light mb-8">{card.description}</p>
+                <h3 className="text-lg md:text-2xl font-serif text-white mb-2 md:mb-4 leading-snug">{card.title}</h3>
+                <p className="text-xs md:text-base font-sans text-white/50 leading-relaxed font-light mb-4 md:mb-8">{card.description}</p>
               </div>
               
               {card.linkText && card.linkUrl && (
@@ -63,9 +63,9 @@ export default function AgencyTrust() {
                   href={card.linkUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-xs font-sans uppercase tracking-[0.2em] text-white hover:text-white/70 transition-colors"
+                  className="inline-flex items-center gap-1 md:gap-2 text-[10px] md:text-xs font-sans uppercase tracking-[0.2em] text-white hover:text-white/70 transition-colors"
                 >
-                  {card.linkText} <ArrowRight size={14} />
+                  {card.linkText} <ArrowRight size={14} className="scale-75 md:scale-100" />
                 </a>
               )}
             </div>
@@ -73,12 +73,12 @@ export default function AgencyTrust() {
         </div>
 
         {/* Premium Statistics */}
-        <div className="border-t border-white/10 pt-20">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center md:text-left">
+        <div className="border-t border-white/10 pt-12 md:pt-20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center md:text-left">
             {stats.map((stat, i) => (
-              <div key={i} className="flex flex-col gap-2">
-                <span className="text-5xl md:text-6xl font-serif text-white tracking-tighter">{stat.value}</span>
-                <span className="text-xs font-sans uppercase tracking-widest text-white/40">{stat.label}</span>
+              <div key={i} className="flex flex-col gap-1 md:gap-2">
+                <span className="text-3xl md:text-6xl font-serif text-white tracking-tighter">{stat.value}</span>
+                <span className="text-[10px] md:text-xs font-sans uppercase tracking-widest text-white/40">{stat.label}</span>
               </div>
             ))}
           </div>

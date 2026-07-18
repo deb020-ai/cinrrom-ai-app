@@ -58,7 +58,7 @@ export default function StickyMobileCta() {
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 w-full bg-white text-black font-sans tracking-[0.1em] uppercase text-xs md:text-sm px-6 py-4 rounded-full font-bold shadow-2xl"
           >
-            Get Campaign Plan <ArrowUpRight size={16} />
+            {pathname === '/agency' ? 'Get White-Label Plan' : 'Get Campaign Plan'} <ArrowUpRight size={16} />
           </a>
         </div>
       )}
