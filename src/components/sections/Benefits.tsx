@@ -6,7 +6,7 @@ const benefits = [
   {
     number: "01",
     title: "Hollywood-Level Quality",
-    desc: "Luxury campaigns inspired by feature film production—without traditional production costs."
+    desc: "Luxury campaigns inspired by feature film production without traditional production costs."
   },
   {
     number: "02",

@@ -41,7 +41,7 @@ export default function AgencyServices() {
         
         <div className="mt-8 md:mt-12 max-w-4xl mx-auto p-6 md:p-8 border border-white/10 rounded-2xl bg-white/[0.02] backdrop-blur-md">
           <p className="text-sm md:text-base font-sans text-white/70 leading-relaxed font-light text-center">
-            If physical product filming is required, your client handles the shoot locally. We take care of everything after that—from editing and VFX to CGI, motion graphics, AI production, sound, color, and final delivery.
+            If physical product filming is required, your client handles the shoot locally. We take care of everything after that: from editing and VFX to CGI, motion graphics, AI production, sound, color, and final delivery.
           </p>
         </div>
       </div>

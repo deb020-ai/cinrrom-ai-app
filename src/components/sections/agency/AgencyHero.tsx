@@ -16,7 +16,7 @@ export default function AgencyHero() {
         
         <div className="text-base md:text-xl font-sans text-white/80 leading-relaxed max-w-3xl mx-auto mb-10 font-light">
           <p className="inline-block mr-2 font-medium text-white">You close the clients.</p>
-          <p className="inline-block">We deliver the videos, ads, CGI, AI content and campaigns—under your brand.</p>
+          <p className="inline-block">We deliver the videos, ads, CGI, AI content and campaigns under your brand.</p>
         </div>
 
         <div className="max-w-4xl mx-auto bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-2xl md:rounded-full p-6 md:px-10 md:py-4 mb-12 shadow-[0_8px_32px_rgba(255,255,255,0.02)]">
