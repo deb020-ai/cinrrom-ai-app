@@ -25,7 +25,7 @@ export default function AgencyCta() {
             rel="noopener noreferrer"
             className="flex items-center gap-3 bg-white text-black px-12 py-6 rounded-full text-sm font-sans tracking-[0.2em] uppercase font-bold hover:bg-gray-200 transition-all shadow-[0_0_50px_rgba(255,255,255,0.2)]"
           >
-            See If We're A Fit <ArrowUpRight size={18} />
+            Book a call to see if we fit <ArrowUpRight size={18} />
           </a>
         </div>
       </div>

@@ -42,7 +42,7 @@ export default function AgencyTrust() {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 max-w-5xl mx-auto">
           {cards.map((card, index) => (
             <div key={index} className="p-8 md:p-12 border border-white/10 rounded-2xl md:rounded-3xl bg-white/[0.02] flex flex-col justify-between">
               <div>
