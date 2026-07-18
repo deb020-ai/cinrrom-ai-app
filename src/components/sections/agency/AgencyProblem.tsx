@@ -1,29 +1,34 @@
 export default function AgencyProblem() {
-  return (
-    <section className="py-24 md:py-32 bg-[#050914] border-b border-white/5">
-      <div className="max-w-[800px] mx-auto px-6">
-        <h2 className="text-4xl md:text-6xl font-serif text-white tracking-tight text-center mb-16 md:mb-24">
-          Growing Is Hard.
-        </h2>
-        
-        <div className="space-y-6 md:space-y-8 text-center text-lg md:text-2xl font-sans font-light text-white/70 leading-relaxed max-w-2xl mx-auto">
-          <p>Closing clients is hard.</p>
-          <p>Keeping them is even harder.</p>
-          <p className="pt-8">Every new client means...</p>
+    <section className="py-16 md:py-24 bg-black border-b border-white/5">
+      <div className="max-w-[1000px] mx-auto px-6">
+        <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-[0_8px_40px_rgba(255,255,255,0.03)] relative overflow-hidden">
+          {/* Subtle glass gradient */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
           
-          <div className="py-8 space-y-4 text-white/40 italic">
-            <p>More deliverables.</p>
-            <p>More deadlines.</p>
-            <p>More revisions.</p>
-            <p>More people to manage.</p>
-            <p>More stress.</p>
+          <h2 className="text-3xl md:text-5xl font-serif text-white tracking-tight mb-8">
+            Growing Is Hard.
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
+            <div className="space-y-4 text-base md:text-xl font-sans font-light text-white/80 leading-relaxed">
+              <p>Closing clients is hard. Keeping them is even harder.</p>
+              <p>Every new client means...</p>
+              
+              <div className="bg-black/20 rounded-xl p-4 md:p-6 border border-white/5 backdrop-blur-sm space-y-2 text-white/50 text-sm md:text-base">
+                <p>• More deliverables</p>
+                <p>• More deadlines</p>
+                <p>• More revisions</p>
+                <p>• More people to manage</p>
+                <p>• More stress</p>
+              </div>
+            </div>
+            
+            <div className="space-y-4 text-base md:text-xl font-sans font-light text-white/80 leading-relaxed flex flex-col justify-center">
+              <p>Eventually your agency stops growing...</p>
+              <p>Not because sales slow down. <span className="text-white">Because production can't keep up.</span></p>
+              <p className="pt-6 text-xl md:text-2xl text-blue-400 font-medium tracking-tight">That's where we come in.</p>
+            </div>
           </div>
-          
-          <p>Eventually your agency stops growing...</p>
-          <p>Not because sales slow down.</p>
-          <p className="text-white">Because production can't keep up.</p>
-          
-          <p className="pt-12 text-2xl md:text-3xl text-blue-400 font-medium tracking-tight">That's where we come in.</p>
         </div>
       </div>
     </section>

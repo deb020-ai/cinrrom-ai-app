@@ -15,30 +15,32 @@ export default function AgencyServices() {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-[#050914] border-b border-white/5">
+    <section className="py-16 md:py-24 bg-black border-b border-white/5">
       <div className="max-w-[1200px] mx-auto px-6">
-        <h2 className="text-4xl md:text-5xl font-serif text-white tracking-tight text-center mb-16 md:mb-24">
-          What We Produce
-        </h2>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-5xl font-serif text-white tracking-tight mb-4">
+            What We Produce
+          </h2>
+        </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
           {services.map((service, index) => (
             <div 
               key={index} 
-              className="flex flex-col items-center justify-center text-center p-8 border border-white/10 rounded-2xl bg-[#02050a] hover:bg-white/[0.03] transition-colors"
+              className="flex flex-col items-center justify-center text-center p-4 md:p-6 bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl hover:bg-white/[0.05] transition-all shadow-[0_4px_20px_rgba(255,255,255,0.01)]"
             >
-              <div className="text-white/40 mb-6">
+              <div className="text-white/40 mb-3 md:mb-4">
                 {service.icon}
               </div>
-              <h3 className="text-sm md:text-base font-sans text-white font-medium">
+              <h3 className="text-[11px] md:text-sm font-sans text-white/90 font-medium leading-tight">
                 {service.title}
               </h3>
             </div>
           ))}
         </div>
         
-        <div className="mt-16 md:mt-24 max-w-4xl mx-auto p-8 md:p-12 border border-white/10 rounded-3xl bg-white/[0.02]">
-          <p className="text-lg md:text-xl font-sans text-white/70 leading-relaxed font-light text-center">
+        <div className="mt-8 md:mt-12 max-w-4xl mx-auto p-6 md:p-8 border border-white/10 rounded-2xl bg-white/[0.02] backdrop-blur-md">
+          <p className="text-sm md:text-base font-sans text-white/70 leading-relaxed font-light text-center">
             If physical product filming is required, your client handles the shoot locally. We take care of everything after that—from editing and VFX to CGI, motion graphics, AI production, sound, color, and final delivery.
           </p>
         </div>

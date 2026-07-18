@@ -12,18 +12,17 @@ export default function AgencyWhyUs() {
     "Reliable quality."
   ];
 
-  return (
-    <section className="py-24 md:py-32 bg-[#050914] border-b border-white/5">
-      <div className="max-w-[1000px] mx-auto px-6">
-        <h2 className="text-3xl md:text-5xl font-serif text-white tracking-tight text-center mb-16">
+    <section className="py-16 md:py-24 bg-black border-b border-white/5">
+      <div className="max-w-[1200px] mx-auto px-6">
+        <h2 className="text-3xl md:text-5xl font-serif text-white tracking-tight text-center mb-12">
           Why Agencies Work With Us
         </h2>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-5xl mx-auto">
           {reasons.map((reason, index) => (
-            <div key={index} className="flex items-start gap-4">
-              <CheckCircle2 size={20} className="text-[#25D366] flex-shrink-0 mt-1" />
-              <span className="text-base md:text-lg font-sans text-white/80 font-light leading-snug">
+            <div key={index} className="flex items-start gap-3 p-4 md:p-5 bg-white/[0.02] backdrop-blur-md border border-white/10 rounded-2xl hover:bg-white/[0.04] transition-all">
+              <CheckCircle2 size={16} className="text-[#25D366] flex-shrink-0 mt-0.5" />
+              <span className="text-sm md:text-base font-sans text-white/80 font-light leading-snug">
                 {reason}
               </span>
             </div>
