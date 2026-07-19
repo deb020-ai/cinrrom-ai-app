@@ -33,7 +33,7 @@ export const LazyVideo = ({
           videoRef.current?.pause();
         }
       },
-      { rootMargin: "200px" } // Load slightly before it comes into view
+      { rootMargin: "0px" } // Stricter lazy loading for performance
     );
 
     if (videoRef.current) {

@@ -31,31 +31,7 @@ export default function Hero() {
          />
       </div>
 
-      {/* Tiny drifting dust particles */}
-      <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
-        {isMounted && [...Array(40)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-white rounded-full opacity-0 blur-[2px]"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-              scale: Math.random() * 0.4 + 0.1,
-            }}
-            animate={{
-              y: [null, Math.random() * -200 - 100],
-              x: [null, Math.random() * 100 - 50],
-              opacity: [0, Math.random() * 0.3 + 0.1, 0],
-            }}
-            transition={{
-              duration: Math.random() * 15 + 15,
-              repeat: Infinity,
-              ease: "linear",
-              delay: Math.random() * 8,
-            }}
-          />
-        ))}
-      </div>
+      {/* Removed heavy drifting dust particles for performance */}
 
       <div className="relative z-20 flex flex-col items-start text-left mt-10 md:mt-0 max-w-5xl">
         <motion.h1 

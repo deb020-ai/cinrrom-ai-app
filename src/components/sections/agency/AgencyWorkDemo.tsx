@@ -153,7 +153,7 @@ export default function AgencyWorkDemo() {
                     src={item.src}
                     muted
                     playsInline
-                    preload="metadata"
+                    preload="none"
                     className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                   />
                 ) : (
