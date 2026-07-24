@@ -1,0 +1,167 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  --background: #050505;
+  --foreground: #f4f4f5;
+  --card: #0a0a0b;
+  --card-foreground: #f4f4f5;
+  --popover: #0a0a0b;
+  --popover-foreground: #f4f4f5;
+  --primary: #d4af37;
+  --primary-foreground: #000000;
+  --secondary: #18181b;
+  --secondary-foreground: #f4f4f5;
+  --muted: #121215;
+  --muted-foreground: #9a9a9f;
+  --accent: #1f1f23;
+  --accent-foreground: #d4af37;
+  --destructive: #7f1d1d;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #c5a880;
+  --radius: 0.75rem;
+  --sidebar: #080809;
+  --sidebar-foreground: #f4f4f5;
+  --sidebar-primary: #d4af37;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #18181b;
+  --sidebar-accent-foreground: #f4f4f5;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-ring: #c5a880;
+}
+
+.dark {
+  --background: #050505;
+  --foreground: #f4f4f5;
+  --card: #0a0a0b;
+  --card-foreground: #f4f4f5;
+  --popover: #0a0a0b;
+  --popover-foreground: #f4f4f5;
+  --primary: #c5a880;
+  --primary-foreground: #050505;
+  --secondary: #141416;
+  --secondary-foreground: #f4f4f5;
+  --muted: #121215;
+  --muted-foreground: #8e8e93;
+  --accent: #1a1a1e;
+  --accent-foreground: #c5a880;
+  --destructive: #7f1d1d;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #c5a880;
+  --sidebar: #080809;
+  --sidebar-foreground: #f4f4f5;
+  --sidebar-primary: #c5a880;
+  --sidebar-primary-foreground: #050505;
+  --sidebar-accent: #141416;
+  --sidebar-accent-foreground: #f4f4f5;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-ring: #c5a880;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-none;
+  }
+  body {
+    @apply bg-[#050505] text-[#f4f4f5] font-sans antialiased selection:bg-amber-900/30 selection:text-amber-200;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+}
+
+/* Custom Art Director Luxury Utilities */
+.glass-panel {
+  background: rgba(18, 18, 20, 0.5);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+.glass-panel-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-panel-hover:hover {
+  background: rgba(26, 26, 30, 0.7);
+  border-color: rgba(197, 168, 128, 0.3);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(197, 168, 128, 0.05);
+}
+
+.luxury-text-gradient {
+  background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 45%, #94A3B8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-text-gradient {
+  background: linear-gradient(135deg, #FFF6E5 0%, #EAD4AA 35%, #C5A880 70%, #9E7D52 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-glow {
+  position: relative;
+}
+.gold-border-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(229, 213, 197, 0.4), rgba(197, 168, 128, 0.1), rgba(255, 255, 255, 0.02));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Subtle luxury noise grid texture */
+.subtle-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
