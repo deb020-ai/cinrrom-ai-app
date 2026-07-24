@@ -23,30 +23,35 @@ export default function SignupPage() {
     setError("");
 
     try {
-      const { data, error } = await authClient.signUp.email({
+      const res = await authClient.signUp.email({
         email,
         password,
         name,
       });
 
-      if (error) {
-        setError(error.message || "Failed to create account");
+      if (res.error) {
+        setError(res.error.message || "Failed to create account. Please check your credentials.");
         setLoading(false);
         return;
       }
 
       // Automatically create company organization workspace
       if (companyName) {
-        await authClient.organization.create({
-          name: companyName,
-          slug: companyName.toLowerCase().replace(/[^a-z0-9]/g, "-"),
-        });
+        try {
+          await authClient.organization.create({
+            name: companyName,
+            slug: companyName.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+          });
+        } catch (orgErr) {
+          console.warn("Organization creation warning:", orgErr);
+        }
       }
 
       router.push("/dashboard");
     } catch (err: any) {
-      // Fallback redirect for preview mode
-      router.push("/dashboard");
+      console.error("Signup error:", err);
+      setError(err?.message || "Error connecting to authentication service.");
+      setLoading(false);
     }
   };
 
