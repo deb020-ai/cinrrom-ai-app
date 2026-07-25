@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Diamond, ArrowRight, Lock, Mail, Building2, User, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
+
+declare global {
+  interface Window {
+    google?: any;
+  }
+}
 
 export default function SignupPage() {
   const supabase = createClient();
@@ -17,6 +23,51 @@ export default function SignupPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const GOOGLE_CLIENT_ID = "615256631418-d1gr6vknmfn084scsmvitc68hdvucgs0.apps.googleusercontent.com";
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      if (window.google?.accounts?.id) {
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleIdTokenResponse,
+        });
+      }
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handleGoogleIdTokenResponse = async (response: any) => {
+    setGoogleLoading(true);
+    setError("");
+    try {
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: "google",
+        token: response.credential,
+      });
+
+      if (error) {
+        setError(error.message);
+        setGoogleLoading(false);
+        return;
+      }
+
+      window.location.href = "/dashboard";
+    } catch (err: any) {
+      console.error("Google ID Token Auth Error:", err);
+      setError(err?.message || "Google Sign-Up failed.");
+      setGoogleLoading(false);
+    }
+  };
 
   const isLengthValid = password.length >= 8;
   const hasNumber = /[0-9]/.test(password);
@@ -65,25 +116,27 @@ export default function SignupPage() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    setGoogleLoading(true);
+  const handleGoogleSignIn = () => {
     setError("");
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
+    setGoogleLoading(true);
+    if (window.google?.accounts?.id) {
+      window.google.accounts.id.prompt((notification: any) => {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          supabase.auth.signInWithOAuth({
+            provider: "google",
+            options: {
+              redirectTo: `${window.location.origin}/auth/callback`,
+            },
+          });
+        }
+      });
+    } else {
+      supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
-
-      if (error) {
-        setError(error.message);
-        setGoogleLoading(false);
-      }
-    } catch (err: any) {
-      console.error("Google auth error:", err);
-      setError(err?.message || "Failed to initialize Google authentication.");
-      setGoogleLoading(false);
     }
   };
 
@@ -110,7 +163,7 @@ export default function SignupPage() {
           <p className="text-xs font-mono text-amber-200/80">Includes 5 Free Trial Campaign Generation Credits</p>
         </div>
 
-        {/* Social Google Login Button */}
+        {/* Direct Google Sign In Button */}
         <Button
           type="button"
           onClick={handleGoogleSignIn}
@@ -136,7 +189,7 @@ export default function SignupPage() {
               d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.1-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"
             />
           </svg>
-          {googleLoading ? "Connecting to Google..." : "Sign up with Google"}
+          {googleLoading ? "Connecting..." : "Sign up with Google"}
         </Button>
 
         {/* Divider */}
@@ -236,7 +289,7 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full h-12 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] transition-all duration-300 rounded-xl mt-4 cursor-pointer"
           >
-            {loading ? "Creating Supabase Workspace..." : "Create Atelier & Claim Credits"}
+            {loading ? "Creating Workspace..." : "Create Atelier & Claim Credits"}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </form>
@@ -244,7 +297,7 @@ export default function SignupPage() {
         <div className="mt-8 pt-6 border-t border-white/[0.06] text-center">
           <p className="text-xs text-neutral-400 font-light">
             Already have an account?{" "}
-            <Link href="/signup" className="text-amber-200 font-mono underline hover:text-white transition-colors">
+            <Link href="/login" className="text-amber-200 font-mono underline hover:text-white transition-colors">
               Sign In
             </Link>
           </p>
