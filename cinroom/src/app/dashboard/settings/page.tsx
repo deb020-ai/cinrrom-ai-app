@@ -1,94 +1,124 @@
+"use client";
+
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { User, Bell, Key, CreditCard, Wallet } from "lucide-react";
+import { User, Bell, Key, CreditCard, Wallet, Sparkles, Zap, ShieldCheck } from "lucide-react";
+import { Pricing } from "@/components/features/landing/pricing";
 
 export default function SettingsPage() {
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-16">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-        <p className="text-muted-foreground">Manage your account, billing, and developer API keys.</p>
+        <h1 className="text-3xl font-light text-white tracking-tight mb-1">Studio Settings</h1>
+        <p className="text-xs font-mono text-neutral-400 uppercase tracking-wider">Manage your Atelier workspace, commercial credits, and API keys.</p>
       </div>
 
-      <Tabs defaultValue="profile" className="w-full">
-        <TabsList className="bg-white/5 border border-white/10 h-12 px-2 gap-2 mb-8">
-          <TabsTrigger value="profile" className="data-[state=active]:bg-white/10 data-[state=active]:text-white h-8">
-            <User className="w-4 h-4 mr-2" /> Profile
+      <Tabs defaultValue="credits" className="w-full">
+        <TabsList className="bg-white/5 border border-white/10 h-12 px-2 gap-2 mb-8 rounded-xl">
+          <TabsTrigger value="credits" className="data-[state=active]:bg-amber-400/10 data-[state=active]:text-amber-200 data-[state=active]:border-amber-200/30 text-xs font-mono tracking-wider uppercase h-9 rounded-lg">
+            <Wallet className="w-4 h-4 mr-2" /> Commercial Credits
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="data-[state=active]:bg-white/10 data-[state=active]:text-white h-8">
-            <Bell className="w-4 h-4 mr-2" /> Notifications
+          <TabsTrigger value="billing" className="data-[state=active]:bg-amber-400/10 data-[state=active]:text-amber-200 data-[state=active]:border-amber-200/30 text-xs font-mono tracking-wider uppercase h-9 rounded-lg">
+            <CreditCard className="w-4 h-4 mr-2" /> Billing & Credit Packs
           </TabsTrigger>
-          <TabsTrigger value="billing" className="data-[state=active]:bg-white/10 data-[state=active]:text-white h-8">
-            <CreditCard className="w-4 h-4 mr-2" /> Billing & Plan
+          <TabsTrigger value="profile" className="data-[state=active]:bg-amber-400/10 data-[state=active]:text-amber-200 data-[state=active]:border-amber-200/30 text-xs font-mono tracking-wider uppercase h-9 rounded-lg">
+            <User className="w-4 h-4 mr-2" /> Atelier Profile
           </TabsTrigger>
-          <TabsTrigger value="credits" className="data-[state=active]:bg-white/10 data-[state=active]:text-white h-8">
-            <Wallet className="w-4 h-4 mr-2" /> Credits
-          </TabsTrigger>
-          <TabsTrigger value="api" className="data-[state=active]:bg-white/10 data-[state=active]:text-white h-8">
-            <Key className="w-4 h-4 mr-2" /> API Keys
+          <TabsTrigger value="api" className="data-[state=active]:bg-amber-400/10 data-[state=active]:text-amber-200 data-[state=active]:border-amber-200/30 text-xs font-mono tracking-wider uppercase h-9 rounded-lg">
+            <Key className="w-4 h-4 mr-2" /> API Access
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profile" className="space-y-6">
-          <Card className="bg-white/5 border-white/10">
-            <CardHeader>
-              <CardTitle className="text-white">Profile Information</CardTitle>
-              <CardDescription>Update your account details.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-white">Full Name</label>
-                <Input defaultValue="Jane Doe" className="bg-white/5 border-white/10 text-white" />
-              </div>
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-white">Email</label>
-                <Input defaultValue="jane@example.com" type="email" className="bg-white/5 border-white/10 text-white" />
-              </div>
-              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 mt-4">Save Changes</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="api" className="space-y-6">
-          <Card className="bg-white/5 border-white/10">
-            <CardHeader>
-              <CardTitle className="text-white">API Keys</CardTitle>
-              <CardDescription>Use these keys to authenticate with the Cinroom API.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-4 p-4 rounded-lg bg-white/5 border border-white/10">
-                <div className="flex-1 font-mono text-sm text-muted-foreground truncate">
-                  sk_live_cinroom_xxxxxxxxxxxxxxxxxxxxxxxx
+        {/* Commercial Credits Tab */}
+        <TabsContent value="credits" className="space-y-8">
+          <Card className="glass-panel gold-border-glow bg-gradient-to-b from-[#14141a] to-[#08080a] border-amber-200/30 p-6 rounded-2xl">
+            <CardHeader className="px-0 pt-0">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl font-light text-white">Active Credit Balance</CardTitle>
+                  <CardDescription className="text-xs font-mono text-neutral-400 mt-1">Available for Commercial Product Videos and Performance Campaign Assets</CardDescription>
                 </div>
-                <Button variant="secondary" size="sm" className="bg-white/10 text-white hover:bg-white/20">Copy</Button>
-                <Button variant="destructive" size="sm" className="bg-red-500/20 text-red-500 hover:bg-red-500/30">Revoke</Button>
+                <div className="px-3 py-1.5 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 font-mono text-xs flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-amber-200" /> Never Expires
+                </div>
               </div>
-              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Generate New Key</Button>
+            </CardHeader>
+            <CardContent className="px-0 pb-0 pt-4">
+              <div className="flex items-baseline gap-3 mb-6">
+                <span className="text-5xl font-light text-amber-200 font-serif">5</span>
+                <span className="text-xs font-mono text-neutral-400 uppercase tracking-widest">Trial Commercial Credits Active</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/10 text-xs font-mono text-neutral-300 mb-6">
+                <div className="flex items-center gap-3">
+                  <Zap className="w-4 h-4 text-amber-300 shrink-0" />
+                  <span>5 Commercial Product Videos</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Sparkles className="w-4 h-4 text-amber-300 shrink-0" />
+                  <span>OR 25 High-Res Campaign Images</span>
+                </div>
+              </div>
+
+              <a href="#billing-packs">
+                <Button className="h-11 px-6 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_30px_rgba(197,168,128,0.4)] cursor-pointer">
+                  Top Up Credit Balance
+                </Button>
+              </a>
+            </CardContent>
+          </Card>
+
+          <div id="billing-packs">
+            <Pricing />
+          </div>
+        </TabsContent>
+
+        {/* Billing & Plans Tab */}
+        <TabsContent value="billing">
+          <Pricing />
+        </TabsContent>
+
+        {/* Profile Tab */}
+        <TabsContent value="profile" className="space-y-6">
+          <Card className="glass-panel border-white/10 p-6 rounded-2xl bg-[#08080a]">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-light text-white">Atelier Details</CardTitle>
+              <CardDescription className="text-xs text-neutral-400">Update your workspace brand name and contact profile.</CardDescription>
+            </CardHeader>
+            <CardContent className="px-0 pb-0 space-y-4 pt-4">
+              <div className="grid gap-2">
+                <label className="text-xs font-mono text-neutral-300 uppercase tracking-wider">Atelier / Brand Name</label>
+                <Input defaultValue="Maison Vendôme" className="h-11 bg-white/[0.03] border-white/10 text-white font-sans rounded-xl" />
+              </div>
+              <div className="grid gap-2">
+                <label className="text-xs font-mono text-neutral-300 uppercase tracking-wider">Primary Work Email</label>
+                <Input defaultValue="deb@cinroom.com" type="email" className="h-11 bg-white/[0.03] border-white/10 text-white font-sans rounded-xl" />
+              </div>
+              <Button className="bg-amber-400/10 text-amber-200 border border-amber-200/30 hover:bg-amber-400/20 text-xs font-mono uppercase tracking-wider h-10 px-5 rounded-xl">Save Profile</Button>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="credits">
-          <Card className="bg-white/5 border-white/10">
-            <CardHeader>
-              <CardTitle className="text-white">Credit Balance</CardTitle>
-              <CardDescription>Your current video generation credits.</CardDescription>
+        {/* API Keys Tab */}
+        <TabsContent value="api" className="space-y-6">
+          <Card className="glass-panel border-white/10 p-6 rounded-2xl bg-[#08080a]">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-light text-white">Commercial API Keys</CardTitle>
+              <CardDescription className="text-xs text-neutral-400">Integrate Cinroom campaign generation with your e-commerce platform.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="text-4xl font-bold text-primary mb-4">42 <span className="text-lg text-muted-foreground font-normal">credits remaining</span></div>
-              <Button className="bg-white text-black hover:bg-neutral-200">Buy More Credits</Button>
+            <CardContent className="px-0 pb-0 space-y-4 pt-4">
+              <div className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                <div className="flex-1 font-mono text-xs text-amber-200/80 truncate">
+                  sk_live_cinroom_89f7a4b901c23849f82190
+                </div>
+                <Button variant="secondary" size="sm" className="bg-white/10 text-white hover:bg-white/20 text-xs font-mono">Copy Key</Button>
+              </div>
+              <Button className="bg-amber-400/10 text-amber-200 border border-amber-200/30 hover:bg-amber-400/20 text-xs font-mono uppercase tracking-wider h-10 px-5 rounded-xl">Generate Production API Key</Button>
             </CardContent>
           </Card>
-        </TabsContent>
-        
-        {/* Mock for other tabs */}
-        <TabsContent value="notifications">
-          <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Notifications</CardTitle><CardDescription>Notification preferences coming soon.</CardDescription></CardHeader></Card>
-        </TabsContent>
-        <TabsContent value="billing">
-          <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Billing</CardTitle><CardDescription>Billing integration coming soon.</CardDescription></CardHeader></Card>
         </TabsContent>
       </Tabs>
     </div>
