@@ -21,21 +21,23 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const { data, error } = await authClient.signIn.email({
+      const res = await authClient.signIn.email({
         email,
         password,
       });
 
-      if (error) {
-        setError(error.message || "Invalid email or password");
+      if (res.error) {
+        setError(res.error.message || "Invalid email or password");
         setLoading(false);
         return;
       }
 
       router.push("/dashboard");
+      router.refresh();
     } catch (err: any) {
-      // Fallback redirect for preview mode
-      router.push("/dashboard");
+      console.error("Login error:", err);
+      setError(err?.message || "Authentication failed. Please try again.");
+      setLoading(false);
     }
   };
 
@@ -87,7 +89,6 @@ export default function LoginPage() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-xs font-mono text-neutral-300 uppercase tracking-wider block">Password</label>
-              <Link href="#" className="text-[10px] font-mono text-amber-200/80 hover:text-white transition-colors">Forgot?</Link>
             </div>
             <div className="relative">
               <Lock className="w-4 h-4 absolute left-3.5 top-3.5 text-neutral-500" />
@@ -105,7 +106,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-12 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] transition-all duration-300 rounded-xl mt-2"
+            className="w-full h-12 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] transition-all duration-300 rounded-xl mt-2 cursor-pointer"
           >
             {loading ? "Authenticating..." : "Sign In to Studio"}
             <ArrowRight className="w-4 h-4 ml-2" />

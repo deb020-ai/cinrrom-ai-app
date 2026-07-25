@@ -1,8 +1,9 @@
 "use client";
 
-import { Diamond, Video, LayoutTemplate, FolderOpen, History, CreditCard, Settings, Code, Sparkles } from "lucide-react";
+import { Diamond, Video, LayoutTemplate, FolderOpen, CreditCard, Settings, Code, LogOut } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession, signOut } from "@/lib/auth-client";
 
 const navItems = [
   { name: "Create Studio Video", href: "/dashboard", icon: Video },
@@ -18,6 +19,22 @@ const secondaryItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/login");
+    router.refresh();
+  };
+
+  const userName = session?.user?.name || "Atelier Member";
+  const userInitials = userName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .substring(0, 2)
+    .toUpperCase();
 
   return (
     <aside className="w-64 h-screen border-r border-white/[0.06] bg-[#070709]/90 backdrop-blur-2xl flex flex-col fixed left-0 top-0 z-40">
@@ -70,16 +87,27 @@ export function Sidebar() {
         ))}
       </div>
       
-      {/* Account Info */}
-      <div className="p-4 border-t border-white/[0.06]">
-        <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-200/30 to-amber-600/20 border border-amber-200/40 flex items-center justify-center text-amber-200 font-mono text-xs font-semibold">
-            MV
+      {/* Account Info & Sign Out */}
+      <div className="p-4 border-t border-white/[0.06] space-y-2">
+        <div className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+          <div className="flex items-center gap-3 overflow-hidden">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-200/30 to-amber-600/20 border border-amber-200/40 flex items-center justify-center text-amber-200 font-mono text-xs font-semibold shrink-0">
+              {userInitials}
+            </div>
+            <div className="flex flex-col truncate">
+              <span className="text-xs font-medium text-white truncate">{userName}</span>
+              <span className="text-[10px] font-mono text-amber-200/80 truncate">
+                {session?.user?.email || "Pro Atelier Plan"}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-xs font-medium text-white">Maison Vendôme</span>
-            <span className="text-[10px] font-mono text-amber-200/80">Pro Atelier Plan</span>
-          </div>
+          <button
+            onClick={handleSignOut}
+            className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors"
+            title="Sign Out"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </aside>

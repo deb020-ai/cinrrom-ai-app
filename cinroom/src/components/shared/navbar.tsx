@@ -3,9 +3,20 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Diamond } from "lucide-react";
+import { ArrowUpRight, Diamond, LogOut, User } from "lucide-react";
+import { authClient, useSession, signOut } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/");
+    router.refresh();
+  };
+
   return (
     <motion.header
       initial={{ y: -10, opacity: 0 }}
@@ -48,22 +59,46 @@ export function Navbar() {
 
         {/* CTA Buttons */}
         <div className="flex items-center gap-3">
-          <Link href="/dashboard">
-            <Button 
-              variant="ghost" 
-              className="text-xs font-mono tracking-wider uppercase text-neutral-300 hover:text-white hover:bg-white/5 h-9 px-4 rounded-full"
-            >
-              Sign In
-            </Button>
-          </Link>
-          <Link href="/dashboard">
-            <Button 
-              className="h-9 px-5 rounded-full text-xs font-mono tracking-wider uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_25px_rgba(197,168,128,0.4)] transition-all duration-300 border border-amber-200/40"
-            >
-              Open Studio
-              <ArrowUpRight className="w-3.5 h-3.5 ml-1.5 opacity-70" />
-            </Button>
-          </Link>
+          {session?.user ? (
+            <>
+              <Link href="/dashboard">
+                <Button 
+                  variant="ghost" 
+                  className="text-xs font-mono tracking-wider uppercase text-amber-200 hover:text-white hover:bg-white/5 h-9 px-4 rounded-full flex items-center gap-2"
+                >
+                  <User className="w-3.5 h-3.5" />
+                  {session.user.name || "Studio Dashboard"}
+                </Button>
+              </Link>
+              <Button 
+                onClick={handleSignOut}
+                variant="outline"
+                className="h-9 px-3 rounded-full text-xs font-mono tracking-wider uppercase border-white/10 text-neutral-400 hover:text-white hover:bg-white/5"
+                title="Sign Out"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button 
+                  variant="ghost" 
+                  className="text-xs font-mono tracking-wider uppercase text-neutral-300 hover:text-white hover:bg-white/5 h-9 px-4 rounded-full"
+                >
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button 
+                  className="h-9 px-5 rounded-full text-xs font-mono tracking-wider uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_25px_rgba(197,168,128,0.4)] transition-all duration-300 border border-amber-200/40"
+                >
+                  Open Studio
+                  <ArrowUpRight className="w-3.5 h-3.5 ml-1.5 opacity-70" />
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
       </div>
