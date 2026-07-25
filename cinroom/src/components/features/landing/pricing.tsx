@@ -27,11 +27,11 @@ const paidPlans: Plan[] = [
     type: "onetime",
     price: "₹3,999",
     billing: "one-time purchase",
-    credits: 8,
-    creditsLabel: "8 Credits",
+    credits: 7,
+    creditsLabel: "7 Credits",
     subtitle: "Perfect for brands that want to experience the platform before committing to a subscription.",
     features: [
-      "8 Production Credits",
+      "7 Production Credits",
       "Full commercial usage rights",
       "Standard studio rendering queue",
       "Secure asset cloud storage",
@@ -45,13 +45,13 @@ const paidPlans: Plan[] = [
     type: "subscription",
     price: "₹9,999",
     billing: "per month",
-    credits: 24,
-    creditsLabel: "24 Credits every month",
+    credits: 18,
+    creditsLabel: "18 Credits every month",
     badge: "MOST POPULAR",
     popular: true,
     subtitle: "The primary commercial production engine for growing luxury jewelry brands.",
     features: [
-      "24 Credits renewed every month",
+      "18 Credits renewed every month",
       "Priority Rendering Queue",
       "Faster Asset Processing",
       "Lower Effective Cost Per Credit",
@@ -67,11 +67,11 @@ const paidPlans: Plan[] = [
     type: "subscription",
     price: "₹24,999",
     billing: "per month",
-    credits: 72,
-    creditsLabel: "72 Credits every month",
+    credits: 48,
+    creditsLabel: "48 Credits every month",
     subtitle: "Built for scaling jewelry houses, agencies, and high-volume marketing teams.",
     features: [
-      "72 Credits renewed every month",
+      "48 Credits renewed every month",
       "Shared Team Credit Pool",
       "Multi-User Team Workspace",
       "Highest Rendering Priority",
@@ -84,11 +84,11 @@ const paidPlans: Plan[] = [
 ];
 
 const topUpPacks = [
-  { id: "topup_6", credits: 6, price: "₹2,999", priceRaw: 2999 },
-  { id: "topup_12", credits: 12, price: "₹5,699", priceRaw: 5699 },
-  { id: "topup_24", credits: 24, price: "₹10,799", priceRaw: 10799, popular: true },
-  { id: "topup_48", credits: 48, price: "₹20,999", priceRaw: 20999 },
-  { id: "topup_96", credits: 96, price: "₹39,999", priceRaw: 39999 },
+  { id: "topup_6", credits: 6, price: "₹3,499", priceRaw: 3499 },
+  { id: "topup_12", credits: 12, price: "₹6,499", priceRaw: 6499 },
+  { id: "topup_24", credits: 24, price: "₹11,999", priceRaw: 11999, popular: true },
+  { id: "topup_48", credits: 48, price: "₹22,999", priceRaw: 22999 },
+  { id: "topup_96", credits: 96, price: "₹42,999", priceRaw: 42999 },
 ];
 
 const faqs = [
