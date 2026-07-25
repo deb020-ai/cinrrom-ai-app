@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Sparkles, Zap, ShieldCheck, ArrowRight, RefreshCw, Building2, HelpCircle, Layers, Star, Award, ShieldAlert, CheckCircle2 } from "lucide-react";
+import { Check, Sparkles, Zap, ShieldCheck, ArrowRight, RefreshCw, Building2, HelpCircle, Layers, Star, Award, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface Plan {
   id: string;
   name: string;
-  type: "free" | "onetime" | "subscription";
+  type: "onetime" | "subscription";
   price: string;
   billing: string;
   credits: string;
@@ -19,25 +19,7 @@ interface Plan {
   cta: string;
 }
 
-const pricingPlans: Plan[] = [
-  {
-    id: "free_tier",
-    name: "FREE",
-    type: "free",
-    price: "₹0",
-    billing: "forever free access",
-    credits: "0 Credits",
-    subtitle: "Explore the studio workspace and templates before purchasing commercial credits.",
-    features: [
-      "Create Atelier Workspace",
-      "Browse Studio Dashboard",
-      "Upload Product Photos",
-      "Explore 24+ Campaign Rigs",
-      "Save Studio Projects",
-      "0 Credits included",
-    ],
-    cta: "Create Free Account",
-  },
+const paidPlans: Plan[] = [
   {
     id: "starter_onetime",
     name: "STARTER",
@@ -161,11 +143,6 @@ export function Pricing() {
   const startCheckout = async (productId: string) => {
     setLoadingPack(productId);
     try {
-      if (productId === "free_tier") {
-        window.location.href = "/signup";
-        return;
-      }
-
       if (productId === "enterprise_contact") {
         window.location.href = "mailto:concierge@cinroom.com?subject=Cinroom%20Enterprise%20Studio%20Inquiry";
         setLoadingPack(null);
@@ -213,58 +190,58 @@ export function Pricing() {
           </p>
         </div>
 
-        {/* No Free Generation Policy Banner */}
+        {/* Updated Notice Banner */}
         <div className="mb-14 max-w-2xl mx-auto p-4 rounded-xl glass-panel bg-amber-500/[0.03] border border-amber-200/20 text-center">
           <p className="text-xs font-mono text-amber-200/90 flex items-center justify-center gap-2">
             <ShieldAlert className="w-4 h-4 text-amber-200 shrink-0" />
-            <span>Notice: Free accounts include full dashboard & workspace access with 0 credits. Every asset is rendered on high-performance studio infrastructure.</span>
+            <span>Accounts are free to create. Credits are only consumed when generating commercial assets.</span>
           </p>
         </div>
 
-        {/* 4 MAIN PRICING CARDS (Free, Starter, Growth ⭐, Business) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch mb-20">
-          {pricingPlans.map((plan) => {
+        {/* 3 BALANCED PAID PRICING CARDS (Starter, Growth ⭐, Business) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto mb-20">
+          {paidPlans.map((plan) => {
             const isPopular = plan.popular;
             return (
               <div
                 key={plan.id}
-                className={`glass-panel rounded-2xl p-6 flex flex-col justify-between relative transition-all duration-300 ${
+                className={`glass-panel rounded-2xl p-8 flex flex-col justify-between relative transition-all duration-300 ${
                   isPopular
-                    ? "border-amber-200/50 shadow-[0_0_70px_rgba(197,168,128,0.25)] bg-gradient-to-b from-[#181820] via-[#0e0e12] to-[#070709] lg:-translate-y-2 z-20"
+                    ? "border-amber-200/50 shadow-[0_0_70px_rgba(197,168,128,0.25)] bg-gradient-to-b from-[#181820] via-[#0e0e12] to-[#070709] md:scale-105 z-20"
                     : "border-white/[0.08] hover:border-white/20 bg-[#08080a]"
                 }`}
               >
                 {/* Badge */}
                 {plan.badge && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-30">
-                    <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-mono text-[9px] font-bold tracking-widest uppercase shadow-lg">
+                    <span className="px-4 py-1 rounded-full bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-mono text-[10px] font-bold tracking-widest uppercase shadow-lg">
                       {plan.badge}
                     </span>
                   </div>
                 )}
 
                 <div>
-                  <div className="mb-4">
+                  <div className="mb-6">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="text-xl font-light text-white tracking-tight">{plan.name}</h3>
-                      <span className="px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 text-[10px] font-mono font-semibold">
+                      <h3 className="text-2xl font-light text-white tracking-tight">{plan.name}</h3>
+                      <span className="px-3 py-1 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 text-xs font-mono font-semibold">
                         {plan.credits}
                       </span>
                     </div>
                     <p className="text-xs text-neutral-400 font-light min-h-[36px] mt-2">{plan.subtitle}</p>
                   </div>
 
-                  <div className="mb-6 pb-4 border-b border-white/[0.08]">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-3xl font-light text-white font-serif tracking-tight">{plan.price}</span>
-                      <span className="text-[10px] font-mono text-neutral-500 uppercase">{plan.billing}</span>
+                  <div className="mb-8 pb-6 border-b border-white/[0.08]">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-4xl sm:text-5xl font-light text-white font-serif tracking-tight">{plan.price}</span>
+                      <span className="text-xs font-mono text-neutral-500 uppercase">{plan.billing}</span>
                     </div>
                   </div>
 
-                  <ul className="space-y-2.5 mb-6">
+                  <ul className="space-y-3.5 mb-8">
                     {plan.features.map((feat, fIdx) => (
-                      <li key={fIdx} className="flex items-start gap-2.5 text-xs text-neutral-300 font-light">
-                        <Check className="w-3.5 h-3.5 text-amber-200 shrink-0 mt-0.5" />
+                      <li key={fIdx} className="flex items-start gap-3 text-xs text-neutral-300 font-light">
+                        <Check className="w-4 h-4 text-amber-200 shrink-0 mt-0.5" />
                         <span>{feat}</span>
                       </li>
                     ))}
@@ -274,14 +251,14 @@ export function Pricing() {
                 <Button
                   onClick={() => startCheckout(plan.id)}
                   disabled={loadingPack === plan.id}
-                  className={`w-full h-11 text-xs font-mono tracking-[0.15em] uppercase rounded-xl transition-all duration-300 cursor-pointer mt-4 ${
+                  className={`w-full h-12 text-xs font-mono tracking-[0.15em] uppercase rounded-xl transition-all duration-300 cursor-pointer ${
                     isPopular
                       ? "bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.3)] hover:shadow-[0_0_35px_rgba(197,168,128,0.5)]"
                       : "bg-white/[0.06] hover:bg-white/[0.12] text-white border border-white/10"
                   }`}
                 >
                   {loadingPack === plan.id ? "Processing..." : plan.cta}
-                  <ArrowRight className="w-3.5 h-3.5 ml-2" />
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
             );
@@ -289,7 +266,7 @@ export function Pricing() {
         </div>
 
         {/* CREDIT CONSUMPTION EXPLANATION */}
-        <div className="mb-20 p-8 rounded-2xl glass-panel gold-border-glow bg-gradient-to-r from-amber-950/20 via-[#0e0e12] to-amber-950/10 border border-amber-200/20 shadow-2xl">
+        <div className="mb-20 p-8 rounded-2xl glass-panel gold-border-glow bg-gradient-to-r from-amber-950/20 via-[#0e0e12] to-amber-950/10 border border-amber-200/20 shadow-2xl max-w-5xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-200/90 mb-1 block">
               SIMPLE WHOLE-NUMBER CONSUMPTION
@@ -312,7 +289,7 @@ export function Pricing() {
         </div>
 
         {/* TOP-UP CREDITS (RECHARGE SECTION) */}
-        <div id="topup" className="mb-20 p-8 rounded-2xl glass-panel border border-white/10 bg-[#08080b]">
+        <div id="topup" className="mb-20 p-8 rounded-2xl glass-panel border border-white/10 bg-[#08080b] max-w-5xl mx-auto">
           <div className="text-center max-w-xl mx-auto mb-10">
             <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-200/80 mb-2 block">
               INSTANT CREDIT RECHARGE
@@ -357,7 +334,7 @@ export function Pricing() {
         </div>
 
         {/* COMPACT ENTERPRISE SECTION */}
-        <div className="mb-24 p-8 rounded-2xl glass-panel border border-white/10 bg-gradient-to-r from-[#0d0d12] via-[#12121a] to-[#0d0d12]">
+        <div className="mb-24 p-8 rounded-2xl glass-panel border border-white/10 bg-gradient-to-r from-[#0d0d12] via-[#12121a] to-[#0d0d12] max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -387,7 +364,7 @@ export function Pricing() {
         </div>
 
         {/* FEATURE COMPARISON MATRIX */}
-        <div className="mb-24">
+        <div className="mb-24 max-w-5xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-neutral-500 mb-2 block">
               // SPECIFICATION MATRIX
@@ -403,7 +380,7 @@ export function Pricing() {
                     <th className="p-4 text-xs font-mono uppercase text-neutral-400 font-normal">Capability</th>
                     <th className="p-4 text-xs font-mono uppercase text-neutral-300 text-center font-normal">Starter (10 Cr)</th>
                     <th className="p-4 text-xs font-mono uppercase text-amber-200 text-center font-semibold bg-amber-400/5">Growth (30 Cr/mo)</th>
-                    <th className="p-4 text-xs font-mono uppercase text-neutral-300 text-center font-normal">Enterprise</th>
+                    <th className="p-4 text-xs font-mono uppercase text-neutral-300 text-center font-normal">Business (80 Cr/mo)</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/[0.06] text-xs font-light text-neutral-300">
@@ -411,19 +388,19 @@ export function Pricing() {
                     <td className="p-4">Commercial Videos (5 Cr each)</td>
                     <td className="p-4 text-center text-amber-200">2 Included</td>
                     <td className="p-4 text-center text-amber-200 bg-amber-400/5">6 Included / mo</td>
-                    <td className="p-4 text-center text-amber-200">Custom Volume</td>
+                    <td className="p-4 text-center text-amber-200">16 Included / mo</td>
                   </tr>
                   <tr>
                     <td className="p-4">Performance Creatives (1 Cr each)</td>
                     <td className="p-4 text-center text-amber-200">10 Included</td>
                     <td className="p-4 text-center text-amber-200 bg-amber-400/5">30 Included / mo</td>
-                    <td className="p-4 text-center text-amber-200">Custom Volume</td>
+                    <td className="p-4 text-center text-amber-200">80 Included / mo</td>
                   </tr>
                   <tr>
                     <td className="p-4">Priority Queue</td>
                     <td className="p-4 text-center text-neutral-600">Standard</td>
                     <td className="p-4 text-center text-amber-200 bg-amber-400/5">✓ Priority Queue</td>
-                    <td className="p-4 text-center text-amber-200">✓ Dedicated Queue</td>
+                    <td className="p-4 text-center text-amber-200">✓ Highest Priority</td>
                   </tr>
                   <tr>
                     <td className="p-4">Commercial License</td>
@@ -435,19 +412,13 @@ export function Pricing() {
                     <td className="p-4">Team Members</td>
                     <td className="p-4 text-center text-neutral-300">1 Seat</td>
                     <td className="p-4 text-center text-neutral-300 bg-amber-400/5">1 Seat</td>
-                    <td className="p-4 text-center text-amber-200">✓ Unlimited Seats</td>
+                    <td className="p-4 text-center text-amber-200">✓ Multi-User Seats</td>
                   </tr>
                   <tr>
                     <td className="p-4">Support</td>
                     <td className="p-4 text-center text-neutral-400">Standard</td>
                     <td className="p-4 text-center text-neutral-300 bg-amber-400/5">Premium 24/7</td>
-                    <td className="p-4 text-center text-amber-200">Dedicated Account Mgr</td>
-                  </tr>
-                  <tr>
-                    <td className="p-4">API Access</td>
-                    <td className="p-4 text-center text-neutral-600">—</td>
-                    <td className="p-4 text-center text-neutral-600 bg-amber-400/5">—</td>
-                    <td className="p-4 text-center text-amber-200">✓ Full API & Webhooks</td>
+                    <td className="p-4 text-center text-amber-200">Priority Dedicated Support</td>
                   </tr>
                 </tbody>
               </table>
