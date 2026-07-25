@@ -2,18 +2,23 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Next.js 16: proxy.ts replaces middleware.ts
-// This runs on the edge before routes are rendered.
-// Better Auth stores session in "better-auth.session_token" cookie.
+// This runs on the server before routes are rendered.
+// Better Auth uses "__Secure-better-auth.session_token" on HTTPS (production)
+// and "better-auth.session_token" on HTTP (development).
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Check for Better Auth session cookie
-  const sessionToken = request.cookies.get("better-auth.session_token");
+  // Check for Better Auth session cookie in both HTTPS and HTTP modes
+  const sessionToken =
+    request.cookies.get("__Secure-better-auth.session_token")?.value ||
+    request.cookies.get("better-auth.session_token")?.value;
+
+  const isAuthenticated = Boolean(sessionToken);
 
   // Protected routes: /dashboard and all sub-routes
   if (pathname.startsWith("/dashboard")) {
-    if (!sessionToken?.value) {
+    if (!isAuthenticated) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
@@ -22,7 +27,7 @@ export function proxy(request: NextRequest) {
 
   // If user is logged in and tries to visit /login or /signup, redirect to /dashboard
   if (pathname === "/login" || pathname === "/signup") {
-    if (sessionToken?.value) {
+    if (isAuthenticated) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
@@ -30,7 +35,7 @@ export function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Only run proxy on these paths (exclude api, static files, images)
+// Only run proxy on these paths
 export const config = {
   matcher: [
     "/dashboard/:path*",

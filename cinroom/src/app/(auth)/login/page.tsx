@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Diamond, ArrowRight, Lock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,11 +30,11 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/dashboard");
-      router.refresh();
+      // Hard redirect to ensure session cookies are recognized across all components
+      window.location.href = "/dashboard";
     } catch (err: any) {
       console.error("Login error:", err);
-      setError(err?.message || "Authentication failed. Please try again.");
+      setError(err?.message || "Authentication failed. Please check your credentials and try again.");
       setLoading(false);
     }
   };

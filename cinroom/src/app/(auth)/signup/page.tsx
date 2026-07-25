@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Diamond, ArrowRight, Lock, Mail, Building2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 
 export default function SignupPage() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
@@ -47,7 +45,8 @@ export default function SignupPage() {
         }
       }
 
-      router.push("/dashboard");
+      // Hard redirect to dashboard
+      window.location.href = "/dashboard";
     } catch (err: any) {
       console.error("Signup error:", err);
       setError(err?.message || "Error connecting to authentication service.");
@@ -148,7 +147,7 @@ export default function SignupPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-12 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] transition-all duration-300 rounded-xl mt-4"
+            className="w-full h-12 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] transition-all duration-300 rounded-xl mt-4 cursor-pointer"
           >
             {loading ? "Creating Workspace..." : "Create Atelier & Claim Credits"}
             <ArrowRight className="w-4 h-4 ml-2" />
