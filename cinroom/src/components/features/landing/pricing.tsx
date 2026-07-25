@@ -80,11 +80,15 @@ const paidPlans: Plan[] = [
   },
 ];
 
-const topUpPacks = [
-  { id: "topup_5", credits: 5, label: "5 Credits Pack" },
-  { id: "topup_10", credits: 10, label: "10 Credits Pack", popular: true },
-  { id: "topup_20", credits: 20, label: "20 Credits Pack" },
-  { id: "topup_50", credits: 50, label: "50 Credits Pack" },
+const topUpOptions = [
+  { id: "topup_5", credits: 5, label: "5 Credits" },
+  { id: "topup_10", credits: 10, label: "10 Credits" },
+  { id: "topup_20", credits: 20, label: "20 Credits", popular: true },
+  { id: "topup_50", credits: 50, label: "50 Credits" },
+  { id: "topup_100", credits: 100, label: "100 Credits" },
+  { id: "topup_200", credits: 200, label: "200 Credits" },
+  { id: "topup_500", credits: 500, label: "500 Credits" },
+  { id: "topup_1000", credits: 1000, label: "1,000 Credits" },
 ];
 
 const creditExamples = [
@@ -112,7 +116,7 @@ const faqs = [
   {
     question: "Can I recharge anytime?",
     answer:
-      "Yes. You can purchase top-up credit packs (5, 10, 20, or 50 credits) anytime directly from your dashboard without changing your subscription.",
+      "Yes. You can purchase top-up credit packs anytime directly from your dashboard without changing your subscription.",
   },
   {
     question: "Do Credits expire?",
@@ -137,8 +141,11 @@ const faqs = [
 ];
 
 export function Pricing() {
+  const [selectedTopUp, setSelectedTopUp] = useState("topup_20");
   const [loadingPack, setLoadingPack] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const activeTopUpObj = topUpOptions.find((t) => t.id === selectedTopUp) || topUpOptions[2];
 
   const startCheckout = async (productId: string) => {
     setLoadingPack(productId);
@@ -190,7 +197,7 @@ export function Pricing() {
           </p>
         </div>
 
-        {/* Updated Notice Banner */}
+        {/* Notice Banner */}
         <div className="mb-14 max-w-2xl mx-auto p-4 rounded-xl glass-panel bg-amber-500/[0.03] border border-amber-200/20 text-center">
           <p className="text-xs font-mono text-amber-200/90 flex items-center justify-center gap-2">
             <ShieldAlert className="w-4 h-4 text-amber-200 shrink-0" />
@@ -288,9 +295,9 @@ export function Pricing() {
           </div>
         </div>
 
-        {/* TOP-UP CREDITS (RECHARGE SECTION) */}
+        {/* SLEEK COMPACT TOP-UP CREDITS SELECTOR */}
         <div id="topup" className="mb-20 p-8 rounded-2xl glass-panel border border-white/10 bg-[#08080b] max-w-5xl mx-auto">
-          <div className="text-center max-w-xl mx-auto mb-10">
+          <div className="text-center max-w-xl mx-auto mb-8">
             <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-200/80 mb-2 block">
               INSTANT CREDIT RECHARGE
             </span>
@@ -298,38 +305,37 @@ export function Pricing() {
             <p className="text-xs text-neutral-400 font-light">Purchase additional Credits instantly without changing your subscription.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {topUpPacks.map((pack) => (
-              <div
-                key={pack.id}
-                className={`p-6 rounded-xl border flex flex-col justify-between transition-all ${
-                  pack.popular
-                    ? "bg-amber-400/5 border-amber-200/40 shadow-[0_0_20px_rgba(197,168,128,0.1)]"
-                    : "bg-white/[0.02] border-white/10 hover:border-white/20"
+          {/* Compact Pill Selector */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-8 max-w-3xl mx-auto">
+            {topUpOptions.map((opt) => (
+              <button
+                key={opt.id}
+                onClick={() => setSelectedTopUp(opt.id)}
+                className={`px-4 py-2.5 rounded-xl font-mono text-xs transition-all ${
+                  selectedTopUp === opt.id
+                    ? "bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_15px_rgba(197,168,128,0.3)]"
+                    : "bg-white/[0.04] text-neutral-300 hover:bg-white/[0.08] border border-white/10"
                 }`}
               >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xl font-light text-white font-serif">{pack.label}</span>
-                    {pack.popular && (
-                      <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-400/20 text-amber-200 uppercase">
-                        POPULAR
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-neutral-400 font-light mb-4">Instant top-up recharge pack</p>
-                </div>
-
-                <Button
-                  onClick={() => startCheckout(pack.id)}
-                  disabled={loadingPack === pack.id}
-                  variant="outline"
-                  className="w-full h-10 text-xs font-mono uppercase border-white/10 text-neutral-200 hover:text-white hover:bg-white/10 cursor-pointer"
-                >
-                  {loadingPack === pack.id ? "Loading..." : "Recharge Credits"}
-                </Button>
-              </div>
+                {opt.label} {opt.popular ? "⭐" : ""}
+              </button>
             ))}
+          </div>
+
+          <div className="max-w-md mx-auto p-6 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+            <div className="text-sm font-mono text-amber-200 font-semibold mb-1">
+              Selected Pack: {activeTopUpObj.label}
+            </div>
+            <p className="text-xs font-mono text-neutral-400 mb-6">
+              Instant top-up added to your Atelier Wallet immediately. Never expires.
+            </p>
+            <Button
+              onClick={() => startCheckout(activeTopUpObj.id)}
+              disabled={loadingPack === activeTopUpObj.id}
+              className="w-full h-11 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_30px_rgba(197,168,128,0.4)] cursor-pointer"
+            >
+              {loadingPack === activeTopUpObj.id ? "Loading..." : `Recharge ${activeTopUpObj.label}`}
+            </Button>
           </div>
         </div>
 
@@ -342,11 +348,10 @@ export function Pricing() {
                 <h3 className="text-2xl font-light text-white tracking-tight">Enterprise Studio</h3>
               </div>
               <p className="text-xs text-neutral-400 font-light max-w-xl">
-                For agencies, manufacturers and high-volume jewelry brands requiring custom GPU capacity and API access.
+                For agencies, manufacturers and high-volume jewelry brands requiring custom GPU capacity and SLA.
               </p>
               <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-neutral-300 pt-2">
                 <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-200" /> Unlimited Team Members</span>
-                <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-200" /> API Access</span>
                 <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-200" /> Dedicated Infrastructure</span>
                 <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-200" /> Custom SLA</span>
                 <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-200" /> Account Manager</span>

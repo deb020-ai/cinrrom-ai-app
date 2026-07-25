@@ -5,14 +5,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { User, Key, CreditCard, Wallet, Sparkles, Zap, ShieldCheck, RefreshCw, Layers, Clock, History, ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { User, CreditCard, Wallet, ShieldCheck, RefreshCw, Clock, History, ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { Pricing } from "@/components/features/landing/pricing";
 
 const mockTransactions = [
-  { id: "tx_01", type: "topup", description: "Top-Up Pack (5 Credits)", credits: "+5", date: "24 Jul 2026", status: "Success" },
-  { id: "tx_02", type: "usage", description: "Render Commercial Video: Diamond Ring", credits: "-1", date: "22 Jul 2026", status: "Completed" },
-  { id: "tx_03", type: "usage", description: "Export 5 Performance Creatives: Emerald Set", credits: "-1", date: "20 Jul 2026", status: "Completed" },
-  { id: "tx_04", type: "subscription", description: "Monthly Subscription Credit Grant", credits: "+10", date: "15 Jul 2026", status: "Success" },
+  { id: "tx_01", type: "topup", description: "Top-Up Recharge Pack (10 Credits)", credits: "+10", date: "24 Jul 2026", status: "Success" },
+  { id: "tx_02", type: "usage", description: "Render Commercial Video: Diamond Ring", credits: "-5", date: "22 Jul 2026", status: "Completed" },
+  { id: "tx_03", type: "usage", description: "Export Performance Creative: Emerald Solitaire", credits: "-1", date: "20 Jul 2026", status: "Completed" },
+  { id: "tx_04", type: "subscription", description: "Monthly Subscription Credit Grant", credits: "+30", date: "15 Jul 2026", status: "Success" },
 ];
 
 export default function SettingsPage() {
@@ -20,7 +20,7 @@ export default function SettingsPage() {
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-16">
       <div>
         <h1 className="text-3xl font-light text-white tracking-tight mb-1">Studio Settings</h1>
-        <p className="text-xs font-mono text-neutral-400 uppercase tracking-wider">Manage your Atelier workspace, credit wallet, and API keys.</p>
+        <p className="text-xs font-mono text-neutral-400 uppercase tracking-wider">Manage your Atelier workspace, commercial credits, and profile.</p>
       </div>
 
       <Tabs defaultValue="credits" className="w-full">
@@ -33,9 +33,6 @@ export default function SettingsPage() {
           </TabsTrigger>
           <TabsTrigger value="profile" className="data-[state=active]:bg-amber-400/10 data-[state=active]:text-amber-200 data-[state=active]:border-amber-200/30 text-xs font-mono tracking-wider uppercase h-9 rounded-lg">
             <User className="w-4 h-4 mr-2" /> Atelier Profile
-          </TabsTrigger>
-          <TabsTrigger value="api" className="data-[state=active]:bg-amber-400/10 data-[state=active]:text-amber-200 data-[state=active]:border-amber-200/30 text-xs font-mono tracking-wider uppercase h-9 rounded-lg">
-            <Key className="w-4 h-4 mr-2" /> API Access
           </TabsTrigger>
         </TabsList>
 
@@ -53,7 +50,7 @@ export default function SettingsPage() {
                   <CardTitle className="text-2xl font-light text-white">Credit Balance & Ledger</CardTitle>
                 </div>
                 <div className="px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 font-mono text-xs flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-amber-200" /> Growth Subscription Active
+                  <ShieldCheck className="w-4 h-4 text-amber-200" /> Growth Plan Active
                 </div>
               </div>
             </CardHeader>
@@ -64,20 +61,20 @@ export default function SettingsPage() {
                 
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
                   <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Available Credits</div>
-                  <div className="text-4xl font-light text-amber-200 font-serif">12</div>
+                  <div className="text-4xl font-light text-amber-200 font-serif">30</div>
                   <div className="text-[10px] font-mono text-neutral-500 mt-2">Ready for commercial rendering</div>
                 </div>
 
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
                   <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Credits Used</div>
-                  <div className="text-4xl font-light text-white font-serif">8</div>
+                  <div className="text-4xl font-light text-white font-serif">6</div>
                   <div className="text-[10px] font-mono text-neutral-500 mt-2">Commercial assets produced</div>
                 </div>
 
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
                   <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Remaining</div>
-                  <div className="text-4xl font-light text-white font-serif">4</div>
-                  <div className="text-[10px] font-mono text-neutral-500 mt-2">Until next monthly top-up</div>
+                  <div className="text-4xl font-light text-white font-serif">24</div>
+                  <div className="text-[10px] font-mono text-neutral-500 mt-2">Until next monthly renewal</div>
                 </div>
 
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10 flex flex-col justify-between">
@@ -87,7 +84,7 @@ export default function SettingsPage() {
                       <Clock className="w-4 h-4 text-amber-200" /> 15 August
                     </div>
                   </div>
-                  <div className="text-[10px] font-mono text-amber-200/80 mt-2">+10 Credits renew automatically</div>
+                  <div className="text-[10px] font-mono text-amber-200/80 mt-2">+30 Credits renew automatically</div>
                 </div>
 
               </div>
@@ -95,7 +92,7 @@ export default function SettingsPage() {
               {/* Action Bar */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/[0.06] mb-8">
                 <div className="text-xs font-mono text-neutral-400">
-                  Need extra credits before next renewal date?
+                  Need additional credits for an upcoming campaign drop?
                 </div>
                 <a href="#topup">
                   <Button className="h-11 px-6 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_30px_rgba(197,168,128,0.4)] cursor-pointer">
@@ -171,25 +168,6 @@ export default function SettingsPage() {
                 <Input defaultValue="deb@cinroom.com" type="email" className="h-11 bg-white/[0.03] border-white/10 text-white font-sans rounded-xl" />
               </div>
               <Button className="bg-amber-400/10 text-amber-200 border border-amber-200/30 hover:bg-amber-400/20 text-xs font-mono uppercase tracking-wider h-10 px-5 rounded-xl">Save Profile</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* API Keys Tab */}
-        <TabsContent value="api" className="space-y-6">
-          <Card className="glass-panel border-white/10 p-6 rounded-2xl bg-[#08080a]">
-            <CardHeader className="px-0 pt-0">
-              <CardTitle className="text-xl font-light text-white">Commercial API Keys</CardTitle>
-              <CardDescription className="text-xs text-neutral-400">Integrate Cinroom campaign generation with your e-commerce platform.</CardDescription>
-            </CardHeader>
-            <CardContent className="px-0 pb-0 space-y-4 pt-4">
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/10">
-                <div className="flex-1 font-mono text-xs text-amber-200/80 truncate">
-                  sk_live_cinroom_89f7a4b901c23849f82190
-                </div>
-                <Button variant="secondary" size="sm" className="bg-white/10 text-white hover:bg-white/20 text-xs font-mono">Copy Key</Button>
-              </div>
-              <Button className="bg-amber-400/10 text-amber-200 border border-amber-200/30 hover:bg-amber-400/20 text-xs font-mono uppercase tracking-wider h-10 px-5 rounded-xl">Generate Production API Key</Button>
             </CardContent>
           </Card>
         </TabsContent>

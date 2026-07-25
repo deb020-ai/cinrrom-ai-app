@@ -1,20 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Diamond, Video, LayoutTemplate, FolderOpen, CreditCard, Settings, Code, LogOut } from "lucide-react";
+import { Diamond, Video, LayoutTemplate, FolderOpen, CreditCard, Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const navItems = [
   { name: "Create Studio Video", href: "/dashboard", icon: Video },
-  { name: "Preset Templates", href: "/dashboard/templates", icon: LayoutTemplate },
+  { name: "Cinroom Vault Rigs", href: "/dashboard/templates", icon: LayoutTemplate },
   { name: "Projects Vault", href: "/dashboard/history", icon: FolderOpen },
 ];
 
 const secondaryItems = [
   { name: "Credits & Plan", href: "/dashboard/settings", icon: CreditCard },
-  { name: "Developer API", href: "/dashboard/settings", icon: Code },
   { name: "Atelier Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
