@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { Diamond, ArrowRight, Lock, Mail, Building2, User, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,12 +15,12 @@ declare global {
 
 export default function SignupPage() {
   const supabase = createClient();
+  const googleBtnRef = useRef<HTMLDivElement>(null);
   const [name, setName] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -37,6 +37,16 @@ export default function SignupPage() {
           client_id: GOOGLE_CLIENT_ID,
           callback: handleGoogleIdTokenResponse,
         });
+
+        if (googleBtnRef.current) {
+          window.google.accounts.id.renderButton(googleBtnRef.current, {
+            theme: "outline",
+            size: "large",
+            width: "380",
+            text: "signup_with",
+            shape: "pill",
+          });
+        }
       }
     };
     document.body.appendChild(script);
@@ -47,7 +57,7 @@ export default function SignupPage() {
   }, []);
 
   const handleGoogleIdTokenResponse = async (response: any) => {
-    setGoogleLoading(true);
+    setLoading(true);
     setError("");
     try {
       const { data, error } = await supabase.auth.signInWithIdToken({
@@ -57,7 +67,7 @@ export default function SignupPage() {
 
       if (error) {
         setError(error.message);
-        setGoogleLoading(false);
+        setLoading(false);
         return;
       }
 
@@ -65,7 +75,7 @@ export default function SignupPage() {
     } catch (err: any) {
       console.error("Google ID Token Auth Error:", err);
       setError(err?.message || "Google Sign-Up failed.");
-      setGoogleLoading(false);
+      setLoading(false);
     }
   };
 
@@ -116,30 +126,6 @@ export default function SignupPage() {
     }
   };
 
-  const handleGoogleSignIn = () => {
-    setError("");
-    setGoogleLoading(true);
-    if (window.google?.accounts?.id) {
-      window.google.accounts.id.prompt((notification: any) => {
-        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-          supabase.auth.signInWithOAuth({
-            provider: "google",
-            options: {
-              redirectTo: `${window.location.origin}/auth/callback`,
-            },
-          });
-        }
-      });
-    } else {
-      supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center p-4 relative overflow-hidden subtle-grid py-12">
       
@@ -163,34 +149,10 @@ export default function SignupPage() {
           <p className="text-xs font-mono text-amber-200/80">Includes 5 Free Trial Campaign Generation Credits</p>
         </div>
 
-        {/* Direct Google Sign In Button */}
-        <Button
-          type="button"
-          onClick={handleGoogleSignIn}
-          disabled={googleLoading}
-          variant="outline"
-          className="w-full h-11 bg-white/[0.04] border-white/10 hover:bg-white/[0.08] text-white text-xs font-mono tracking-wider rounded-xl mb-6 flex items-center justify-center gap-3 cursor-pointer"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24">
-            <path
-              fill="#EA4335"
-              d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.1 9 5 12 5z"
-            />
-            <path
-              fill="#4285F4"
-              d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.6 14.8c-.3-.8-.4-1.8-.4-2.8s.1-2 .4-2.8L1.9 6.3C.7 8.7 0 10.3 0 12s.7 3.3 1.9 5.7l3.7-2.9z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.1-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"
-            />
-          </svg>
-          {googleLoading ? "Connecting..." : "Sign up with Google"}
-        </Button>
+        {/* Native Google Sign-In Button Container */}
+        <div className="flex justify-center mb-6">
+          <div ref={googleBtnRef} className="w-full flex justify-center" />
+        </div>
 
         {/* Divider */}
         <div className="relative flex items-center justify-center mb-6">
@@ -289,7 +251,7 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full h-12 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] transition-all duration-300 rounded-xl mt-4 cursor-pointer"
           >
-            {loading ? "Creating Workspace..." : "Create Atelier & Claim Credits"}
+            {loading ? "Creating Supabase Workspace..." : "Create Atelier & Claim Credits"}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </form>

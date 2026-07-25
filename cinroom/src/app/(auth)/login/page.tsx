@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { Diamond, ArrowRight, Lock, Mail, KeyRound, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,19 +15,19 @@ declare global {
 
 export default function LoginPage() {
   const supabase = createClient();
+  const googleBtnRef = useRef<HTMLDivElement>(null);
   const [authMethod, setAuthMethod] = useState<"password" | "otp">("password");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
   const GOOGLE_CLIENT_ID = "615256631418-d1gr6vknmfn084scsmvitc68hdvucgs0.apps.googleusercontent.com";
 
-  // Load Google Identity Services SDK for direct cinroom.com Sign-In
+  // Load Google Identity Services & render Google Sign In button directly on cinroom.com
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://accounts.google.com/gsi/client";
@@ -39,6 +39,16 @@ export default function LoginPage() {
           client_id: GOOGLE_CLIENT_ID,
           callback: handleGoogleIdTokenResponse,
         });
+
+        if (googleBtnRef.current) {
+          window.google.accounts.id.renderButton(googleBtnRef.current, {
+            theme: "outline",
+            size: "large",
+            width: "380",
+            text: "continue_with",
+            shape: "pill",
+          });
+        }
       }
     };
     document.body.appendChild(script);
@@ -49,7 +59,7 @@ export default function LoginPage() {
   }, []);
 
   const handleGoogleIdTokenResponse = async (response: any) => {
-    setGoogleLoading(true);
+    setLoading(true);
     setError("");
     try {
       const { data, error } = await supabase.auth.signInWithIdToken({
@@ -59,7 +69,7 @@ export default function LoginPage() {
 
       if (error) {
         setError(error.message);
-        setGoogleLoading(false);
+        setLoading(false);
         return;
       }
 
@@ -67,32 +77,7 @@ export default function LoginPage() {
     } catch (err: any) {
       console.error("Google ID Token Auth Error:", err);
       setError(err?.message || "Google Sign-In failed.");
-      setGoogleLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = () => {
-    setError("");
-    setGoogleLoading(true);
-    if (window.google?.accounts?.id) {
-      window.google.accounts.id.prompt((notification: any) => {
-        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-          // Fallback to standard OAuth if prompt is suppressed
-          supabase.auth.signInWithOAuth({
-            provider: "google",
-            options: {
-              redirectTo: `${window.location.origin}/auth/callback`,
-            },
-          });
-        }
-      });
-    } else {
-      supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
+      setLoading(false);
     }
   };
 
@@ -206,34 +191,10 @@ export default function LoginPage() {
           <p className="text-xs font-mono text-neutral-400">Sign in to your Cinroom Studio</p>
         </div>
 
-        {/* Direct Google Sign In Button */}
-        <Button
-          type="button"
-          onClick={handleGoogleSignIn}
-          disabled={googleLoading}
-          variant="outline"
-          className="w-full h-11 bg-white/[0.04] border-white/10 hover:bg-white/[0.08] text-white text-xs font-mono tracking-wider rounded-xl mb-6 flex items-center justify-center gap-3 cursor-pointer"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24">
-            <path
-              fill="#EA4335"
-              d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.1 9 5 12 5z"
-            />
-            <path
-              fill="#4285F4"
-              d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.6 14.8c-.3-.8-.4-1.8-.4-2.8s.1-2 .4-2.8L1.9 6.3C.7 8.7 0 10.3 0 12s.7 3.3 1.9 5.7l3.7-2.9z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.1-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"
-            />
-          </svg>
-          {googleLoading ? "Connecting..." : "Continue with Google"}
-        </Button>
+        {/* Native Google Sign-In Button Container */}
+        <div className="flex justify-center mb-6">
+          <div ref={googleBtnRef} className="w-full flex justify-center" />
+        </div>
 
         {/* Divider */}
         <div className="relative flex items-center justify-center mb-6">
