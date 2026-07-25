@@ -5,9 +5,10 @@ import Link from "next/link";
 import { Diamond, ArrowRight, Lock, Mail, Building2, User, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
+import { createClient } from "@/lib/supabase/client";
 
 export default function SignupPage() {
+  const supabase = createClient();
   const [name, setName] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,8 +16,8 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  // Strong Password Checks
   const isLengthValid = password.length >= 8;
   const hasNumber = /[0-9]/.test(password);
   const isPasswordStrong = isLengthValid && hasNumber;
@@ -24,42 +25,41 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isPasswordStrong) {
-      setError("Password must be at least 8 characters long and contain at least one number.");
+      setError("Password must be at least 8 characters long and contain a number.");
       return;
     }
 
     setLoading(true);
     setError("");
+    setSuccess("");
 
     try {
-      const res = await authClient.signUp.email({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        name,
+        options: {
+          data: {
+            full_name: name,
+            company_name: companyName,
+          },
+        },
       });
 
-      if (res.error) {
-        setError(res.error.message || "Failed to create account. Please check your details.");
+      if (error) {
+        setError(error.message);
         setLoading(false);
         return;
       }
 
-      // Automatically create company organization workspace
-      if (companyName) {
-        try {
-          await authClient.organization.create({
-            name: companyName,
-            slug: companyName.toLowerCase().replace(/[^a-z0-9]/g, "-"),
-          });
-        } catch (orgErr) {
-          console.warn("Organization creation warning:", orgErr);
-        }
+      if (data.session) {
+        window.location.href = "/dashboard";
+      } else {
+        setSuccess("Account created successfully! Check your email to verify your account or sign in with your password.");
+        setLoading(false);
       }
-
-      window.location.href = "/dashboard";
     } catch (err: any) {
-      console.error("Signup error:", err);
-      setError(err?.message || "Error connecting to authentication service.");
+      console.error("Supabase Signup error:", err);
+      setError(err?.message || "Error connecting to Supabase auth service.");
       setLoading(false);
     }
   };
@@ -68,10 +68,17 @@ export default function SignupPage() {
     setGoogleLoading(true);
     setError("");
     try {
-      await authClient.signIn.social({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        callbackURL: "/dashboard",
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
       });
+
+      if (error) {
+        setError(error.message);
+        setGoogleLoading(false);
+      }
     } catch (err: any) {
       console.error("Google auth error:", err);
       setError(err?.message || "Failed to initialize Google authentication.");
@@ -145,6 +152,12 @@ export default function SignupPage() {
           </div>
         )}
 
+        {success && (
+          <div className="mb-6 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono text-emerald-300 text-center">
+            {success}
+          </div>
+        )}
+
         <form onSubmit={handleSignup} className="space-y-4">
           <div className="space-y-2">
             <label className="text-xs font-mono text-neutral-300 uppercase tracking-wider block">Full Name</label>
@@ -205,7 +218,6 @@ export default function SignupPage() {
               />
             </div>
             
-            {/* Password Validation Hints */}
             {password.length > 0 && (
               <div className="flex items-center gap-4 text-[10px] font-mono text-neutral-400 pt-1">
                 <span className={`flex items-center gap-1 ${isLengthValid ? "text-amber-300" : "text-neutral-500"}`}>
@@ -223,7 +235,7 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full h-12 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] transition-all duration-300 rounded-xl mt-4 cursor-pointer"
           >
-            {loading ? "Creating Workspace..." : "Create Atelier & Claim Credits"}
+            {loading ? "Creating Supabase Workspace..." : "Create Atelier & Claim Credits"}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </form>

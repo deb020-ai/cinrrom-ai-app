@@ -5,9 +5,10 @@ import Link from "next/link";
 import { Diamond, ArrowRight, Lock, Mail, KeyRound, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
+  const supabase = createClient();
   const [authMethod, setAuthMethod] = useState<"password" | "otp">("password");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,20 +26,20 @@ export default function LoginPage() {
     setMessage("");
 
     try {
-      const res = await authClient.signIn.email({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (res.error) {
-        setError(res.error.message || "Invalid email or password");
+      if (error) {
+        setError(error.message);
         setLoading(false);
         return;
       }
 
       window.location.href = "/dashboard";
     } catch (err: any) {
-      console.error("Login error:", err);
+      console.error("Supabase Login error:", err);
       setError(err?.message || "Authentication failed. Please check your credentials.");
       setLoading(false);
     }
@@ -55,23 +56,25 @@ export default function LoginPage() {
     setMessage("");
 
     try {
-      const res = await authClient.emailOtp.sendVerificationOtp({
+      const { error } = await supabase.auth.signInWithOtp({
         email,
-        type: "sign-in",
+        options: {
+          shouldCreateUser: true,
+        },
       });
 
-      if (res.error) {
-        setError(res.error.message || "Failed to send OTP code.");
+      if (error) {
+        setError(error.message);
         setLoading(false);
         return;
       }
 
       setOtpSent(true);
-      setMessage("A 6-digit security code has been dispatched to your email.");
+      setMessage("A 6-digit security OTP / Magic link has been dispatched to your email address!");
       setLoading(false);
     } catch (err: any) {
       console.error("OTP Request error:", err);
-      setError(err?.message || "Error requesting OTP security code.");
+      setError(err?.message || "Error requesting OTP code.");
       setLoading(false);
     }
   };
@@ -82,13 +85,14 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await authClient.signIn.emailOtp({
+      const { data, error } = await supabase.auth.verifyOtp({
         email,
-        otp: otpCode,
+        token: otpCode,
+        type: "email",
       });
 
-      if (res.error) {
-        setError(res.error.message || "Invalid or expired OTP verification code.");
+      if (error) {
+        setError(error.message);
         setLoading(false);
         return;
       }
@@ -105,10 +109,17 @@ export default function LoginPage() {
     setGoogleLoading(true);
     setError("");
     try {
-      await authClient.signIn.social({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        callbackURL: "/dashboard",
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
       });
+
+      if (error) {
+        setError(error.message);
+        setGoogleLoading(false);
+      }
     } catch (err: any) {
       console.error("Google auth error:", err);
       setError(err?.message || "Failed to initialize Google authentication.");
@@ -136,7 +147,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md glass-panel gold-border-glow p-8 rounded-2xl z-10 shadow-[0_20px_80px_rgba(0,0,0,0.9)]">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-light text-white tracking-tight mb-1">Welcome Back</h1>
-          <p className="text-xs font-mono text-neutral-400">Sign in to your Cinroom Enterprise Studio</p>
+          <p className="text-xs font-mono text-neutral-400">Sign in to your Supabase-powered Cinroom Studio</p>
         </div>
 
         {/* Social Google Login Button */}
@@ -172,7 +183,7 @@ export default function LoginPage() {
         <div className="relative flex items-center justify-center mb-6">
           <div className="border-t border-white/10 w-full" />
           <span className="bg-[#0b0b0e] px-3 text-[10px] font-mono text-neutral-500 uppercase tracking-widest absolute">
-            Or Work Email
+            Or Email Credentials
           </span>
         </div>
 
@@ -198,7 +209,7 @@ export default function LoginPage() {
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            OTP Code Sign In
+            Supabase OTP Sign In
           </button>
         </div>
 
@@ -253,7 +264,7 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full h-12 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] transition-all duration-300 rounded-xl mt-2 cursor-pointer"
             >
-              {loading ? "Authenticating..." : "Sign In to Studio"}
+              {loading ? "Authenticating..." : "Sign In with Supabase"}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </form>
@@ -280,7 +291,7 @@ export default function LoginPage() {
 
             {otpSent && (
               <div className="space-y-2">
-                <label className="text-xs font-mono text-neutral-300 uppercase tracking-wider block">6-Digit Security OTP</label>
+                <label className="text-xs font-mono text-neutral-300 uppercase tracking-wider block">6-Digit Supabase OTP</label>
                 <div className="relative">
                   <KeyRound className="w-4 h-4 absolute left-3.5 top-3.5 text-amber-200" />
                   <Input
@@ -304,8 +315,8 @@ export default function LoginPage() {
               {loading
                 ? "Processing..."
                 : otpSent
-                ? "Verify OTP & Enter Studio"
-                : "Send 6-Digit Verification OTP"}
+                ? "Verify OTP Code"
+                : "Send 6-Digit Supabase OTP"}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
 

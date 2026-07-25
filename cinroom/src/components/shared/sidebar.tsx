@@ -1,9 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Diamond, Video, LayoutTemplate, FolderOpen, CreditCard, Settings, Code, LogOut } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useSession, signOut } from "@/lib/auth-client";
+import { usePathname } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 const navItems = [
   { name: "Create Studio Video", href: "/dashboard", icon: Video },
@@ -19,19 +20,32 @@ const secondaryItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
-  const { data: session } = useSession();
+  const supabase = createClient();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   const handleSignOut = async () => {
-    await signOut();
-    router.push("/login");
-    router.refresh();
+    await supabase.auth.signOut();
+    window.location.href = "/login";
   };
 
-  const userName = session?.user?.name || "Atelier Member";
+  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Atelier Member";
   const userInitials = userName
     .split(" ")
-    .map((n) => n[0])
+    .map((n: string) => n[0])
     .join("")
     .substring(0, 2)
     .toUpperCase();
@@ -97,7 +111,7 @@ export function Sidebar() {
             <div className="flex flex-col truncate">
               <span className="text-xs font-medium text-white truncate">{userName}</span>
               <span className="text-[10px] font-mono text-amber-200/80 truncate">
-                {session?.user?.email || "Pro Atelier Plan"}
+                {user?.email || "Pro Atelier Plan"}
               </span>
             </div>
           </div>

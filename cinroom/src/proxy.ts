@@ -2,32 +2,31 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Next.js 16: proxy.ts replaces middleware.ts
-// This runs on the server before routes are rendered.
-// Better Auth uses "__Secure-better-auth.session_token" on HTTPS (production)
-// and "better-auth.session_token" on HTTP (development).
+// Checks for Supabase Auth session cookies (sb-pwtxdpgbggzgmscspepe-auth-token / sb-access-token)
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Check for Better Auth session cookie in both HTTPS and HTTP modes
-  const sessionToken =
-    request.cookies.get("__Secure-better-auth.session_token")?.value ||
-    request.cookies.get("better-auth.session_token")?.value;
-
-  const isAuthenticated = Boolean(sessionToken);
+  // Read all cookies to detect Supabase Auth token
+  const allCookies = request.cookies.getAll();
+  const hasSupabaseCookie = allCookies.some((c) =>
+    c.name.startsWith("sb-") ||
+    c.name.includes("auth-token") ||
+    c.name.includes("better-auth")
+  );
 
   // Protected routes: /dashboard and all sub-routes
   if (pathname.startsWith("/dashboard")) {
-    if (!isAuthenticated) {
+    if (!hasSupabaseCookie) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
   }
 
-  // If user is logged in and tries to visit /login or /signup, redirect to /dashboard
+  // Redirect authenticated users away from login/signup
   if (pathname === "/login" || pathname === "/signup") {
-    if (isAuthenticated) {
+    if (hasSupabaseCookie) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }

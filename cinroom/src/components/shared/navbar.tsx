@@ -1,20 +1,33 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Diamond, LogOut, User } from "lucide-react";
-import { authClient, useSession, signOut } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export function Navbar() {
-  const { data: session, isPending } = useSession();
-  const router = useRouter();
+  const supabase = createClient();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-    router.refresh();
+    await supabase.auth.signOut();
+    window.location.href = "/";
   };
 
   return (
@@ -59,7 +72,7 @@ export function Navbar() {
 
         {/* CTA Buttons */}
         <div className="flex items-center gap-3">
-          {session?.user ? (
+          {user ? (
             <>
               <Link href="/dashboard">
                 <Button 
@@ -67,7 +80,7 @@ export function Navbar() {
                   className="text-xs font-mono tracking-wider uppercase text-amber-200 hover:text-white hover:bg-white/5 h-9 px-4 rounded-full flex items-center gap-2"
                 >
                   <User className="w-3.5 h-3.5" />
-                  {session.user.name || "Studio Dashboard"}
+                  {user.user_metadata?.full_name || user.email?.split("@")[0] || "Studio Dashboard"}
                 </Button>
               </Link>
               <Button 
