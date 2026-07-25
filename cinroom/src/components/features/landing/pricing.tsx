@@ -1,82 +1,121 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Sparkles, Zap, ShieldCheck, ArrowRight, RefreshCw, Building2, HelpCircle, Layers, Star, Award, ShieldAlert, History } from "lucide-react";
+import { Check, Sparkles, Zap, ShieldCheck, ArrowRight, RefreshCw, Building2, HelpCircle, Layers, Star, Award, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface Plan {
   id: string;
   name: string;
-  type: "onetime" | "subscription";
+  type: "free" | "onetime" | "subscription";
   price: string;
   billing: string;
   credits: string;
   subtitle: string;
   badge?: string;
   popular?: boolean;
-  benefits: string[];
+  features: string[];
   cta: string;
 }
 
-const mainPlans: Plan[] = [
+const pricingPlans: Plan[] = [
+  {
+    id: "free_tier",
+    name: "FREE",
+    type: "free",
+    price: "₹0",
+    billing: "forever free access",
+    credits: "0 Credits",
+    subtitle: "Explore the studio workspace and templates before purchasing commercial credits.",
+    features: [
+      "Create Atelier Workspace",
+      "Browse Studio Dashboard",
+      "Upload Product Photos",
+      "Explore 24+ Campaign Rigs",
+      "Save Studio Projects",
+      "0 Credits included",
+    ],
+    cta: "Create Free Account",
+  },
   {
     id: "starter_onetime",
-    name: "Starter",
+    name: "STARTER",
     type: "onetime",
     price: "₹3,999",
     billing: "one-time purchase",
-    credits: "2 Credits",
-    subtitle: "Perfect for brands that want to experience the platform before committing to a subscription.",
-    benefits: [
-      "2 Premium Commercial Videos OR 10 Performance Creatives",
-      "Studio-quality commercial assets",
+    credits: "10 Credits",
+    subtitle: "Best for trying the platform and producing your first launch campaign.",
+    features: [
+      "10 Production Credits",
+      "2 Commercial Videos OR 10 Images",
+      "1 Video + 5 Images equivalent",
       "Full commercial usage rights",
-      "Standard cloud rendering queue",
+      "Standard studio rendering queue",
       "Secure asset cloud storage",
     ],
-    cta: "Start Creating",
+    cta: "Buy Credits",
   },
   {
     id: "growth_monthly",
-    name: "Growth",
+    name: "GROWTH",
     type: "subscription",
     price: "₹9,999",
     billing: "per month",
-    credits: "10 Credits / mo",
+    credits: "30 Credits / mo",
     badge: "MOST POPULAR",
     popular: true,
-    subtitle: "The primary commercial production engine for growing jewelry brands.",
-    benefits: [
-      "10 Credits renewed every month",
+    subtitle: "The primary commercial production engine for growing luxury jewelry brands.",
+    features: [
+      "30 Credits renewed every month",
       "Priority Rendering Queue",
-      "Faster Asset Processing",
+      "Faster Asset Processing Queue",
       "Lower Effective Cost Per Credit",
-      "Commercial Usage Rights",
+      "Unrestricted Commercial License",
       "Premium 24/7 Dedicated Support",
+      "Instant Top-Up Recharge Enabled",
     ],
     cta: "Subscribe",
+  },
+  {
+    id: "business_monthly",
+    name: "BUSINESS",
+    type: "subscription",
+    price: "₹24,999",
+    billing: "per month",
+    credits: "80 Credits / mo",
+    subtitle: "Built for scaling jewelry houses, agencies, and high-volume marketing teams.",
+    features: [
+      "80 Credits renewed every month",
+      "Shared Team Credit Pool",
+      "Multi-User Team Workspace",
+      "Priority Dedicated Support",
+      "Highest Rendering Priority",
+      "Custom Motion Brand Watermarks",
+      "ProRes MOV 4K Exports",
+    ],
+    cta: "Upgrade",
   },
 ];
 
 const topUpPacks = [
-  { id: "topup_small", name: "Small Pack", credits: 2, label: "2 Credits" },
-  { id: "topup_medium", name: "Medium Pack", credits: 5, label: "5 Credits", popular: true },
-  { id: "topup_large", name: "Large Pack", credits: 10, label: "10 Credits" },
-  { id: "topup_xlarge", name: "Scale Pack", credits: 25, label: "25 Credits" },
+  { id: "topup_5", credits: 5, label: "5 Credits Pack" },
+  { id: "topup_10", credits: 10, label: "10 Credits Pack", popular: true },
+  { id: "topup_20", credits: 20, label: "20 Credits Pack" },
+  { id: "topup_50", credits: 50, label: "50 Credits Pack" },
 ];
 
 const creditExamples = [
-  { label: "Example A", desc: "2 Commercial Videos + 10 Performance Creatives", breakdown: "2 Credits" },
-  { label: "Example B", desc: "4 Commercial Videos", breakdown: "4 Credits" },
-  { label: "Example C", desc: "20 Performance Creatives", breakdown: "4 Credits" },
+  { title: "Example A", desc: "2 Commercial Videos OR 10 Images", breakdown: "10 Credits" },
+  { title: "Example B", desc: "1 Commercial Video + 5 Images", breakdown: "10 Credits" },
+  { title: "Example C", desc: "4 Commercial Videos + 10 Images", breakdown: "30 Credits (Growth)" },
 ];
 
 const faqs = [
   {
     question: "What are Credits?",
     answer:
-      "A Credit is our studio's unit of production. 1 Credit can be redeemed for 1 Premium Commercial Video (up to 4K resolution) OR 5 Premium Performance Creatives.",
+      "A Credit is the unified unit of production on Cinroom. 1 Performance Creative (Image) = 1 Credit. 1 Commercial Video = 5 Credits.",
   },
   {
     question: "How do Credits work?",
@@ -84,14 +123,14 @@ const faqs = [
       "Credits are stored in your Atelier Credit Wallet and deducted automatically whenever you render commercial videos or export performance ad creatives.",
   },
   {
-    question: "Can I mix videos and creatives?",
+    question: "Can I mix Videos and Images?",
     answer:
-      "Yes. Credits are completely flexible. You can use your credits for any combination of commercial videos and performance creatives.",
+      "Yes. Credits are completely flexible. For instance, 10 Credits can produce 2 Commercial Videos (2x5=10) OR 1 Commercial Video + 5 Performance Creatives (5+5=10).",
   },
   {
-    question: "Can I buy more Credits later?",
+    question: "Can I recharge anytime?",
     answer:
-      "Yes. You can recharge top-up credit packs anytime directly from your user dashboard without changing or upgrading your subscription plan.",
+      "Yes. You can purchase top-up credit packs (5, 10, 20, or 50 credits) anytime directly from your dashboard without changing your subscription.",
   },
   {
     question: "Do Credits expire?",
@@ -99,14 +138,19 @@ const faqs = [
       "Top-up credit packs never expire. Subscription credits roll over each month as long as your workspace subscription remains active.",
   },
   {
-    question: "Can I upgrade my subscription?",
-    answer:
-      "Yes. You can upgrade, downgrade, or pause your monthly subscription anytime from your workspace settings with zero lock-in contracts.",
-  },
-  {
     question: "Can I cancel anytime?",
     answer:
-      "Yes. You can cancel your subscription at any time with a single click in your billing settings.",
+      "Yes. You can cancel your subscription at any time with a single click in your workspace billing settings.",
+  },
+  {
+    question: "Can I upgrade later?",
+    answer:
+      "Yes. You can upgrade from Starter or Growth to Business/Enterprise at any time.",
+  },
+  {
+    question: "Can my team share Credits?",
+    answer:
+      "Yes. On Business and Enterprise plans, all workspace team members draw from a shared organization credit pool.",
   },
 ];
 
@@ -117,6 +161,11 @@ export function Pricing() {
   const startCheckout = async (productId: string) => {
     setLoadingPack(productId);
     try {
+      if (productId === "free_tier") {
+        window.location.href = "/signup";
+        return;
+      }
+
       if (productId === "enterprise_contact") {
         window.location.href = "mailto:concierge@cinroom.com?subject=Cinroom%20Enterprise%20Studio%20Inquiry";
         setLoadingPack(null);
@@ -157,66 +206,66 @@ export function Pricing() {
             // COMMERCIAL PRODUCTION PLANS
           </span>
           <h2 className="text-3xl sm:text-5xl font-light text-white tracking-tight mb-4">
-            Invest in <span className="gold-text-gradient font-normal italic">Conversion-Driven</span> Marketing Assets
+            Invest in <span className="gold-text-gradient font-normal italic">High-Converting</span> Marketing Assets
           </h2>
           <p className="text-sm text-neutral-400 font-light tracking-wide max-w-xl mx-auto">
             High-efficiency commercial asset production for luxury jewelry brands. Scale marketing campaigns without traditional studio overhead.
           </p>
         </div>
 
-        {/* No Free Trial Banner */}
+        {/* No Free Generation Policy Banner */}
         <div className="mb-14 max-w-2xl mx-auto p-4 rounded-xl glass-panel bg-amber-500/[0.03] border border-amber-200/20 text-center">
           <p className="text-xs font-mono text-amber-200/90 flex items-center justify-center gap-2">
             <ShieldAlert className="w-4 h-4 text-amber-200 shrink-0" />
-            <span>Every asset is rendered on dedicated studio GPUs. We do not offer free trials to maintain master output quality.</span>
+            <span>Notice: Free accounts include full dashboard & workspace access with 0 credits. Every asset is rendered on high-performance studio infrastructure.</span>
           </p>
         </div>
 
-        {/* 2 MAIN PRICING CARDS (Starter & Growth) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto mb-20">
-          {mainPlans.map((plan) => {
+        {/* 4 MAIN PRICING CARDS (Free, Starter, Growth ⭐, Business) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch mb-20">
+          {pricingPlans.map((plan) => {
             const isPopular = plan.popular;
             return (
               <div
                 key={plan.id}
-                className={`glass-panel rounded-2xl p-8 flex flex-col justify-between relative transition-all duration-300 ${
+                className={`glass-panel rounded-2xl p-6 flex flex-col justify-between relative transition-all duration-300 ${
                   isPopular
-                    ? "border-amber-200/50 shadow-[0_0_70px_rgba(197,168,128,0.25)] bg-gradient-to-b from-[#181820] via-[#0e0e12] to-[#070709] md:scale-105 z-20"
+                    ? "border-amber-200/50 shadow-[0_0_70px_rgba(197,168,128,0.25)] bg-gradient-to-b from-[#181820] via-[#0e0e12] to-[#070709] lg:-translate-y-2 z-20"
                     : "border-white/[0.08] hover:border-white/20 bg-[#08080a]"
                 }`}
               >
                 {/* Badge */}
                 {plan.badge && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-30">
-                    <span className="px-4 py-1 rounded-full bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-mono text-[10px] font-bold tracking-widest uppercase shadow-lg">
+                    <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-mono text-[9px] font-bold tracking-widest uppercase shadow-lg">
                       {plan.badge}
                     </span>
                   </div>
                 )}
 
                 <div>
-                  <div className="mb-6">
+                  <div className="mb-4">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="text-2xl font-light text-white tracking-tight">{plan.name}</h3>
-                      <span className="px-3 py-1 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 text-xs font-mono font-semibold">
+                      <h3 className="text-xl font-light text-white tracking-tight">{plan.name}</h3>
+                      <span className="px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 text-[10px] font-mono font-semibold">
                         {plan.credits}
                       </span>
                     </div>
                     <p className="text-xs text-neutral-400 font-light min-h-[36px] mt-2">{plan.subtitle}</p>
                   </div>
 
-                  <div className="mb-8 pb-6 border-b border-white/[0.08]">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-4xl sm:text-5xl font-light text-white font-serif tracking-tight">{plan.price}</span>
-                      <span className="text-xs font-mono text-neutral-500 uppercase">{plan.billing}</span>
+                  <div className="mb-6 pb-4 border-b border-white/[0.08]">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-3xl font-light text-white font-serif tracking-tight">{plan.price}</span>
+                      <span className="text-[10px] font-mono text-neutral-500 uppercase">{plan.billing}</span>
                     </div>
                   </div>
 
-                  <ul className="space-y-3.5 mb-8">
-                    {plan.benefits.map((benefit, bIdx) => (
-                      <li key={bIdx} className="flex items-start gap-3 text-xs text-neutral-300 font-light">
-                        <Check className="w-4 h-4 text-amber-200 shrink-0 mt-0.5" />
-                        <span>{benefit}</span>
+                  <ul className="space-y-2.5 mb-6">
+                    {plan.features.map((feat, fIdx) => (
+                      <li key={fIdx} className="flex items-start gap-2.5 text-xs text-neutral-300 font-light">
+                        <Check className="w-3.5 h-3.5 text-amber-200 shrink-0 mt-0.5" />
+                        <span>{feat}</span>
                       </li>
                     ))}
                   </ul>
@@ -225,34 +274,34 @@ export function Pricing() {
                 <Button
                   onClick={() => startCheckout(plan.id)}
                   disabled={loadingPack === plan.id}
-                  className={`w-full h-12 text-xs font-mono tracking-[0.15em] uppercase rounded-xl transition-all duration-300 cursor-pointer ${
+                  className={`w-full h-11 text-xs font-mono tracking-[0.15em] uppercase rounded-xl transition-all duration-300 cursor-pointer mt-4 ${
                     isPopular
                       ? "bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.3)] hover:shadow-[0_0_35px_rgba(197,168,128,0.5)]"
                       : "bg-white/[0.06] hover:bg-white/[0.12] text-white border border-white/10"
                   }`}
                 >
                   {loadingPack === plan.id ? "Processing..." : plan.cta}
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <ArrowRight className="w-3.5 h-3.5 ml-2" />
                 </Button>
               </div>
             );
           })}
         </div>
 
-        {/* FLEXIBLE CREDIT USAGE EXPLANATION */}
+        {/* CREDIT CONSUMPTION EXPLANATION */}
         <div className="mb-20 p-8 rounded-2xl glass-panel gold-border-glow bg-gradient-to-r from-amber-950/20 via-[#0e0e12] to-amber-950/10 border border-amber-200/20 shadow-2xl">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-200/90 mb-1 block">
-              FLEXIBLE ASSET REDEMPTION
+              SIMPLE WHOLE-NUMBER CONSUMPTION
             </span>
-            <h3 className="text-xl font-light text-white mb-1">1 Credit = 1 Commercial Video OR 5 Performance Creatives</h3>
-            <p className="text-xs text-neutral-400 font-light">Credits give you complete flexibility to produce videos or images as your campaign demands.</p>
+            <h3 className="text-xl font-light text-white mb-1">1 Performance Creative = 1 Credit | 1 Commercial Video = 5 Credits</h3>
+            <p className="text-xs text-neutral-400 font-light">No complicated decimal math. Credits provide complete flexibility across all campaign formats.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {creditExamples.map((item, idx) => (
               <div key={idx} className="p-5 rounded-xl bg-white/[0.02] border border-white/10 text-center hover:border-amber-200/40 transition-all">
-                <div className="text-[10px] font-mono text-amber-200 uppercase tracking-widest mb-2">{item.label}</div>
+                <div className="text-[10px] font-mono text-amber-200 uppercase tracking-widest mb-2">{item.title}</div>
                 <div className="text-xs font-mono text-white mb-2">{item.desc}</div>
                 <span className="inline-block px-3 py-1 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 text-[10px] font-mono">
                   {item.breakdown}
@@ -269,7 +318,7 @@ export function Pricing() {
               INSTANT CREDIT RECHARGE
             </span>
             <h3 className="text-2xl font-light text-white tracking-tight mb-1">Need More Credits?</h3>
-            <p className="text-xs text-neutral-400 font-light">Recharge instantly without changing your subscription.</p>
+            <p className="text-xs text-neutral-400 font-light">Purchase additional Credits instantly without changing your subscription.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -291,7 +340,7 @@ export function Pricing() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-neutral-400 font-light mb-4">Top-up credit pack</p>
+                  <p className="text-xs text-neutral-400 font-light mb-4">Instant top-up recharge pack</p>
                 </div>
 
                 <Button
@@ -316,7 +365,7 @@ export function Pricing() {
                 <h3 className="text-2xl font-light text-white tracking-tight">Enterprise Studio</h3>
               </div>
               <p className="text-xs text-neutral-400 font-light max-w-xl">
-                For agencies, manufacturers and high-volume jewelry brands requiring custom pipeline integration.
+                For agencies, manufacturers and high-volume jewelry brands requiring custom GPU capacity and API access.
               </p>
               <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-neutral-300 pt-2">
                 <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-200" /> Unlimited Team Members</span>
@@ -343,7 +392,7 @@ export function Pricing() {
             <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-neutral-500 mb-2 block">
               // SPECIFICATION MATRIX
             </span>
-            <h3 className="text-2xl font-light text-white tracking-tight">Feature Comparison</h3>
+            <h3 className="text-2xl font-light text-white tracking-tight">Feature & Capability Comparison</h3>
           </div>
 
           <div className="glass-panel rounded-2xl border border-white/[0.08] overflow-hidden">
@@ -352,28 +401,28 @@ export function Pricing() {
                 <thead>
                   <tr className="border-b border-white/[0.08] bg-white/[0.02]">
                     <th className="p-4 text-xs font-mono uppercase text-neutral-400 font-normal">Capability</th>
-                    <th className="p-4 text-xs font-mono uppercase text-neutral-300 text-center font-normal">Starter (2 Cr)</th>
-                    <th className="p-4 text-xs font-mono uppercase text-amber-200 text-center font-semibold bg-amber-400/5">Growth (10 Cr/mo)</th>
+                    <th className="p-4 text-xs font-mono uppercase text-neutral-300 text-center font-normal">Starter (10 Cr)</th>
+                    <th className="p-4 text-xs font-mono uppercase text-amber-200 text-center font-semibold bg-amber-400/5">Growth (30 Cr/mo)</th>
                     <th className="p-4 text-xs font-mono uppercase text-neutral-300 text-center font-normal">Enterprise</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/[0.06] text-xs font-light text-neutral-300">
                   <tr>
-                    <td className="p-4">Commercial Videos</td>
+                    <td className="p-4">Commercial Videos (5 Cr each)</td>
                     <td className="p-4 text-center text-amber-200">2 Included</td>
-                    <td className="p-4 text-center text-amber-200 bg-amber-400/5">10 Included / mo</td>
+                    <td className="p-4 text-center text-amber-200 bg-amber-400/5">6 Included / mo</td>
                     <td className="p-4 text-center text-amber-200">Custom Volume</td>
                   </tr>
                   <tr>
-                    <td className="p-4">Performance Creatives</td>
-                    <td className="p-4 text-center text-amber-200">Up to 10</td>
-                    <td className="p-4 text-center text-amber-200 bg-amber-400/5">Up to 50 / mo</td>
+                    <td className="p-4">Performance Creatives (1 Cr each)</td>
+                    <td className="p-4 text-center text-amber-200">10 Included</td>
+                    <td className="p-4 text-center text-amber-200 bg-amber-400/5">30 Included / mo</td>
                     <td className="p-4 text-center text-amber-200">Custom Volume</td>
                   </tr>
                   <tr>
                     <td className="p-4">Priority Queue</td>
                     <td className="p-4 text-center text-neutral-600">Standard</td>
-                    <td className="p-4 text-center text-amber-200 bg-amber-400/5">✓ Priority</td>
+                    <td className="p-4 text-center text-amber-200 bg-amber-400/5">✓ Priority Queue</td>
                     <td className="p-4 text-center text-amber-200">✓ Dedicated Queue</td>
                   </tr>
                   <tr>
