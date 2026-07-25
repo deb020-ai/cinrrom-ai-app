@@ -42,6 +42,7 @@ export default function SignupPage() {
             full_name: name,
             company_name: companyName,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
@@ -71,7 +72,7 @@ export default function SignupPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
@@ -243,7 +244,7 @@ export default function SignupPage() {
         <div className="mt-8 pt-6 border-t border-white/[0.06] text-center">
           <p className="text-xs text-neutral-400 font-light">
             Already have an account?{" "}
-            <Link href="/login" className="text-amber-200 font-mono underline hover:text-white transition-colors">
+            <Link href="/signup" className="text-amber-200 font-mono underline hover:text-white transition-colors">
               Sign In
             </Link>
           </p>

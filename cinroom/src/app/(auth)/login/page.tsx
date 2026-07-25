@@ -60,6 +60,7 @@ export default function LoginPage() {
         email,
         options: {
           shouldCreateUser: true,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
@@ -112,7 +113,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
@@ -187,7 +188,7 @@ export default function LoginPage() {
           </span>
         </div>
 
-        {/* Auth Method Selector (Password vs OTP) */}
+        {/* Auth Method Selector */}
         <div className="grid grid-cols-2 gap-2 p-1 bg-white/[0.03] rounded-xl border border-white/5 mb-6 text-xs font-mono">
           <button
             type="button"
