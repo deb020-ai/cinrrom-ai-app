@@ -1,32 +1,32 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Next.js 16: proxy.ts replaces middleware.ts
-// Checks for Supabase Auth session cookies (sb-pwtxdpgbggzgmscspepe-auth-token / sb-access-token)
+// Next.js 16: proxy.ts
+// Strict Cookie Guard for Supabase Auth Tokens
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Read all cookies to detect Supabase Auth token
+  // Read cookies for Supabase authentication project tokens
   const allCookies = request.cookies.getAll();
-  const hasSupabaseCookie = allCookies.some((c) =>
+  const hasSupabaseSession = allCookies.some((c) =>
+    c.name.startsWith("sb-pwtxdpgbggzgmscspepe-auth-token") ||
     c.name.startsWith("sb-") ||
-    c.name.includes("auth-token") ||
-    c.name.includes("better-auth")
+    c.name.includes("auth-token")
   );
 
-  // Protected routes: /dashboard and all sub-routes
+  // Protected routes: /dashboard and sub-routes
   if (pathname.startsWith("/dashboard")) {
-    if (!hasSupabaseCookie) {
+    if (!hasSupabaseSession) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
   }
 
-  // Redirect authenticated users away from login/signup
+  // Redirect logged-in users away from login/signup
   if (pathname === "/login" || pathname === "/signup") {
-    if (hasSupabaseCookie) {
+    if (hasSupabaseSession) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
@@ -34,7 +34,6 @@ export function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Only run proxy on these paths
 export const config = {
   matcher: [
     "/dashboard/:path*",

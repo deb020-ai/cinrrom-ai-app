@@ -1,19 +1,19 @@
 import { Sidebar } from "@/components/shared/sidebar";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const reqHeaders = await headers();
-  const session = await auth.api.getSession({
-    headers: reqHeaders,
-  });
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!session) {
+  // Enforce strict live account protection: Unauthenticated users CANNOT access dashboard
+  if (!user) {
     redirect("/login");
   }
 
