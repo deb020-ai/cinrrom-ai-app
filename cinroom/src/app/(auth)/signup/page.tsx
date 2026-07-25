@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Diamond, ArrowRight, Lock, Mail, Building2, User } from "lucide-react";
+import { Diamond, ArrowRight, Lock, Mail, Building2, User, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
@@ -13,10 +13,21 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Strong Password Checks
+  const isLengthValid = password.length >= 8;
+  const hasNumber = /[0-9]/.test(password);
+  const isPasswordStrong = isLengthValid && hasNumber;
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isPasswordStrong) {
+      setError("Password must be at least 8 characters long and contain at least one number.");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -28,7 +39,7 @@ export default function SignupPage() {
       });
 
       if (res.error) {
-        setError(res.error.message || "Failed to create account. Please check your credentials.");
+        setError(res.error.message || "Failed to create account. Please check your details.");
         setLoading(false);
         return;
       }
@@ -45,12 +56,26 @@ export default function SignupPage() {
         }
       }
 
-      // Hard redirect to dashboard
       window.location.href = "/dashboard";
     } catch (err: any) {
       console.error("Signup error:", err);
       setError(err?.message || "Error connecting to authentication service.");
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    setError("");
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+    } catch (err: any) {
+      console.error("Google auth error:", err);
+      setError(err?.message || "Failed to initialize Google authentication.");
+      setGoogleLoading(false);
     }
   };
 
@@ -72,9 +97,46 @@ export default function SignupPage() {
 
       {/* Signup Form Box */}
       <div className="w-full max-w-md glass-panel gold-border-glow p-8 rounded-2xl z-10 shadow-[0_20px_80px_rgba(0,0,0,0.9)]">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <h1 className="text-2xl font-light text-white tracking-tight mb-1">Create Atelier Workspace</h1>
           <p className="text-xs font-mono text-amber-200/80">Includes 5 Free Trial Campaign Generation Credits</p>
+        </div>
+
+        {/* Social Google Login Button */}
+        <Button
+          type="button"
+          onClick={handleGoogleSignIn}
+          disabled={googleLoading}
+          variant="outline"
+          className="w-full h-11 bg-white/[0.04] border-white/10 hover:bg-white/[0.08] text-white text-xs font-mono tracking-wider rounded-xl mb-6 flex items-center justify-center gap-3 cursor-pointer"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24">
+            <path
+              fill="#EA4335"
+              d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.1 9 5 12 5z"
+            />
+            <path
+              fill="#4285F4"
+              d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.6 14.8c-.3-.8-.4-1.8-.4-2.8s.1-2 .4-2.8L1.9 6.3C.7 8.7 0 10.3 0 12s.7 3.3 1.9 5.7l3.7-2.9z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.1-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"
+            />
+          </svg>
+          {googleLoading ? "Connecting to Google..." : "Sign up with Google"}
+        </Button>
+
+        {/* Divider */}
+        <div className="relative flex items-center justify-center mb-6">
+          <div className="border-t border-white/10 w-full" />
+          <span className="bg-[#0b0b0e] px-3 text-[10px] font-mono text-neutral-500 uppercase tracking-widest absolute">
+            Or Work Email Registration
+          </span>
         </div>
 
         {error && (
@@ -136,12 +198,24 @@ export default function SignupPage() {
               <Input
                 type="password"
                 required
-                placeholder="Minimum 8 characters"
+                placeholder="Minimum 8 characters with numbers"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="h-11 pl-10 bg-white/[0.03] border-white/10 text-white placeholder:text-neutral-600 focus:border-amber-200/50 rounded-xl"
               />
             </div>
+            
+            {/* Password Validation Hints */}
+            {password.length > 0 && (
+              <div className="flex items-center gap-4 text-[10px] font-mono text-neutral-400 pt-1">
+                <span className={`flex items-center gap-1 ${isLengthValid ? "text-amber-300" : "text-neutral-500"}`}>
+                  <CheckCircle2 className="w-3 h-3" /> 8+ Characters
+                </span>
+                <span className={`flex items-center gap-1 ${hasNumber ? "text-amber-300" : "text-neutral-500"}`}>
+                  <CheckCircle2 className="w-3 h-3" /> At least 1 Number
+                </span>
+              </div>
+            )}
           </div>
 
           <Button

@@ -41,6 +41,15 @@ export const accounts = pgTable("account", {
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
 
+export const verifications = pgTable("verification", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow(),
+});
+
 // Organization (Company Workspace / Jewelry House)
 export const organizations = pgTable("organization", {
   id: text("id").primaryKey(),
