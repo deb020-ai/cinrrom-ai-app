@@ -5,8 +5,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { User, Key, CreditCard, Wallet, Sparkles, Zap, ShieldCheck, RefreshCw, Layers, Clock } from "lucide-react";
+import { User, Key, CreditCard, Wallet, Sparkles, Zap, ShieldCheck, RefreshCw, Layers, Clock, History, ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { Pricing } from "@/components/features/landing/pricing";
+
+const mockTransactions = [
+  { id: "tx_01", type: "topup", description: "Top-Up Pack (5 Credits)", credits: "+5", date: "24 Jul 2026", status: "Success" },
+  { id: "tx_02", type: "usage", description: "Render Commercial Video: Diamond Ring", credits: "-1", date: "22 Jul 2026", status: "Completed" },
+  { id: "tx_03", type: "usage", description: "Export 5 Performance Creatives: Emerald Set", credits: "-1", date: "20 Jul 2026", status: "Completed" },
+  { id: "tx_04", type: "subscription", description: "Monthly Subscription Credit Grant", credits: "+10", date: "15 Jul 2026", status: "Success" },
+];
 
 export default function SettingsPage() {
   return (
@@ -46,7 +53,7 @@ export default function SettingsPage() {
                   <CardTitle className="text-2xl font-light text-white">Credit Balance & Ledger</CardTitle>
                 </div>
                 <div className="px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 font-mono text-xs flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-amber-200" /> Active Subscription
+                  <ShieldCheck className="w-4 h-4 text-amber-200" /> Growth Subscription Active
                 </div>
               </div>
             </CardHeader>
@@ -62,7 +69,7 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
-                  <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">This Month Used</div>
+                  <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Credits Used</div>
                   <div className="text-4xl font-light text-white font-serif">8</div>
                   <div className="text-[10px] font-mono text-neutral-500 mt-2">Commercial assets produced</div>
                 </div>
@@ -86,7 +93,7 @@ export default function SettingsPage() {
               </div>
 
               {/* Action Bar */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/[0.06]">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/[0.06] mb-8">
                 <div className="text-xs font-mono text-neutral-400">
                   Need extra credits before next renewal date?
                 </div>
@@ -96,6 +103,46 @@ export default function SettingsPage() {
                   </Button>
                 </a>
               </div>
+
+              {/* Recent Ledger Transactions Table */}
+              <div>
+                <div className="flex items-center gap-2 text-xs font-mono text-amber-200 uppercase tracking-wider mb-4">
+                  <History className="w-4 h-4 text-amber-200" /> Recent Credit Transactions
+                </div>
+
+                <div className="rounded-xl border border-white/10 overflow-hidden bg-white/[0.01]">
+                  <table className="w-full text-left text-xs font-mono">
+                    <thead>
+                      <tr className="border-b border-white/10 bg-white/[0.03] text-neutral-400">
+                        <th className="p-3.5 font-normal">Transaction</th>
+                        <th className="p-3.5 font-normal text-right">Credits</th>
+                        <th className="p-3.5 font-normal text-right">Date</th>
+                        <th className="p-3.5 font-normal text-right">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/[0.05] text-neutral-300">
+                      {mockTransactions.map((tx) => (
+                        <tr key={tx.id}>
+                          <td className="p-3.5 flex items-center gap-2.5">
+                            {tx.type === "usage" ? (
+                              <ArrowDownRight className="w-4 h-4 text-red-400 shrink-0" />
+                            ) : (
+                              <ArrowUpRight className="w-4 h-4 text-emerald-400 shrink-0" />
+                            )}
+                            <span>{tx.description}</span>
+                          </td>
+                          <td className={`p-3.5 text-right font-bold ${tx.type === "usage" ? "text-red-400" : "text-emerald-400"}`}>
+                            {tx.credits}
+                          </td>
+                          <td className="p-3.5 text-right text-neutral-400">{tx.date}</td>
+                          <td className="p-3.5 text-right text-amber-200">{tx.status}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
             </CardContent>
           </Card>
 
