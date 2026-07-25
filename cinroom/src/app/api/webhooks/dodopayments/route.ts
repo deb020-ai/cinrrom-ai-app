@@ -1,52 +1,82 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
-import { organizations, creditTransactions } from "@/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dHhkcGdiZ2d6Z21zY3NwZXBlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDk1NDE4MCwiZXhwIjoyMTAwNTMwMTgwfQ.VavXzgIXsO6e4XOdsuWPfuzM0wXx0ZkT_B30aHqNm88";
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+const PRODUCT_CREDIT_MAP: Record<string, number> = {
+  pdt_0NjxLVOe3nEY8sjRUHX2Y: 7,   // starter_onetime
+  pdt_0NjxLVR4OKFIjgwVqLH9w: 18,  // growth_monthly
+  pdt_0NjxLVSkfoUw6zbz1LPuj: 48,  // business_monthly
+  pdt_0NjxLVTamfL0YIUl8hEZw: 6,   // topup_6
+  pdt_0NjxLVUUg9GB4M4uaI1QN: 12,  // topup_12
+  pdt_0NjxLVVLYM1wFfqj85Jt8: 24,  // topup_24
+  pdt_0NjxLVWDCzQSPmiqnb6d7: 48,  // topup_48
+  pdt_0NjxLVX6NbGgFun9fffNj: 96,  // topup_96
+};
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const eventType = body.type || body.event;
+    const data = body.data || body;
 
-    // Listen for payment or subscription events from Dodo Payments
-    if (eventType === "payment.succeeded" || eventType === "subscription.active" || eventType === "subscription.renewed") {
-      const data = body.data || body;
-      const metadata = data.metadata || {};
-      const organizationId = metadata.organizationId;
-      const purchasedCredits = parseInt(metadata.credits || "50", 10);
-      const referenceId = data.payment_id || data.subscription_id || "dodo_ref_mock";
+    console.log(`Received Dodo Webhook: ${eventType}`, JSON.stringify(data));
 
-      if (!organizationId) {
-        console.warn("Dodo Webhook received without organizationId in metadata");
-        return NextResponse.json({ error: "Missing organizationId metadata" }, { status: 400 });
+    if (
+      eventType === "payment.succeeded" ||
+      eventType === "subscription.active" ||
+      eventType === "subscription.renewed"
+    ) {
+      const customerEmail = data.customer?.email || data.customer_email;
+      const productCart = data.product_cart || [];
+      const productId = productCart[0]?.product_id || data.product_id;
+
+      const creditsToGrant = PRODUCT_CREDIT_MAP[productId] || parseInt(data.metadata?.credits || "10", 10);
+
+      if (customerEmail) {
+        // Find user by email in Supabase Auth
+        const { data: usersData } = await supabase.auth.admin.listUsers();
+        const user = usersData?.users?.find((u) => u.email?.toLowerCase() === customerEmail.toLowerCase());
+
+        if (user) {
+          const userId = user.id;
+
+          // 1. Get existing wallet
+          const { data: wallet } = await supabase
+            .from("user_wallets")
+            .select("available_credits")
+            .eq("user_id", userId)
+            .single();
+
+          const currentCredits = wallet?.available_credits || 0;
+          const newBalance = currentCredits + creditsToGrant;
+
+          // 2. Upsert credit wallet balance
+          await supabase.from("user_wallets").upsert({
+            user_id: userId,
+            available_credits: newBalance,
+            updated_at: new Date().toISOString(),
+          });
+
+          // 3. Log credit transaction
+          await supabase.from("credit_transactions").insert({
+            user_id: userId,
+            amount: creditsToGrant,
+            type: eventType.includes("subscription") ? "grant" : "topup",
+            description: `Dodo Payment Succeeded: +${creditsToGrant} Credits (${eventType})`,
+            created_at: new Date().toISOString(),
+          });
+
+          console.log(`Successfully credited ${creditsToGrant} credits to user ${userId} (${customerEmail})`);
+        } else {
+          console.warn(`User with email ${customerEmail} not found in Supabase Auth.`);
+        }
       }
 
-      // Execute Atomic Credit Increment + Ledger Entry Transaction
-      await db.transaction(async (tx) => {
-        const [org] = await tx
-          .update(organizations)
-          .set({
-            creditBalance: sql`${organizations.creditBalance} + ${purchasedCredits}`,
-            dodoCustomerId: data.customer?.customer_id || null,
-            dodoSubscriptionId: data.subscription_id || null,
-            updatedAt: new Date(),
-          })
-          .where(eq(organizations.id, organizationId))
-          .returning();
-
-        if (org) {
-          await tx.insert(creditTransactions).values({
-            organizationId,
-            amount: purchasedCredits,
-            balanceAfter: org.creditBalance,
-            type: eventType.includes("subscription") ? "SUBSCRIPTION_REFILL" : "TOP_UP",
-            description: `Added ${purchasedCredits} credits via Dodo Payments (${eventType})`,
-            referenceId,
-          });
-        }
-      });
-
-      return NextResponse.json({ success: true });
+      return NextResponse.json({ success: true, credited: creditsToGrant });
     }
 
     return NextResponse.json({ received: true });
