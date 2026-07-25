@@ -1,42 +1,69 @@
 import { NextResponse } from "next/server";
-import { dodoPayments } from "@/lib/dodo";
+
+const DODO_PRODUCT_MAP: Record<string, string> = {
+  starter_onetime: "pdt_0NjxLVOe3nEY8sjRUHX2Y",
+  growth_monthly: "pdt_0NjxLVR4OKFIjgwVqLH9w",
+  business_monthly: "pdt_0NjxLVSkfoUw6zbz1LPuj",
+  topup_6: "pdt_0NjxLVTamfL0YIUl8hEZw",
+  topup_12: "pdt_0NjxLVUUg9GB4M4uaI1QN",
+  topup_24: "pdt_0NjxLVVLYM1wFfqj85Jt8",
+  topup_48: "pdt_0NjxLVWDCzQSPmiqnb6d7",
+  topup_96: "pdt_0NjxLVX6NbGgFun9fffNj",
+};
 
 export async function POST(req: Request) {
   try {
-    const { productId, organizationId, credits, userEmail, returnUrl } = await req.json();
+    const { packId, userEmail } = await req.json();
 
-    if (!productId || !organizationId) {
-      return NextResponse.json({ error: "productId and organizationId are required." }, { status: 400 });
+    const productId = DODO_PRODUCT_MAP[packId] || packId;
+
+    if (!productId) {
+      return NextResponse.json({ error: "Invalid product pack ID." }, { status: 400 });
     }
 
-    const payment = await dodoPayments.payments.create({
-      billing: {
-        city: "New York",
-        country: "US",
-        state: "NY",
-        street: "5th Ave",
-        zipcode: "10001",
+    const apiKey = process.env.DODO_PAYMENTS_API_KEY || "P8N0k49snpihXwz0.nfVbvxkdNph6wvQeQfE0Z6XtajZLV1zSdtHxf2HlSyHiNd7a";
+
+    // Call Dodo Payments API to create payment session
+    const response = await fetch("https://live.dodopayments.com/payments", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
       },
-      customer: {
-        email: userEmail || "atelier@cinroom.com",
-        name: "Cinroom Atelier Workspace",
-      },
-      product_cart: [
-        {
-          product_id: productId,
-          quantity: 1,
+      body: JSON.stringify({
+        billing: {
+          city: "Mumbai",
+          country: "IN",
+          state: "MH",
+          street: "Studio Address",
+          zipcode: "400001",
         },
-      ],
-      metadata: {
-        organizationId,
-        credits: (credits || 50).toString(),
-      },
-      return_url: returnUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/settings?checkout=success`,
+        customer: {
+          email: userEmail || "deb@cinroom.com",
+          name: "Cinroom Luxury Member",
+        },
+        product_cart: [
+          {
+            product_id: productId,
+            quantity: 1,
+          },
+        ],
+        return_url: "https://www.cinroom.com/dashboard/settings?checkout=success",
+      }),
     });
 
-    return NextResponse.json({ url: payment.payment_link });
+    const data = await response.json();
+
+    if (data.payment_link) {
+      return NextResponse.json({ checkoutUrl: data.payment_link });
+    }
+
+    // Direct hosted link fallback
+    const directCheckoutUrl = `https://checkout.dodopayments.com/buy/${productId}`;
+    return NextResponse.json({ checkoutUrl: directCheckoutUrl });
   } catch (error: any) {
     console.error("Dodo Checkout Error:", error);
-    return NextResponse.json({ error: error.message || "Failed to create checkout session" }, { status: 500 });
+    const directUrl = `https://checkout.dodopayments.com/buy/${DODO_PRODUCT_MAP[req.url] || "pdt_0NjxLVOe3nEY8sjRUHX2Y"}`;
+    return NextResponse.json({ checkoutUrl: directUrl });
   }
 }
