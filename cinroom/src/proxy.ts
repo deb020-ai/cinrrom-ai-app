@@ -2,42 +2,31 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Next.js 16: proxy.ts
-// Strict Cookie Guard for Supabase Auth Tokens
+// Route protection for /dashboard/*
+// NOTE: Layout-level server component (src/app/dashboard/layout.tsx) performs strict Supabase token validation.
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Read cookies for Supabase authentication project tokens
-  const allCookies = request.cookies.getAll();
-  const hasSupabaseSession = allCookies.some((c) =>
-    c.name.startsWith("sb-pwtxdpgbggzgmscspepe-auth-token") ||
-    c.name.startsWith("sb-") ||
-    c.name.includes("auth-token")
-  );
-
   // Protected routes: /dashboard and sub-routes
+  // Check for any Supabase auth cookies
+  const allCookies = request.cookies.getAll();
+  const hasSupabaseCookie = allCookies.some((c) => c.name.startsWith("sb-"));
+
   if (pathname.startsWith("/dashboard")) {
-    if (!hasSupabaseSession) {
+    if (!hasSupabaseCookie) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
   }
 
-  // Redirect logged-in users away from login/signup
-  if (pathname === "/login" || pathname === "/signup") {
-    if (hasSupabaseSession) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-  }
-
+  // Never block /login or /signup in proxy.ts to prevent infinite redirect loops!
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
     "/dashboard/:path*",
-    "/login",
-    "/signup",
   ],
 };
