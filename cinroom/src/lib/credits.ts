@@ -1,13 +1,13 @@
 import { createClient } from "@/lib/supabase/client";
 
 /**
- * Cinroom Unified Credit Consumption Constants
- * 1 Commercial Video = 5 Credits
- * 1 Performance Creative (Image) = 1 Credit
+ * Cinroom Credit Consumption Constants
+ * 1 Commercial Video = 3 Credits
+ * 1 Performance Creative (Image) = 0.2 Credits (5 Creatives = 1 Credit)
  */
 export const CREDIT_COSTS = {
-  COMMERCIAL_VIDEO: 5,
-  PERFORMANCE_CREATIVE: 1,
+  COMMERCIAL_VIDEO: 3,
+  PERFORMANCE_CREATIVE: 0.2,
 } as const;
 
 export interface CreditTransaction {
@@ -25,11 +25,11 @@ export interface UserCreditWallet {
   credits_used: number;
   remaining_credits: number;
   next_renewal_date?: string;
-  plan_tier: "free" | "starter" | "growth" | "business" | "enterprise";
+  plan_tier: "starter" | "growth" | "business" | "enterprise";
 }
 
 /**
- * Deduct credits from user wallet
+ * Deduct credits from user wallet (supports decimal credits accurately)
  */
 export async function deductCredits(
   userId: string,
@@ -40,7 +40,6 @@ export async function deductCredits(
   const cost = CREDIT_COSTS[assetType];
 
   try {
-    // 1. Fetch current user wallet balance
     const { data: wallet, error: walletError } = await supabase
       .from("user_wallets")
       .select("available_credits, credits_used")
@@ -58,10 +57,9 @@ export async function deductCredits(
       };
     }
 
-    const newAvailable = wallet.available_credits - cost;
-    const newUsed = wallet.credits_used + cost;
+    const newAvailable = Number((wallet.available_credits - cost).toFixed(2));
+    const newUsed = Number((wallet.credits_used + cost).toFixed(2));
 
-    // 2. Update wallet balance
     const { error: updateError } = await supabase
       .from("user_wallets")
       .update({
@@ -75,7 +73,6 @@ export async function deductCredits(
       return { success: false, error: updateError.message };
     }
 
-    // 3. Log transaction history
     await supabase.from("credit_transactions").insert({
       user_id: userId,
       amount: -cost,
@@ -92,7 +89,7 @@ export async function deductCredits(
 }
 
 /**
- * Add credits to user wallet (Top-Up or Subscription Renewal)
+ * Add credits to user wallet
  */
 export async function grantCredits(
   userId: string,
@@ -110,7 +107,7 @@ export async function grantCredits(
       .single();
 
     const currentBalance = wallet?.available_credits || 0;
-    const newBalance = currentBalance + amount;
+    const newBalance = Number((currentBalance + amount).toFixed(2));
 
     await supabase.from("user_wallets").upsert({
       user_id: userId,
