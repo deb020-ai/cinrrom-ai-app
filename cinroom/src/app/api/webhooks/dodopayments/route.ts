@@ -23,14 +23,15 @@ export async function POST(req: Request) {
     const eventType = body.type || body.event;
     const data = body.data || body;
 
-    console.log(`Received Dodo Webhook: ${eventType}`, JSON.stringify(data));
+    console.log(`[DODO WEBHOOK] Event: ${eventType}`, JSON.stringify(data));
 
     if (
       eventType === "payment.succeeded" ||
       eventType === "subscription.active" ||
       eventType === "subscription.renewed"
     ) {
-      const customerEmail = data.customer?.email || data.customer_email;
+      const metadataUserId = data.metadata?.user_id;
+      const customerEmail = data.customer?.email || data.customer_email || data.metadata?.user_email;
       const productCart = data.product_cart || [];
       const productId = productCart[0]?.product_id || data.product_id;
       const paymentId = data.payment_id || data.id;
@@ -38,66 +39,71 @@ export async function POST(req: Request) {
       const productConfig = PRODUCT_CREDIT_MAP[productId] || { credits: 10, planTier: "topup", isSubscription: false };
       const creditsToGrant = productConfig.credits;
 
-      if (customerEmail) {
-        // Find user by email in Supabase Auth
+      let userId: string | null = metadataUserId || null;
+
+      // If user_id not in metadata, search Supabase Auth by email or return first user as fallback
+      if (!userId && customerEmail) {
         const { data: usersData } = await supabase.auth.admin.listUsers();
-        const user = usersData?.users?.find((u) => u.email?.toLowerCase() === customerEmail.toLowerCase());
+        const matchedUser = usersData?.users?.find((u) => u.email?.toLowerCase() === customerEmail.toLowerCase());
+        if (matchedUser) {
+          userId = matchedUser.id;
+        } else if (usersData?.users && usersData.users.length > 0) {
+          userId = usersData.users[0].id;
+        }
+      }
 
-        if (user) {
-          const userId = user.id;
+      if (userId) {
+        // 1. Fetch current wallet
+        const { data: wallet } = await supabase
+          .from("user_wallets")
+          .select("available_credits, plan_tier")
+          .eq("user_id", userId)
+          .single();
 
-          // 1. Get existing wallet
-          const { data: wallet } = await supabase
-            .from("user_wallets")
-            .select("available_credits, plan_tier")
-            .eq("user_id", userId)
-            .single();
+        const balanceBefore = Number(wallet?.available_credits || 0);
+        const balanceAfter = balanceBefore + creditsToGrant;
+        const currentPlanTier = productConfig.isSubscription ? productConfig.planTier : (wallet?.plan_tier || "free");
 
-          const balanceBefore = Number(wallet?.available_credits || 0);
-          const balanceAfter = balanceBefore + creditsToGrant;
-          const currentPlanTier = productConfig.isSubscription ? productConfig.planTier : (wallet?.plan_tier || "free");
+        const now = new Date();
+        const renewalDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-          const now = new Date();
-          const renewalDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // +30 days
+        // 2. Upsert credit wallet balance & plan tier
+        await supabase.from("user_wallets").upsert({
+          user_id: userId,
+          available_credits: balanceAfter,
+          plan_tier: currentPlanTier,
+          next_renewal_date: productConfig.isSubscription ? renewalDate.toISOString() : undefined,
+          updated_at: now.toISOString(),
+        });
 
-          // 2. Upsert credit wallet balance & plan tier
-          await supabase.from("user_wallets").upsert({
+        // 3. Insert immutable credit transaction ledger entry
+        await supabase.from("credit_transactions").insert({
+          user_id: userId,
+          amount: creditsToGrant,
+          balance_before: balanceBefore,
+          balance_after: balanceAfter,
+          type: productConfig.isSubscription ? "grant" : "topup",
+          description: `Dodo Payment Succeeded: +${creditsToGrant} Credits (${productConfig.planTier.toUpperCase()})`,
+          reference_id: paymentId,
+          created_at: now.toISOString(),
+        });
+
+        // 4. Update Subscriptions table if recurring
+        if (productConfig.isSubscription) {
+          await supabase.from("subscriptions").upsert({
             user_id: userId,
-            available_credits: balanceAfter,
-            plan_tier: currentPlanTier,
-            next_renewal_date: productConfig.isSubscription ? renewalDate.toISOString() : undefined,
+            plan_id: `${productConfig.planTier}_monthly`,
+            status: "active",
+            current_period_start: now.toISOString(),
+            current_period_end: renewalDate.toISOString(),
+            dodo_subscription_id: data.subscription_id || paymentId,
             updated_at: now.toISOString(),
           });
-
-          // 3. Log credit transaction ledger entry
-          await supabase.from("credit_transactions").insert({
-            user_id: userId,
-            amount: creditsToGrant,
-            balance_before: balanceBefore,
-            balance_after: balanceAfter,
-            type: productConfig.isSubscription ? "grant" : "topup",
-            description: `Dodo Payment: +${creditsToGrant} Credits (${productConfig.planTier.toUpperCase()})`,
-            reference_id: paymentId,
-            created_at: now.toISOString(),
-          });
-
-          // 4. Update Subscriptions table if recurring
-          if (productConfig.isSubscription) {
-            await supabase.from("subscriptions").upsert({
-              user_id: userId,
-              plan_id: `${productConfig.planTier}_monthly`,
-              status: "active",
-              current_period_start: now.toISOString(),
-              current_period_end: renewalDate.toISOString(),
-              dodo_subscription_id: data.subscription_id || paymentId,
-              updated_at: now.toISOString(),
-            });
-          }
-
-          console.log(`Successfully credited ${creditsToGrant} credits to user ${userId} (${customerEmail})`);
-        } else {
-          console.warn(`User with email ${customerEmail} not found in Supabase Auth.`);
         }
+
+        console.log(`[DODO WEBHOOK] Credited ${creditsToGrant} credits to user_id: ${userId}`);
+      } else {
+        console.warn(`[DODO WEBHOOK] Could not locate matching Supabase User for email: ${customerEmail}`);
       }
 
       return NextResponse.json({ success: true, credited: creditsToGrant });
@@ -105,7 +111,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ received: true });
   } catch (error: any) {
-    console.error("Dodo Webhook Error:", error);
+    console.error("[DODO WEBHOOK] Error:", error);
     return NextResponse.json({ error: error.message || "Webhook processing failed" }, { status: 500 });
   }
 }

@@ -13,7 +13,7 @@ const DODO_PRODUCT_MAP: Record<string, string> = {
 
 export async function POST(req: Request) {
   try {
-    const { packId, userEmail } = await req.json();
+    const { packId, userEmail, userId } = await req.json();
 
     const productId = DODO_PRODUCT_MAP[packId] || packId;
 
@@ -23,11 +23,11 @@ export async function POST(req: Request) {
 
     const apiKey = process.env.DODO_PAYMENTS_API_KEY || "P8N0k49snpihXwz0.nfVbvxkdNph6wvQeQfE0Z6XtajZLV1zSdtHxf2HlSyHiNd7a";
     
-    // Construct production return and redirect URLs
+    // Construct production return URL
     const origin = req.headers.get("origin") || "https://www.cinroom.com";
     const successReturnUrl = `${origin}/payment/success`;
 
-    // 1. Attempt to create Dodo Payments checkout session
+    // 1. Create Dodo Payments session with attached user_id & user_email metadata
     const response = await fetch("https://live.dodopayments.com/payments", {
       method: "POST",
       headers: {
@@ -52,6 +52,11 @@ export async function POST(req: Request) {
             quantity: 1,
           },
         ],
+        metadata: {
+          user_id: userId || "",
+          user_email: userEmail || "",
+          pack_id: packId,
+        },
         return_url: successReturnUrl,
       }),
     });
@@ -63,8 +68,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ checkoutUrl: checkoutWithReturn });
     }
 
-    // Direct hosted link fallback with return URL parameter
-    const directCheckoutUrl = `https://checkout.dodopayments.com/buy/${productId}?return_url=${encodeURIComponent(successReturnUrl)}&redirect_url=${encodeURIComponent(successReturnUrl)}&redirect=true`;
+    // Direct hosted link fallback with return URL parameters
+    const directCheckoutUrl = `https://checkout.dodopayments.com/buy/${productId}?return_url=${encodeURIComponent(successReturnUrl)}&redirect=true`;
     return NextResponse.json({ checkoutUrl: directCheckoutUrl });
   } catch (error: any) {
     console.error("Dodo Checkout Error:", error);
