@@ -106,6 +106,7 @@ export async function POST(req: Request) {
         type: productConfig.isSubscription ? "grant" : "topup",
         description: `Dodo Payment Succeeded: +${creditsToGrant} Credits (${productConfig.planTier.toUpperCase()})`,
         reference_id: paymentId,
+        invoice_url: data.invoice_url || data.receipt_url || (paymentId ? `https://live.dodopayments.com/invoices/payments/${paymentId}` : null),
         created_at: now.toISOString(),
       });
 

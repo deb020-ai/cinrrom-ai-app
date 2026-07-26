@@ -29,6 +29,7 @@ interface TransactionData {
   type: string;
   description: string;
   created_at: string;
+  invoice_url?: string;
 }
 
 export default function SettingsPage() {
@@ -210,6 +211,7 @@ export default function SettingsPage() {
                           <th className="p-3.5 font-normal text-right">Amount</th>
                           <th className="p-3.5 font-normal text-right">Balance After</th>
                           <th className="p-3.5 font-normal text-right">Timestamp</th>
+                          <th className="p-3.5 font-normal text-right">Invoice</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-white/[0.05] text-neutral-300">
@@ -229,6 +231,13 @@ export default function SettingsPage() {
                             <td className="p-3.5 text-right text-neutral-300">{tx.balance_after}</td>
                             <td className="p-3.5 text-right text-neutral-400">
                               {new Date(tx.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                            </td>
+                            <td className="p-3.5 text-right font-sans text-[11px]">
+                              {tx.invoice_url ? (
+                                <a href={tx.invoice_url} target="_blank" rel="noopener noreferrer" className="text-amber-200/80 hover:text-amber-200 underline decoration-amber-200/30 underline-offset-4">Receipt ↗</a>
+                              ) : (
+                                <span className="text-neutral-600">-</span>
+                              )}
                             </td>
                           </tr>
                         ))}

@@ -99,6 +99,7 @@ export async function GET(req: Request) {
         type: config.isSubscription ? "grant" : "topup",
         description: `Dodo Verified Payment: +${config.credits} Credits (${config.planTier.toUpperCase()})`,
         reference_id: paymentId,
+        invoice_url: dodoData?.invoice_url || dodoData?.receipt_url || (paymentId ? `https://live.dodopayments.com/invoices/payments/${paymentId}` : null),
         created_at: now.toISOString(),
       });
 

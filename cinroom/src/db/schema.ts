@@ -95,6 +95,7 @@ export const creditTransactions = pgTable("credit_transaction", {
   type: varchar("type", { length: 32 }).notNull(), // 'SUBSCRIPTION_REFILL' | 'TOP_UP' | 'VIDEO_RENDER' | 'REFUND'
   description: text("description").notNull(),
   referenceId: text("reference_id"), // Dodo payment_id or Video Generation ID
+  invoiceUrl: text("invoice_url"), // URL to the Dodo invoice receipt
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
