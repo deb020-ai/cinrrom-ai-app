@@ -29,7 +29,7 @@ function PaymentSuccessContent() {
 
   const [details, setDetails] = useState<PaymentDetails | null>(null);
   const [loading, setLoading] = useState(true);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
     async function verifyPayment() {
@@ -56,11 +56,11 @@ function PaymentSuccessContent() {
 
             setDetails({
               verified: true,
-              available_credits: Number(wallet?.available_credits || 18),
-              credits_added: 18,
-              plan_tier: wallet?.plan_tier || "growth",
+              available_credits: Number(wallet?.available_credits || 0),
+              credits_added: 0,
+              plan_tier: wallet?.plan_tier || "free",
               next_renewal_date: wallet?.next_renewal_date,
-              transaction_id: paymentId || `pay_${Date.now().toString(36)}`,
+              transaction_id: paymentId || "",
               invoice_url: paymentId ? `https://live.dodopayments.com/invoices/payments/${paymentId}` : null,
             });
           }
@@ -81,7 +81,7 @@ function PaymentSuccessContent() {
         setCountdown((prev) => {
           if (prev <= 1) {
             clearInterval(timer);
-            router.push("/dashboard");
+            router.push("/dashboard/settings");
             return 0;
           }
           return prev - 1;

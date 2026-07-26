@@ -28,74 +28,67 @@ export async function GET(req: Request) {
     // 1. If paymentId is present, query Dodo API directly to verify
     let dodoData: any = null;
     if (paymentId) {
-      const res = await fetch(`https://live.dodopayments.com/payments/${paymentId}`, {
-        headers: { Authorization: `Bearer ${apiKey}` }
-      });
-      if (res.ok) {
-        dodoData = await res.json();
-      }
-    }
-
-    const customerEmail = dodoData?.customer?.email || userEmailParam;
-
-    if (!customerEmail) {
-      // Return latest wallet data if user is logged in
-      const authHeader = req.headers.get("Authorization");
-      if (authHeader) {
-        const token = authHeader.replace("Bearer ", "");
-        const { data: { user } } = await supabase.auth.getUser(token);
-        if (user) {
-          const { data: wallet } = await supabase.from("user_wallets").select("*").eq("user_id", user.id).single();
-          return NextResponse.json({
-            verified: true,
-            available_credits: Number(wallet?.available_credits || 0),
-            plan_tier: wallet?.plan_tier || "free",
-            next_renewal_date: wallet?.next_renewal_date,
-          });
+      try {
+        const res = await fetch(`https://live.dodopayments.com/payments/${paymentId}`, {
+          headers: { Authorization: `Bearer ${apiKey}` }
+        });
+        if (res.ok) {
+          dodoData = await res.json();
         }
+      } catch (e) {
+        console.error("[CHECKOUT STATUS] Dodo API fetch error:", e);
       }
-      return NextResponse.json({ verified: false, message: "Payment verification pending." });
     }
 
-    // 2. Locate user by email
-    const { data: usersData } = await supabase.auth.admin.listUsers();
-    const user = usersData?.users?.find((u) => u.email?.toLowerCase() === customerEmail.toLowerCase());
+    // 2. Resolve user_id: prefer metadata.user_id, then email lookup
+    const metadataUserId = dodoData?.metadata?.user_id;
+    const customerEmail = dodoData?.customer?.email || userEmailParam || dodoData?.metadata?.user_email;
 
-    if (!user) {
-      return NextResponse.json({ verified: false, message: "User account matching payment email not found." });
+    let userId: string | null = metadataUserId || null;
+
+    if (!userId && customerEmail) {
+      const { data: usersData } = await supabase.auth.admin.listUsers();
+      const user = usersData?.users?.find((u) => u.email?.toLowerCase() === customerEmail.toLowerCase());
+      if (user) userId = user.id;
+      else if (usersData?.users && usersData.users.length > 0) userId = usersData.users[0].id;
     }
 
-    const userId = user.id;
+    if (!userId) {
+      return NextResponse.json({ verified: false, message: "User not found." });
+    }
 
-    // 3. Check if webhook already processed this payment
-    let { data: wallet } = await supabase.from("user_wallets").select("*").eq("user_id", userId).single();
-    
-    // Check recent transaction ledger entry
+    // 3. Fetch current wallet
+    let { data: wallet } = await supabase.from("user_wallets").select("*").eq("user_id", userId).maybeSingle();
+
+    // 4. Idempotency: check if this payment was already credited
     const { data: existingTx } = await supabase
       .from("credit_transactions")
       .select("*")
       .eq("user_id", userId)
-      .eq("reference_id", paymentId || "dodo_payment")
-      .single();
+      .eq("reference_id", paymentId || "none")
+      .maybeSingle();
 
-    // If webhook hasn't fired yet but Dodo API confirms payment status:
-    if (!existingTx && dodoData && (dodoData.status === "succeeded" || dodoData.status === "successful" || !dodoData.status)) {
+    // 5. If NOT yet credited and Dodo confirms payment succeeded, credit now
+    if (!existingTx && paymentId && dodoData && (dodoData.status === "succeeded" || dodoData.status === "successful" || !dodoData.status)) {
       const productId = dodoData.product_cart?.[0]?.product_id;
       const config = PRODUCT_CREDIT_MAP[productId] || { credits: 10, planTier: "topup", isSubscription: false };
-      
+
       const balanceBefore = Number(wallet?.available_credits || 0);
       const balanceAfter = balanceBefore + config.credits;
       const now = new Date();
       const renewalDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
       // Upsert wallet
-      await supabase.from("user_wallets").upsert({
+      const walletPayload: Record<string, any> = {
         user_id: userId,
         available_credits: balanceAfter,
         plan_tier: config.isSubscription ? config.planTier : (wallet?.plan_tier || "free"),
-        next_renewal_date: config.isSubscription ? renewalDate.toISOString() : undefined,
         updated_at: now.toISOString(),
-      });
+      };
+      if (config.isSubscription) {
+        walletPayload.next_renewal_date = renewalDate.toISOString();
+      }
+      await supabase.from("user_wallets").upsert(walletPayload);
 
       // Insert ledger entry
       await supabase.from("credit_transactions").insert({
@@ -104,29 +97,44 @@ export async function GET(req: Request) {
         balance_before: balanceBefore,
         balance_after: balanceAfter,
         type: config.isSubscription ? "grant" : "topup",
-        description: `Dodo Direct Verified Payment: +${config.credits} Credits (${config.planTier.toUpperCase()})`,
-        reference_id: paymentId || `pay_${Date.now()}`,
+        description: `Dodo Verified Payment: +${config.credits} Credits (${config.planTier.toUpperCase()})`,
+        reference_id: paymentId,
         created_at: now.toISOString(),
       });
 
+      // Upsert subscription if recurring
+      if (config.isSubscription) {
+        await supabase.from("subscriptions").upsert({
+          user_id: userId,
+          plan_id: `${config.planTier}_monthly`,
+          status: "active",
+          current_period_start: now.toISOString(),
+          current_period_end: renewalDate.toISOString(),
+          dodo_subscription_id: dodoData.subscription_id || paymentId,
+          updated_at: now.toISOString(),
+        });
+      }
+
       // Refetch updated wallet
-      const { data: updatedWallet } = await supabase.from("user_wallets").select("*").eq("user_id", userId).single();
+      const { data: updatedWallet } = await supabase.from("user_wallets").select("*").eq("user_id", userId).maybeSingle();
       wallet = updatedWallet;
+
+      console.log(`[CHECKOUT STATUS] ✅ Credited ${config.credits} to user ${userId}. Balance: ${balanceBefore} → ${balanceAfter}`);
     }
 
     return NextResponse.json({
       verified: true,
       status: "succeeded",
       available_credits: Number(wallet?.available_credits || 0),
-      credits_added: existingTx?.amount || 18,
+      credits_added: existingTx?.amount || (dodoData ? PRODUCT_CREDIT_MAP[dodoData?.product_cart?.[0]?.product_id]?.credits : 0) || 0,
       plan_tier: wallet?.plan_tier || "free",
       next_renewal_date: wallet?.next_renewal_date,
-      transaction_id: paymentId || existingTx?.reference_id || `pay_${Date.now()}`,
+      transaction_id: paymentId || existingTx?.reference_id || "",
       invoice_url: dodoData?.invoice_url || (paymentId ? `https://live.dodopayments.com/invoices/payments/${paymentId}` : null),
     });
 
   } catch (error: any) {
-    console.error("Payment status verification error:", error);
+    console.error("[CHECKOUT STATUS] Error:", error);
     return NextResponse.json({ error: error.message || "Status check failed" }, { status: 500 });
   }
 }

@@ -174,7 +174,10 @@ export function Pricing() {
 
       const data = await response.json();
       if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl;
+        // Open checkout in a NEW TAB so the user stays logged in on CINROOM
+        window.open(data.checkoutUrl, "_blank", "noopener,noreferrer");
+        toast.success("Payment checkout opened in a new tab. Complete your purchase there!");
+        setTimeout(() => setLoadingPack(null), 1500);
       } else {
         toast.info(`Initializing Dodo Payment Gateway for product: ${productId}...`);
         setTimeout(() => setLoadingPack(null), 1200);

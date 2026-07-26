@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     const eventType = body.type || body.event;
     const data = body.data || body;
 
-    console.log(`[DODO WEBHOOK] Event: ${eventType}`, JSON.stringify(data));
+    console.log(`[DODO WEBHOOK] Event: ${eventType}`, JSON.stringify(data).substring(0, 500));
 
     if (
       eventType === "payment.succeeded" ||
@@ -39,76 +39,95 @@ export async function POST(req: Request) {
       const productConfig = PRODUCT_CREDIT_MAP[productId] || { credits: 10, planTier: "topup", isSubscription: false };
       const creditsToGrant = productConfig.credits;
 
+      // --- Resolve user_id ---
       let userId: string | null = metadataUserId || null;
 
-      // If user_id not in metadata, search Supabase Auth by email or return first user as fallback
       if (!userId && customerEmail) {
         const { data: usersData } = await supabase.auth.admin.listUsers();
         const matchedUser = usersData?.users?.find((u) => u.email?.toLowerCase() === customerEmail.toLowerCase());
         if (matchedUser) {
           userId = matchedUser.id;
         } else if (usersData?.users && usersData.users.length > 0) {
+          // Last resort: first user (for single-user setups)
           userId = usersData.users[0].id;
         }
       }
 
-      if (userId) {
-        // 1. Fetch current wallet
-        const { data: wallet } = await supabase
-          .from("user_wallets")
-          .select("available_credits, plan_tier")
-          .eq("user_id", userId)
-          .single();
-
-        const balanceBefore = Number(wallet?.available_credits || 0);
-        const balanceAfter = balanceBefore + creditsToGrant;
-        const currentPlanTier = productConfig.isSubscription ? productConfig.planTier : (wallet?.plan_tier || "free");
-
-        const now = new Date();
-        const renewalDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
-
-        // 2. Upsert credit wallet balance & plan tier
-        await supabase.from("user_wallets").upsert({
-          user_id: userId,
-          available_credits: balanceAfter,
-          plan_tier: currentPlanTier,
-          next_renewal_date: productConfig.isSubscription ? renewalDate.toISOString() : undefined,
-          updated_at: now.toISOString(),
-        });
-
-        // 3. Insert immutable credit transaction ledger entry
-        await supabase.from("credit_transactions").insert({
-          user_id: userId,
-          amount: creditsToGrant,
-          balance_before: balanceBefore,
-          balance_after: balanceAfter,
-          type: productConfig.isSubscription ? "grant" : "topup",
-          description: `Dodo Payment Succeeded: +${creditsToGrant} Credits (${productConfig.planTier.toUpperCase()})`,
-          reference_id: paymentId,
-          created_at: now.toISOString(),
-        });
-
-        // 4. Update Subscriptions table if recurring
-        if (productConfig.isSubscription) {
-          await supabase.from("subscriptions").upsert({
-            user_id: userId,
-            plan_id: `${productConfig.planTier}_monthly`,
-            status: "active",
-            current_period_start: now.toISOString(),
-            current_period_end: renewalDate.toISOString(),
-            dodo_subscription_id: data.subscription_id || paymentId,
-            updated_at: now.toISOString(),
-          });
-        }
-
-        console.log(`[DODO WEBHOOK] Credited ${creditsToGrant} credits to user_id: ${userId}`);
-      } else {
-        console.warn(`[DODO WEBHOOK] Could not locate matching Supabase User for email: ${customerEmail}`);
+      if (!userId) {
+        console.warn(`[DODO WEBHOOK] Could not resolve user. Email: ${customerEmail}, metadata.user_id: ${metadataUserId}`);
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
 
-      return NextResponse.json({ success: true, credited: creditsToGrant });
+      // --- Idempotency check: skip if this payment was already processed ---
+      const { data: existingTx } = await supabase
+        .from("credit_transactions")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("reference_id", paymentId)
+        .maybeSingle();
+
+      if (existingTx) {
+        console.log(`[DODO WEBHOOK] Payment ${paymentId} already processed for user ${userId}. Skipping.`);
+        return NextResponse.json({ success: true, message: "Already processed", skipped: true });
+      }
+
+      // --- 1. Fetch current wallet ---
+      const { data: wallet } = await supabase
+        .from("user_wallets")
+        .select("available_credits, plan_tier")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      const balanceBefore = Number(wallet?.available_credits || 0);
+      const balanceAfter = balanceBefore + creditsToGrant;
+      const currentPlanTier = productConfig.isSubscription ? productConfig.planTier : (wallet?.plan_tier || "free");
+
+      const now = new Date();
+      const renewalDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+      // --- 2. Upsert credit wallet ---
+      const walletPayload: Record<string, any> = {
+        user_id: userId,
+        available_credits: balanceAfter,
+        plan_tier: currentPlanTier,
+        updated_at: now.toISOString(),
+      };
+      if (productConfig.isSubscription) {
+        walletPayload.next_renewal_date = renewalDate.toISOString();
+      }
+      await supabase.from("user_wallets").upsert(walletPayload);
+
+      // --- 3. Insert immutable ledger entry ---
+      await supabase.from("credit_transactions").insert({
+        user_id: userId,
+        amount: creditsToGrant,
+        balance_before: balanceBefore,
+        balance_after: balanceAfter,
+        type: productConfig.isSubscription ? "grant" : "topup",
+        description: `Dodo Payment Succeeded: +${creditsToGrant} Credits (${productConfig.planTier.toUpperCase()})`,
+        reference_id: paymentId,
+        created_at: now.toISOString(),
+      });
+
+      // --- 4. Upsert subscription if recurring ---
+      if (productConfig.isSubscription) {
+        await supabase.from("subscriptions").upsert({
+          user_id: userId,
+          plan_id: `${productConfig.planTier}_monthly`,
+          status: "active",
+          current_period_start: now.toISOString(),
+          current_period_end: renewalDate.toISOString(),
+          dodo_subscription_id: data.subscription_id || paymentId,
+          updated_at: now.toISOString(),
+        });
+      }
+
+      console.log(`[DODO WEBHOOK] ✅ Credited ${creditsToGrant} credits to user ${userId}. Balance: ${balanceBefore} → ${balanceAfter}. Plan: ${currentPlanTier}`);
+      return NextResponse.json({ success: true, credited: creditsToGrant, balance_after: balanceAfter });
     }
 
+    // Unhandled event type
+    console.log(`[DODO WEBHOOK] Unhandled event type: ${eventType}`);
     return NextResponse.json({ received: true });
   } catch (error: any) {
     console.error("[DODO WEBHOOK] Error:", error);
