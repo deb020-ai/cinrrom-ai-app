@@ -22,8 +22,12 @@ export async function POST(req: Request) {
     }
 
     const apiKey = process.env.DODO_PAYMENTS_API_KEY || "P8N0k49snpihXwz0.nfVbvxkdNph6wvQeQfE0Z6XtajZLV1zSdtHxf2HlSyHiNd7a";
+    
+    // Construct production return and redirect URLs
+    const origin = req.headers.get("origin") || "https://www.cinroom.com";
+    const successReturnUrl = `${origin}/payment/success`;
 
-    // Call Dodo Payments API to create payment session
+    // 1. Attempt to create Dodo Payments checkout session
     const response = await fetch("https://live.dodopayments.com/payments", {
       method: "POST",
       headers: {
@@ -40,7 +44,7 @@ export async function POST(req: Request) {
         },
         customer: {
           email: userEmail || "deb@cinroom.com",
-          name: "Cinroom Luxury Member",
+          name: "Cinroom Member",
         },
         product_cart: [
           {
@@ -48,22 +52,25 @@ export async function POST(req: Request) {
             quantity: 1,
           },
         ],
-        return_url: "https://www.cinroom.com/dashboard/settings?checkout=success",
+        return_url: successReturnUrl,
       }),
     });
 
     const data = await response.json();
 
     if (data.payment_link) {
-      return NextResponse.json({ checkoutUrl: data.payment_link });
+      const checkoutWithReturn = `${data.payment_link}?return_url=${encodeURIComponent(successReturnUrl)}&redirect=true`;
+      return NextResponse.json({ checkoutUrl: checkoutWithReturn });
     }
 
-    // Direct hosted link fallback
-    const directCheckoutUrl = `https://checkout.dodopayments.com/buy/${productId}`;
+    // Direct hosted link fallback with return URL parameter
+    const directCheckoutUrl = `https://checkout.dodopayments.com/buy/${productId}?return_url=${encodeURIComponent(successReturnUrl)}&redirect_url=${encodeURIComponent(successReturnUrl)}&redirect=true`;
     return NextResponse.json({ checkoutUrl: directCheckoutUrl });
   } catch (error: any) {
     console.error("Dodo Checkout Error:", error);
-    const directUrl = `https://checkout.dodopayments.com/buy/${DODO_PRODUCT_MAP[req.url] || "pdt_0NjxLVOe3nEY8sjRUHX2Y"}`;
+    const successReturnUrl = "https://www.cinroom.com/payment/success";
+    const productId = DODO_PRODUCT_MAP[req.url] || "pdt_0NjxLVOe3nEY8sjRUHX2Y";
+    const directUrl = `https://checkout.dodopayments.com/buy/${productId}?return_url=${encodeURIComponent(successReturnUrl)}&redirect=true`;
     return NextResponse.json({ checkoutUrl: directUrl });
   }
 }
