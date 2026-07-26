@@ -4,8 +4,14 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Monitor, Smartphone, Square, Wand2, Settings2, Video, Image as ImageIcon, Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
+import { Monitor, Smartphone, Square, Settings2, Video, Image as ImageIcon, ArrowRight, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dHhkcGdiZ2d6Z21zY3NwZXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTQxODAsImV4cCI6MjEwMDUzMDE4MH0.848UyPbVz5gnr2HYYdoMkrV-wBLoE4TW3E3iIUoZQV8";
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function GenerateSettingsPage() {
   const router = useRouter();
@@ -18,14 +24,96 @@ export default function GenerateSettingsPage() {
   const [resolution, setResolution] = useState("4K");
   const [motionSpeed, setMotionSpeed] = useState("Slow & Elegant");
   const [background, setBackground] = useState("Obsidian Studio Mirror");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const creditCost = assetType === "COMMERCIAL_VIDEO" ? 3 : 0.2;
 
-  const handleGenerate = () => {
-    toast.success(`Initializing Atelier Rendering Engine (${creditCost} Credits)...`);
-    setTimeout(() => {
-      router.push(`/dashboard/render?type=${assetType}&cost=${creditCost}`);
-    }, 600);
+  const handleGenerate = async () => {
+    setIsSubmitting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.user) {
+        toast.error("Please sign in to generate commercial assets.");
+        router.push("/login");
+        return;
+      }
+
+      const userId = session.user.id;
+
+      // 1. Fetch wallet balance
+      const { data: wallet } = await supabase
+        .from("user_wallets")
+        .select("available_credits")
+        .eq("user_id", userId)
+        .single();
+
+      const availableCredits = Number(wallet?.available_credits || 0);
+
+      if (availableCredits < creditCost) {
+        toast.error(`Insufficient credits (${availableCredits} available). This render requires ${creditCost} credits.`, {
+          action: {
+            label: "Recharge Credits",
+            onClick: () => router.push("/dashboard/settings#topup"),
+          },
+        });
+        return;
+      }
+
+      // 2. Call RPC atomic deduction or deduct via wallet update
+      const { data: rpcRes, error: rpcErr } = await supabase.rpc("deduct_user_credits", {
+        p_user_id: userId,
+        p_cost: creditCost,
+        p_asset_type: assetType,
+        p_description: `Render ${assetType === "COMMERCIAL_VIDEO" ? "Commercial Video" : "Performance Creative"} (${aspectRatio})`,
+        p_reference_id: `gen_${Date.now()}`
+      });
+
+      if (rpcErr || (rpcRes && !rpcRes.success)) {
+        // Fallback update if RPC procedure is updating
+        const newBalance = availableCredits - creditCost;
+        await supabase.from("user_wallets").update({
+          available_credits: newBalance,
+          updated_at: new Date().toISOString()
+        }).eq("user_id", userId);
+
+        await supabase.from("credit_transactions").insert({
+          user_id: userId,
+          amount: -creditCost,
+          balance_before: availableCredits,
+          balance_after: newBalance,
+          type: "deduction",
+          description: `Render ${assetType === "COMMERCIAL_VIDEO" ? "Commercial Video" : "Performance Creative"} (${aspectRatio})`,
+          created_at: new Date().toISOString()
+        });
+      }
+
+      // 3. Create generation history record
+      const promptText = `High jewelry luxury presentation: ${motionSpeed} camera orbit, ${background} setup.`;
+      const { data: genRecord } = await supabase
+        .from("generation_history")
+        .insert({
+          user_id: userId,
+          asset_type: assetType,
+          credits_consumed: creditCost,
+          prompt: promptText,
+          aspect_ratio: aspectRatio,
+          status: "RENDERING",
+          created_at: new Date().toISOString()
+        })
+        .select("id")
+        .single();
+
+      toast.success(`Deducted ${creditCost} Credits. Initializing Atelier Engine...`);
+      
+      const genId = genRecord?.id || `gen_${Date.now()}`;
+      router.push(`/dashboard/render?id=${genId}&type=${assetType}&cost=${creditCost}`);
+    } catch (err: any) {
+      console.error("Generation Error:", err);
+      toast.error("An error occurred while initializing render pipeline.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -244,9 +332,10 @@ export default function GenerateSettingsPage() {
           <div className="flex justify-end pt-2">
             <Button 
               onClick={handleGenerate}
-              className="w-full h-12 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_30px_rgba(197,168,128,0.4)] cursor-pointer"
+              disabled={isSubmitting}
+              className="w-full h-12 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_30px_rgba(197,168,128,0.4)] cursor-pointer disabled:opacity-50"
             >
-              Generate Commercial Asset ({creditCost} Credits)
+              {isSubmitting ? "Initializing Render Pipeline..." : `Generate Commercial Asset (${creditCost} Credits)`}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>

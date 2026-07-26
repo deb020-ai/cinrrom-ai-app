@@ -6,15 +6,15 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJ
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-const PRODUCT_CREDIT_MAP: Record<string, number> = {
-  pdt_0NjxLVOe3nEY8sjRUHX2Y: 7,   // starter_onetime
-  pdt_0NjxLVR4OKFIjgwVqLH9w: 18,  // growth_monthly
-  pdt_0NjxLVSkfoUw6zbz1LPuj: 48,  // business_monthly
-  pdt_0NjxLVTamfL0YIUl8hEZw: 6,   // topup_6
-  pdt_0NjxLVUUg9GB4M4uaI1QN: 12,  // topup_12
-  pdt_0NjxLVVLYM1wFfqj85Jt8: 24,  // topup_24
-  pdt_0NjxLVWDCzQSPmiqnb6d7: 48,  // topup_48
-  pdt_0NjxLVX6NbGgFun9fffNj: 96,  // topup_96
+const PRODUCT_CREDIT_MAP: Record<string, { credits: number; planTier: string; isSubscription: boolean }> = {
+  pdt_0NjxLVOe3nEY8sjRUHX2Y: { credits: 7, planTier: "starter", isSubscription: false },
+  pdt_0NjxLVR4OKFIjgwVqLH9w: { credits: 18, planTier: "growth", isSubscription: true },
+  pdt_0NjxLVSkfoUw6zbz1LPuj: { credits: 48, planTier: "business", isSubscription: true },
+  pdt_0NjxLVTamfL0YIUl8hEZw: { credits: 6, planTier: "topup", isSubscription: false },
+  pdt_0NjxLVUUg9GB4M4uaI1QN: { credits: 12, planTier: "topup", isSubscription: false },
+  pdt_0NjxLVVLYM1wFfqj85Jt8: { credits: 24, planTier: "topup", isSubscription: false },
+  pdt_0NjxLVWDCzQSPmiqnb6d7: { credits: 48, planTier: "topup", isSubscription: false },
+  pdt_0NjxLVX6NbGgFun9fffNj: { credits: 96, planTier: "topup", isSubscription: false },
 };
 
 export async function POST(req: Request) {
@@ -33,8 +33,10 @@ export async function POST(req: Request) {
       const customerEmail = data.customer?.email || data.customer_email;
       const productCart = data.product_cart || [];
       const productId = productCart[0]?.product_id || data.product_id;
+      const paymentId = data.payment_id || data.id;
 
-      const creditsToGrant = PRODUCT_CREDIT_MAP[productId] || parseInt(data.metadata?.credits || "10", 10);
+      const productConfig = PRODUCT_CREDIT_MAP[productId] || { credits: 10, planTier: "topup", isSubscription: false };
+      const creditsToGrant = productConfig.credits;
 
       if (customerEmail) {
         // Find user by email in Supabase Auth
@@ -47,28 +49,50 @@ export async function POST(req: Request) {
           // 1. Get existing wallet
           const { data: wallet } = await supabase
             .from("user_wallets")
-            .select("available_credits")
+            .select("available_credits, plan_tier")
             .eq("user_id", userId)
             .single();
 
-          const currentCredits = wallet?.available_credits || 0;
-          const newBalance = currentCredits + creditsToGrant;
+          const balanceBefore = Number(wallet?.available_credits || 0);
+          const balanceAfter = balanceBefore + creditsToGrant;
+          const currentPlanTier = productConfig.isSubscription ? productConfig.planTier : (wallet?.plan_tier || "free");
 
-          // 2. Upsert credit wallet balance
+          const now = new Date();
+          const renewalDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // +30 days
+
+          // 2. Upsert credit wallet balance & plan tier
           await supabase.from("user_wallets").upsert({
             user_id: userId,
-            available_credits: newBalance,
-            updated_at: new Date().toISOString(),
+            available_credits: balanceAfter,
+            plan_tier: currentPlanTier,
+            next_renewal_date: productConfig.isSubscription ? renewalDate.toISOString() : undefined,
+            updated_at: now.toISOString(),
           });
 
-          // 3. Log credit transaction
+          // 3. Log credit transaction ledger entry
           await supabase.from("credit_transactions").insert({
             user_id: userId,
             amount: creditsToGrant,
-            type: eventType.includes("subscription") ? "grant" : "topup",
-            description: `Dodo Payment Succeeded: +${creditsToGrant} Credits (${eventType})`,
-            created_at: new Date().toISOString(),
+            balance_before: balanceBefore,
+            balance_after: balanceAfter,
+            type: productConfig.isSubscription ? "grant" : "topup",
+            description: `Dodo Payment: +${creditsToGrant} Credits (${productConfig.planTier.toUpperCase()})`,
+            reference_id: paymentId,
+            created_at: now.toISOString(),
           });
+
+          // 4. Update Subscriptions table if recurring
+          if (productConfig.isSubscription) {
+            await supabase.from("subscriptions").upsert({
+              user_id: userId,
+              plan_id: `${productConfig.planTier}_monthly`,
+              status: "active",
+              current_period_start: now.toISOString(),
+              current_period_end: renewalDate.toISOString(),
+              dodo_subscription_id: data.subscription_id || paymentId,
+              updated_at: now.toISOString(),
+            });
+          }
 
           console.log(`Successfully credited ${creditsToGrant} credits to user ${userId} (${customerEmail})`);
         } else {

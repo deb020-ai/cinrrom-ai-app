@@ -1,21 +1,95 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { User, CreditCard, Wallet, ShieldCheck, RefreshCw, Clock, History, ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { User, CreditCard, Wallet, ShieldCheck, RefreshCw, Clock, History, ArrowDownRight, ArrowUpRight, Inbox } from "lucide-react";
 import { Pricing } from "@/components/features/landing/pricing";
+import { createClient } from "@supabase/supabase-js";
 
-const mockTransactions = [
-  { id: "tx_01", type: "topup", description: "Top-Up Recharge Pack (10 Credits)", credits: "+10", date: "24 Jul 2026", status: "Success" },
-  { id: "tx_02", type: "usage", description: "Render Commercial Video: Diamond Ring", credits: "-5", date: "22 Jul 2026", status: "Completed" },
-  { id: "tx_03", type: "usage", description: "Export Performance Creative: Emerald Solitaire", credits: "-1", date: "20 Jul 2026", status: "Completed" },
-  { id: "tx_04", type: "subscription", description: "Monthly Subscription Credit Grant", credits: "+30", date: "15 Jul 2026", status: "Success" },
-];
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dHhkcGdiZ2d6Z21zY3NwZXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTQxODAsImV4cCI6MjEwMDUzMDE4MH0.848UyPbVz5gnr2HYYdoMkrV-wBLoE4TW3E3iIUoZQV8";
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+interface WalletData {
+  available_credits: number;
+  credits_used: number;
+  plan_tier: string;
+  next_renewal_date: string | null;
+}
+
+interface TransactionData {
+  id: string;
+  amount: number;
+  balance_before: number;
+  balance_after: number;
+  type: string;
+  description: string;
+  created_at: string;
+}
 
 export default function SettingsPage() {
+  const [wallet, setWallet] = useState<WalletData | null>(null);
+  const [transactions, setTransactions] = useState<TransactionData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [userEmail, setUserEmail] = useState<string>("");
+
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setUserEmail(session.user.email || "");
+          const userId = session.user.id;
+
+          // 1. Fetch live wallet
+          const { data: walletRes } = await supabase
+            .from("user_wallets")
+            .select("available_credits, credits_used, plan_tier, next_renewal_date")
+            .eq("user_id", userId)
+            .single();
+
+          if (walletRes) {
+            setWallet({
+              available_credits: Number(walletRes.available_credits || 0),
+              credits_used: Number(walletRes.credits_used || 0),
+              plan_tier: walletRes.plan_tier || "free",
+              next_renewal_date: walletRes.next_renewal_date,
+            });
+          } else {
+            setWallet({ available_credits: 0, credits_used: 0, plan_tier: "free", next_renewal_date: null });
+          }
+
+          // 2. Fetch live transactions ledger
+          const { data: txRes } = await supabase
+            .from("credit_transactions")
+            .select("*")
+            .eq("user_id", userId)
+            .order("created_at", { ascending: false });
+
+          if (txRes) {
+            setTransactions(txRes as TransactionData[]);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching studio wallet settings:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchUserData();
+  }, []);
+
+  const formatRenewalDate = (dateStr: string | null) => {
+    if (!dateStr) return "N/A";
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-16">
       <div>
@@ -50,7 +124,8 @@ export default function SettingsPage() {
                   <CardTitle className="text-2xl font-light text-white">Credit Balance & Ledger</CardTitle>
                 </div>
                 <div className="px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 font-mono text-xs flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-amber-200" /> Growth Plan Active
+                  <ShieldCheck className="w-4 h-4 text-amber-200" />
+                  {wallet?.plan_tier ? `${wallet.plan_tier.toUpperCase()} PLAN` : "FREE ACCOUNT"}
                 </div>
               </div>
             </CardHeader>
@@ -61,30 +136,36 @@ export default function SettingsPage() {
                 
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
                   <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Available Credits</div>
-                  <div className="text-4xl font-light text-amber-200 font-serif">30</div>
+                  <div className="text-4xl font-light text-amber-200 font-serif">
+                    {loading ? "..." : wallet?.available_credits ?? 0}
+                  </div>
                   <div className="text-[10px] font-mono text-neutral-500 mt-2">Ready for commercial rendering</div>
                 </div>
 
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
                   <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Credits Used</div>
-                  <div className="text-4xl font-light text-white font-serif">6</div>
+                  <div className="text-4xl font-light text-white font-serif">
+                    {loading ? "..." : wallet?.credits_used ?? 0}
+                  </div>
                   <div className="text-[10px] font-mono text-neutral-500 mt-2">Commercial assets produced</div>
                 </div>
 
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
-                  <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Remaining</div>
-                  <div className="text-4xl font-light text-white font-serif">24</div>
-                  <div className="text-[10px] font-mono text-neutral-500 mt-2">Until next monthly renewal</div>
+                  <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Wallet Status</div>
+                  <div className="text-4xl font-light text-white font-serif">
+                    {wallet?.available_credits && wallet.available_credits > 0 ? "Active" : "Zero"}
+                  </div>
+                  <div className="text-[10px] font-mono text-neutral-500 mt-2">Live production account</div>
                 </div>
 
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10 flex flex-col justify-between">
                   <div>
                     <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Next Renewal</div>
-                    <div className="text-xl font-light text-white font-serif flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-amber-200" /> 15 August
+                    <div className="text-lg font-light text-white font-serif flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-amber-200" /> {formatRenewalDate(wallet?.next_renewal_date || null)}
                     </div>
                   </div>
-                  <div className="text-[10px] font-mono text-amber-200/80 mt-2">+30 Credits renew automatically</div>
+                  <div className="text-[10px] font-mono text-amber-200/80 mt-2">Automatic monthly refill</div>
                 </div>
 
               </div>
@@ -104,40 +185,57 @@ export default function SettingsPage() {
               {/* Recent Ledger Transactions Table */}
               <div>
                 <div className="flex items-center gap-2 text-xs font-mono text-amber-200 uppercase tracking-wider mb-4">
-                  <History className="w-4 h-4 text-amber-200" /> Recent Credit Transactions
+                  <History className="w-4 h-4 text-amber-200" /> Production Credit Ledger
                 </div>
 
-                <div className="rounded-xl border border-white/10 overflow-hidden bg-white/[0.01]">
-                  <table className="w-full text-left text-xs font-mono">
-                    <thead>
-                      <tr className="border-b border-white/10 bg-white/[0.03] text-neutral-400">
-                        <th className="p-3.5 font-normal">Transaction</th>
-                        <th className="p-3.5 font-normal text-right">Credits</th>
-                        <th className="p-3.5 font-normal text-right">Date</th>
-                        <th className="p-3.5 font-normal text-right">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/[0.05] text-neutral-300">
-                      {mockTransactions.map((tx) => (
-                        <tr key={tx.id}>
-                          <td className="p-3.5 flex items-center gap-2.5">
-                            {tx.type === "usage" ? (
-                              <ArrowDownRight className="w-4 h-4 text-red-400 shrink-0" />
-                            ) : (
-                              <ArrowUpRight className="w-4 h-4 text-emerald-400 shrink-0" />
-                            )}
-                            <span>{tx.description}</span>
-                          </td>
-                          <td className={`p-3.5 text-right font-bold ${tx.type === "usage" ? "text-red-400" : "text-emerald-400"}`}>
-                            {tx.credits}
-                          </td>
-                          <td className="p-3.5 text-right text-neutral-400">{tx.date}</td>
-                          <td className="p-3.5 text-right text-amber-200">{tx.status}</td>
+                {transactions.length === 0 ? (
+                  <div className="rounded-2xl border border-white/10 p-12 text-center bg-white/[0.01]">
+                    <Inbox className="w-10 h-10 text-neutral-600 mx-auto mb-3" />
+                    <h4 className="text-sm font-mono text-white font-medium mb-1">No Ledger Transactions Recorded</h4>
+                    <p className="text-xs text-neutral-400 font-mono max-w-sm mx-auto mb-4">
+                      Purchase credits or subscribe to view your billing ledger history.
+                    </p>
+                    <a href="#topup">
+                      <Button variant="outline" className="h-9 px-5 text-xs font-mono border-amber-200/30 text-amber-200 hover:bg-amber-400/10">
+                        Purchase Credits
+                      </Button>
+                    </a>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-white/10 overflow-hidden bg-white/[0.01]">
+                    <table className="w-full text-left text-xs font-mono">
+                      <thead>
+                        <tr className="border-b border-white/10 bg-white/[0.03] text-neutral-400">
+                          <th className="p-3.5 font-normal">Transaction Description</th>
+                          <th className="p-3.5 font-normal text-right">Amount</th>
+                          <th className="p-3.5 font-normal text-right">Balance After</th>
+                          <th className="p-3.5 font-normal text-right">Timestamp</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody className="divide-y divide-white/[0.05] text-neutral-300">
+                        {transactions.map((tx) => (
+                          <tr key={tx.id}>
+                            <td className="p-3.5 flex items-center gap-2.5">
+                              {tx.amount < 0 ? (
+                                <ArrowDownRight className="w-4 h-4 text-red-400 shrink-0" />
+                              ) : (
+                                <ArrowUpRight className="w-4 h-4 text-emerald-400 shrink-0" />
+                              )}
+                              <span>{tx.description}</span>
+                            </td>
+                            <td className={`p-3.5 text-right font-bold ${tx.amount < 0 ? "text-red-400" : "text-emerald-400"}`}>
+                              {tx.amount > 0 ? `+${tx.amount}` : tx.amount}
+                            </td>
+                            <td className="p-3.5 text-right text-neutral-300">{tx.balance_after}</td>
+                            <td className="p-3.5 text-right text-neutral-400">
+                              {new Date(tx.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
 
             </CardContent>
@@ -165,7 +263,7 @@ export default function SettingsPage() {
               </div>
               <div className="grid gap-2">
                 <label className="text-xs font-mono text-neutral-300 uppercase tracking-wider">Primary Work Email</label>
-                <Input defaultValue="deb@cinroom.com" type="email" className="h-11 bg-white/[0.03] border-white/10 text-white font-sans rounded-xl" />
+                <Input value={userEmail || "loading..."} disabled className="h-11 bg-white/[0.03] border-white/10 text-neutral-400 font-mono rounded-xl opacity-80" />
               </div>
               <Button className="bg-amber-400/10 text-amber-200 border border-amber-200/30 hover:bg-amber-400/20 text-xs font-mono uppercase tracking-wider h-10 px-5 rounded-xl">Save Profile</Button>
             </CardContent>
