@@ -6,12 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Play, ExternalLink, Sparkles, Film, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dHhkcGdiZ2d6Z21zY3NwZXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTQxODAsImV4cCI6MjEwMDUzMDE4MH0.848UyPbVz5gnr2HYYdoMkrV-wBLoE4TW3E3iIUoZQV8";
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { createClient } from "@/lib/supabase/client";
 
 interface GenerationItem {
   id: string;
@@ -31,6 +26,7 @@ export default function HistoryPage() {
   useEffect(() => {
     async function fetchHistory() {
       try {
+        const supabase = createClient();
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
           const { data } = await supabase

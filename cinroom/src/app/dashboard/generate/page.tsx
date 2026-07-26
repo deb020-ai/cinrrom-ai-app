@@ -6,12 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Monitor, Smartphone, Square, Settings2, Video, Image as ImageIcon, ArrowRight, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dHhkcGdiZ2d6Z21zY3NwZXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTQxODAsImV4cCI6MjEwMDUzMDE4MH0.848UyPbVz5gnr2HYYdoMkrV-wBLoE4TW3E3iIUoZQV8";
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { createClient } from "@/lib/supabase/client";
 
 export default function GenerateSettingsPage() {
   const router = useRouter();
@@ -31,6 +26,7 @@ export default function GenerateSettingsPage() {
   const handleGenerate = async () => {
     setIsSubmitting(true);
     try {
+      const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session?.user) {

@@ -20,29 +20,55 @@ const PRODUCT_CREDIT_MAP: Record<string, { credits: number; planTier: string; is
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const paymentId = searchParams.get("payment_id") || searchParams.get("id");
+    const paymentId = searchParams.get("payment_id") || searchParams.get("id") || searchParams.get("session_id") || searchParams.get("subscription_id");
     const userEmailParam = searchParams.get("email");
+
+    if (!paymentId) {
+      return NextResponse.json({ verified: false, message: "Missing payment_id or subscription_id" });
+    }
 
     const apiKey = process.env.DODO_PAYMENTS_API_KEY || "P8N0k49snpihXwz0.nfVbvxkdNph6wvQeQfE0Z6XtajZLV1zSdtHxf2HlSyHiNd7a";
 
-    // 1. If paymentId is present, query Dodo API directly to verify
+    // 1. Query Dodo API
     let dodoData: any = null;
-    if (paymentId) {
-      try {
-        const res = await fetch(`https://live.dodopayments.com/payments/${paymentId}`, {
-          headers: { Authorization: `Bearer ${apiKey}` }
-        });
-        if (res.ok) {
-          dodoData = await res.json();
-        }
-      } catch (e) {
-        console.error("[CHECKOUT STATUS] Dodo API fetch error:", e);
-      }
+    let fetchUrl = `https://live.dodopayments.com/payments/${paymentId}`;
+    if (paymentId.startsWith("cks_")) {
+      fetchUrl = `https://live.dodopayments.com/checkouts/${paymentId}`;
+    } else if (paymentId.startsWith("sub_")) {
+      fetchUrl = `https://live.dodopayments.com/subscriptions/${paymentId}`;
     }
 
-    // 2. Resolve user_id: prefer metadata.user_id, then email lookup
+    try {
+      const res = await fetch(fetchUrl, {
+        headers: { Authorization: `Bearer ${apiKey}` }
+      });
+      if (res.ok) {
+        dodoData = await res.json();
+      } else {
+        console.warn(`[CHECKOUT STATUS] Dodo API returned ${res.status}`);
+        return NextResponse.json({ verified: false, message: "Invalid payment ID" });
+      }
+    } catch (e) {
+      console.error("[CHECKOUT STATUS] Dodo API fetch error:", e);
+      return NextResponse.json({ verified: false, message: "Failed to connect to Dodo Payments" });
+    }
+
+    // 2. Determine Success Status
+    // For CheckoutSessions, it's `payment_status`. For Payments, it's `status`. For Subscriptions, it's `status` (active/past_due/etc).
+    const isPaymentSuccessful = 
+      dodoData.payment_status === "succeeded" || 
+      dodoData.status === "succeeded" || 
+      dodoData.status === "successful" ||
+      dodoData.status === "active";
+
+    if (!isPaymentSuccessful) {
+      console.warn(`[CHECKOUT STATUS] Payment is not successful. Status: ${dodoData.payment_status || dodoData.status}`);
+      return NextResponse.json({ verified: false, message: "Payment was not successful or is still pending" });
+    }
+
+    // 3. Resolve user_id
     const metadataUserId = dodoData?.metadata?.user_id;
-    const customerEmail = dodoData?.customer?.email || userEmailParam || dodoData?.metadata?.user_email;
+    const customerEmail = dodoData?.customer?.email || userEmailParam || dodoData?.metadata?.user_email || dodoData?.customer_email || dodoData?.customer?.email_address;
 
     let userId: string | null = metadataUserId || null;
 
@@ -57,28 +83,29 @@ export async function GET(req: Request) {
       return NextResponse.json({ verified: false, message: "User not found." });
     }
 
-    // 3. Fetch current wallet
+    // 4. Fetch current wallet
     let { data: wallet } = await supabase.from("user_wallets").select("*").eq("user_id", userId).maybeSingle();
 
-    // 4. Idempotency: check if this payment was already credited
+    const canonicalId = dodoData.payment_id || dodoData.subscription_id || dodoData.id || paymentId;
+
+    // 5. Idempotency check
     const { data: existingTx } = await supabase
       .from("credit_transactions")
       .select("*")
       .eq("user_id", userId)
-      .eq("reference_id", paymentId || "none")
+      .eq("reference_id", canonicalId)
       .maybeSingle();
 
-    // 5. If NOT yet credited and Dodo confirms payment succeeded, credit now
-    if (!existingTx && paymentId && dodoData && (dodoData.status === "succeeded" || dodoData.status === "successful" || !dodoData.status)) {
-      const productId = dodoData.product_cart?.[0]?.product_id;
-      const config = PRODUCT_CREDIT_MAP[productId] || { credits: 10, planTier: "topup", isSubscription: false };
+    // 6. Credit User if not yet credited
+    const productId = dodoData.product_cart?.[0]?.product_id || dodoData.product_id || dodoData.plan?.product_id;
+    const config = PRODUCT_CREDIT_MAP[productId] || { credits: 0, planTier: "free", isSubscription: false };
 
+    if (!existingTx && config.credits > 0) {
       const balanceBefore = Number(wallet?.available_credits || 0);
       const balanceAfter = balanceBefore + config.credits;
       const now = new Date();
       const renewalDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-      // Upsert wallet
       const walletPayload: Record<string, any> = {
         user_id: userId,
         available_credits: balanceAfter,
@@ -90,7 +117,6 @@ export async function GET(req: Request) {
       }
       await supabase.from("user_wallets").upsert(walletPayload);
 
-      // Insert ledger entry
       await supabase.from("credit_transactions").insert({
         user_id: userId,
         amount: config.credits,
@@ -98,12 +124,11 @@ export async function GET(req: Request) {
         balance_after: balanceAfter,
         type: config.isSubscription ? "grant" : "topup",
         description: `Dodo Verified Payment: +${config.credits} Credits (${config.planTier.toUpperCase()})`,
-        reference_id: paymentId,
-        invoice_url: dodoData?.invoice_url || dodoData?.receipt_url || (paymentId ? `https://live.dodopayments.com/invoices/payments/${paymentId}` : null),
+        reference_id: canonicalId,
+        invoice_url: dodoData?.invoice_url || dodoData?.receipt_url || `https://live.dodopayments.com/invoices/payments/${paymentId}`,
         created_at: now.toISOString(),
       });
 
-      // Upsert subscription if recurring
       if (config.isSubscription) {
         await supabase.from("subscriptions").upsert({
           user_id: userId,
@@ -111,12 +136,11 @@ export async function GET(req: Request) {
           status: "active",
           current_period_start: now.toISOString(),
           current_period_end: renewalDate.toISOString(),
-          dodo_subscription_id: dodoData.subscription_id || paymentId,
+          dodo_subscription_id: dodoData.subscription_id || dodoData.id || paymentId,
           updated_at: now.toISOString(),
         });
       }
 
-      // Refetch updated wallet
       const { data: updatedWallet } = await supabase.from("user_wallets").select("*").eq("user_id", userId).maybeSingle();
       wallet = updatedWallet;
 
@@ -127,11 +151,11 @@ export async function GET(req: Request) {
       verified: true,
       status: "succeeded",
       available_credits: Number(wallet?.available_credits || 0),
-      credits_added: existingTx?.amount || (dodoData ? PRODUCT_CREDIT_MAP[dodoData?.product_cart?.[0]?.product_id]?.credits : 0) || 0,
+      credits_added: existingTx?.amount || config.credits,
       plan_tier: wallet?.plan_tier || "free",
       next_renewal_date: wallet?.next_renewal_date,
-      transaction_id: paymentId || existingTx?.reference_id || "",
-      invoice_url: dodoData?.invoice_url || (paymentId ? `https://live.dodopayments.com/invoices/payments/${paymentId}` : null),
+      transaction_id: paymentId,
+      invoice_url: dodoData?.invoice_url || `https://live.dodopayments.com/invoices/payments/${paymentId}`,
     });
 
   } catch (error: any) {

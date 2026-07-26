@@ -5,12 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Video, Wallet, Download, X, ArrowRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dHhkcGdiZ2d6Z21zY3NwZXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTQxODAsImV4cCI6MjEwMDUzMDE4MH0.848UyPbVz5gnr2HYYdoMkrV-wBLoE4TW3E3iIUoZQV8";
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { createClient } from "@/lib/supabase/client";
 
 interface PaymentDetails {
   verified: boolean;
@@ -25,7 +20,7 @@ interface PaymentDetails {
 function PaymentSuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const paymentId = searchParams.get("payment_id") || searchParams.get("id");
+  const paymentId = searchParams.get("payment_id") || searchParams.get("id") || searchParams.get("session_id") || searchParams.get("subscription_id");
 
   const [details, setDetails] = useState<PaymentDetails | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,6 +29,7 @@ function PaymentSuccessContent() {
   useEffect(() => {
     async function verifyPayment() {
       try {
+        const supabase = createClient();
         const { data: { session } } = await supabase.auth.getSession();
         const userEmail = session?.user?.email || "";
 
@@ -47,23 +43,17 @@ function PaymentSuccessContent() {
         if (data.verified) {
           setDetails(data);
         } else {
-          if (session?.user?.id) {
-            const { data: wallet } = await supabase
-              .from("user_wallets")
-              .select("*")
-              .eq("user_id", session.user.id)
-              .single();
-
-            setDetails({
-              verified: true,
-              available_credits: Number(wallet?.available_credits || 0),
-              credits_added: 0,
-              plan_tier: wallet?.plan_tier || "free",
-              next_renewal_date: wallet?.next_renewal_date,
-              transaction_id: paymentId || "",
-              invoice_url: paymentId ? `https://live.dodopayments.com/invoices/payments/${paymentId}` : null,
-            });
-          }
+          // If the backend API says it's not verified, it's not verified.
+          // Don't fake it!
+          setDetails({
+            verified: false,
+            available_credits: 0,
+            credits_added: 0,
+            plan_tier: "free",
+            next_renewal_date: null,
+            transaction_id: paymentId || "",
+            invoice_url: null,
+          });
         }
       } catch (err) {
         console.error("Payment verification error:", err);
@@ -102,16 +92,20 @@ function PaymentSuccessContent() {
       
       {/* Success Icon Header */}
       <div className="text-center space-y-3">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400/20 to-emerald-500/20 border border-amber-200/40 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(197,168,128,0.3)]">
-          <CheckCircle2 className="w-8 h-8 text-amber-200" />
+        <div className={`w-16 h-16 rounded-full border flex items-center justify-center mx-auto ${details?.verified === false ? 'bg-gradient-to-tr from-red-500/20 to-red-900/20 border-red-500/40 shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'bg-gradient-to-tr from-amber-400/20 to-emerald-500/20 border-amber-200/40 shadow-[0_0_30px_rgba(197,168,128,0.3)]'}`}>
+          {details?.verified === false ? <X className="w-8 h-8 text-red-500" /> : <CheckCircle2 className="w-8 h-8 text-amber-200" />}
         </div>
 
-        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-amber-200/80 block">
-          CINROOM ATELIER CONFIRMED
+        <span className={`text-[10px] font-mono uppercase tracking-[0.25em] block ${details?.verified === false ? 'text-red-400/80' : 'text-amber-200/80'}`}>
+          {details?.verified === false ? "PAYMENT FAILED OR PENDING" : "CINROOM ATELIER CONFIRMED"}
         </span>
-        <h1 className="text-3xl font-light tracking-tight text-white font-serif">🎉 Payment Successful</h1>
+        <h1 className="text-3xl font-light tracking-tight text-white font-serif">
+          {details?.verified === false ? "⚠️ Payment Failed" : "🎉 Payment Successful"}
+        </h1>
         <p className="text-xs font-mono text-neutral-300 max-w-md mx-auto leading-relaxed">
-          Your payment has been verified. Your commercial credits have been credited to your Atelier Credit Wallet.
+          {details?.verified === false 
+            ? "Your payment could not be verified or was unsuccessful. Please check your Dodo Payments account or try again."
+            : "Your payment has been verified. Your commercial credits have been credited to your Atelier Credit Wallet."}
         </p>
       </div>
 

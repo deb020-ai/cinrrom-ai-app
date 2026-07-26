@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import DodoPayments from "dodopayments";
 
 const DODO_PRODUCT_MAP: Record<string, string> = {
   starter_onetime: "pdt_0NjxLVOe3nEY8sjRUHX2Y",
@@ -22,49 +23,39 @@ export async function POST(req: Request) {
     }
 
     const apiKey = process.env.DODO_PAYMENTS_API_KEY || "P8N0k49snpihXwz0.nfVbvxkdNph6wvQeQfE0Z6XtajZLV1zSdtHxf2HlSyHiNd7a";
+    const environment = apiKey.startsWith("test_") ? "test_mode" : "live_mode";
+    
+    const client = new DodoPayments({
+      bearerToken: apiKey,
+      environment: environment
+    });
     
     // Construct production return URL
     const origin = req.headers.get("origin") || "https://www.cinroom.com";
     const successReturnUrl = `${origin}/payment/success`;
 
     // 1. Create Dodo Payments session with attached user_id & user_email metadata
-    const response = await fetch("https://live.dodopayments.com/payments", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+    const session = await client.checkoutSessions.create({
+      product_cart: [
+        {
+          product_id: productId,
+          quantity: 1,
+        },
+      ],
+      metadata: {
+        user_id: userId || "",
+        user_email: userEmail || "",
+        pack_id: packId,
       },
-      body: JSON.stringify({
-        billing: {
-          city: "Mumbai",
-          country: "IN",
-          state: "MH",
-          street: "Studio Address",
-          zipcode: "400001",
-        },
-        customer: {
-          email: userEmail || "deb@cinroom.com",
-          name: "Cinroom Member",
-        },
-        product_cart: [
-          {
-            product_id: productId,
-            quantity: 1,
-          },
-        ],
-        metadata: {
-          user_id: userId || "",
-          user_email: userEmail || "",
-          pack_id: packId,
-        },
-        return_url: successReturnUrl,
-      }),
+      return_url: successReturnUrl,
     });
 
-    const data = await response.json();
+    if (session.checkout_url) {
+      return NextResponse.json({ checkoutUrl: session.checkout_url });
+    }
 
-    if (data.payment_link) {
-      const checkoutWithReturn = `${data.payment_link}?return_url=${encodeURIComponent(successReturnUrl)}&redirect=true`;
+    if ((session as any).payment_link) {
+      const checkoutWithReturn = `${(session as any).payment_link}?return_url=${encodeURIComponent(successReturnUrl)}&redirect=true`;
       return NextResponse.json({ checkoutUrl: checkoutWithReturn });
     }
 

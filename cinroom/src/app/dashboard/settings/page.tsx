@@ -7,12 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { User, CreditCard, Wallet, ShieldCheck, RefreshCw, Clock, History, ArrowDownRight, ArrowUpRight, Inbox } from "lucide-react";
 import { Pricing } from "@/components/features/landing/pricing";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dHhkcGdiZ2d6Z21zY3NwZXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTQxODAsImV4cCI6MjEwMDUzMDE4MH0.848UyPbVz5gnr2HYYdoMkrV-wBLoE4TW3E3iIUoZQV8";
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { createClient } from "@/lib/supabase/client";
 
 interface WalletData {
   available_credits: number;
@@ -41,6 +36,7 @@ export default function SettingsPage() {
   useEffect(() => {
     async function fetchUserData() {
       try {
+        const supabase = createClient();
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
           setUserEmail(session.user.email || "");
