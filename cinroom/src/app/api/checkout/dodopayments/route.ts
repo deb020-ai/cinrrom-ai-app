@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import DodoPayments from "dodopayments";
 
 const DODO_PRODUCT_MAP: Record<string, string> = {
-  starter_onetime: "pdt_0NjxLVOe3nEY8sjRUHX2Y",
-  growth_monthly: "pdt_0NjxLVR4OKFIjgwVqLH9w",
-  business_monthly: "pdt_0NjxLVSkfoUw6zbz1LPuj",
-  topup_6: "pdt_0NjxLVTamfL0YIUl8hEZw",
-  topup_12: "pdt_0NjxLVUUg9GB4M4uaI1QN",
-  topup_24: "pdt_0NjxLVVLYM1wFfqj85Jt8",
-  topup_48: "pdt_0NjxLVWDCzQSPmiqnb6d7",
-  topup_96: "pdt_0NjxLVX6NbGgFun9fffNj",
+  starter_onetime: "pdt_0NkBkI4nIraCF13YnypTB",
+  growth_monthly: "pdt_0NkBkI6C9sBJb6o7D3S0y",
+  business_monthly: "pdt_0NkBkI8UCl9UJrSR43j1H",
+  topup_6: "pdt_0NkBkIApGxciWGcneFJpu",
+  topup_12: "pdt_0NkBkICBqyyyVMpq876Zd",
+  topup_24: "pdt_0NkBkIDUiIVvssvxxafff",
+  topup_48: "pdt_0NkBkIEuLaLgT0YDtDlPd",
+  topup_96: "pdt_0NkBkIGHhGFWub6EI3tDx",
 };
 
 export async function POST(req: Request) {
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error("Dodo Checkout Error:", error);
     const successReturnUrl = "https://www.cinroom.com/payment/success";
-    const productId = DODO_PRODUCT_MAP[req.url] || "pdt_0NjxLVOe3nEY8sjRUHX2Y";
+    const productId = DODO_PRODUCT_MAP[req.url] || "pdt_0NkBkI4nIraCF13YnypTB";
     const directUrl = `https://checkout.dodopayments.com/buy/${productId}?return_url=${encodeURIComponent(successReturnUrl)}&redirect=true`;
     return NextResponse.json({ checkoutUrl: directUrl });
   }
