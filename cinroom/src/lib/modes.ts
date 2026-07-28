@@ -70,8 +70,8 @@ export const GENERATION_MODES: ModeOption[] = [
 
 export interface ModeInputState {
   mode: GenerationModeId;
-  jewelry_image?: string;
-  brand_guideline_image?: string;
+  jewelry_images?: string[];
+  brand_guideline_images?: string[];
   duration: "5s" | "10s" | "15s";
   aspect_ratio: "16:9" | "9:16" | "1:1";
   gender?: string;
@@ -84,11 +84,13 @@ export interface ModeInputState {
 }
 
 export const STRICT_JEWELRY_GUARDRAIL =
-  "CRITICAL PRODUCT INTEGRITY REQUIREMENT: The uploaded jewelry image is the single source of truth for the product's appearance. Preserve the uploaded jewelry EXACTLY as provided, with no redesign, no additional jewelry pieces, no extra gemstones, no metal changes, and no structural alterations. Only the camera motion, lighting, environment, characters, and atmosphere are generated around the exact jewelry piece.";
+  "CRITICAL PRODUCT INTEGRITY REQUIREMENT: The uploaded jewelry images are the single source of truth for the product's appearance. Preserve the uploaded jewelry EXACTLY as provided across all angles, with no redesign, no additional jewelry pieces, no extra gemstones, no metal changes, and no structural alterations. Only the camera motion, lighting, environment, characters, and atmosphere are generated around the exact jewelry piece.";
 
 export function buildMasterPrompt(inputs: ModeInputState): string {
   const {
     mode,
+    jewelry_images = [],
+    brand_guideline_images = [],
     gender = "Female",
     age = "25-35",
     country = "France",
@@ -100,15 +102,25 @@ export function buildMasterPrompt(inputs: ModeInputState): string {
 
   let masterPrompt = "";
 
+  const multiAngleNote =
+    jewelry_images.length > 1
+      ? ` (Multi-angle product reference attached: ${jewelry_images.length} views provided for 360-degree geometric accuracy)`
+      : "";
+
+  const brandGuideNote =
+    brand_guideline_images.length > 0
+      ? ` (Brand guidelines attached: ${brand_guideline_images.length} reference palettes provided for color matching)`
+      : "";
+
   switch (mode) {
     case "product_hero":
       masterPrompt =
-        "LUXURY PRODUCT HERO COMMERCIAL: Solo high-jewelry presentation of the uploaded piece. Set in an ultra-clean obsidian mirror studio with 360-degree orbital camera motion, raytraced caustics, macro light flares, and 8K cinematic focus.";
+        `LUXURY PRODUCT HERO COMMERCIAL${multiAngleNote}${brandGuideNote}: Solo high-jewelry presentation of the uploaded piece. Set in an ultra-clean obsidian mirror studio with 360-degree orbital camera motion, raytraced caustics, macro light flares, and 8K cinematic focus.`;
       break;
 
     case "model_campaign":
       masterPrompt =
-        `HIGH-FASHION EDITORIAL MODEL CAMPAIGN: A luxury fashion campaign featuring a ${age} year old ${ethnicity} ${gender} model from ${country} elegantly wearing the uploaded jewelry piece. Shot on 85mm lens with soft cinematic key lighting, shallow depth of field, high-end Vogue magazine aesthetic.`;
+        `HIGH-FASHION EDITORIAL MODEL CAMPAIGN${multiAngleNote}${brandGuideNote}: A luxury fashion campaign featuring a ${age} year old ${ethnicity} ${gender} model from ${country} elegantly wearing the uploaded jewelry piece. Shot on 85mm lens with soft cinematic key lighting, shallow depth of field, high-end Vogue magazine aesthetic.`;
       break;
 
     case "fantasy_world": {
@@ -116,7 +128,7 @@ export function buildMasterPrompt(inputs: ModeInputState): string {
         ? fantasy_theme.trim()
         : "an ethereal crystal starlight sanctuary with floating bioluminescent particles and obsidian glass caustics";
       masterPrompt =
-        `ETHEREAL FANTASY WORLD CAMPAIGN: A breathtaking luxury fantasy commercial set inside ${selectedWorld}. Features a ${age} year old ${ethnicity} ${gender} model from ${country} wearing the uploaded jewelry piece with cinematic atmospheric lighting and floating particle reflections.`;
+        `ETHEREAL FANTASY WORLD CAMPAIGN${multiAngleNote}${brandGuideNote}: A breathtaking luxury fantasy commercial set inside ${selectedWorld}. Features a ${age} year old ${ethnicity} ${gender} model from ${country} wearing the uploaded jewelry piece with cinematic atmospheric lighting and floating particle reflections.`;
       break;
     }
 
@@ -125,7 +137,7 @@ export function buildMasterPrompt(inputs: ModeInputState): string {
         ? animal.trim()
         : "a regal panther with a sleek dark coat and golden eyes";
       masterPrompt =
-        `MAJESTIC ANIMAL LUXURY CAMPAIGN: High-converting luxury commercial pairing the uploaded fine jewelry with ${selectedAnimal}. High-contrast obsidian studio lighting, slow-motion grace, majestic atmosphere, 4K film grade.`;
+        `MAJESTIC ANIMAL LUXURY CAMPAIGN${multiAngleNote}${brandGuideNote}: High-converting luxury commercial pairing the uploaded fine jewelry with ${selectedAnimal}. High-contrast obsidian studio lighting, slow-motion grace, majestic atmosphere, 4K film grade.`;
       break;
     }
 
@@ -134,7 +146,7 @@ export function buildMasterPrompt(inputs: ModeInputState): string {
         ? creative_prompt.trim()
         : "Paris Fashion Week High Jewelry Gala";
       masterPrompt =
-        `AI DIRECTOR EXPANDED CONCEPT: World-class luxury jewelry commercial based on the concept: "${expandedConcept}". Intelligently expanded into a high-fashion cinematic film featuring a ${age} year old ${ethnicity} ${gender} model from ${country} in an immersive luxury environment tailored to the concept.`;
+        `AI DIRECTOR EXPANDED CONCEPT${multiAngleNote}${brandGuideNote}: World-class luxury jewelry commercial based on the concept: "${expandedConcept}". Intelligently expanded into a high-fashion cinematic film featuring a ${age} year old ${ethnicity} ${gender} model from ${country} in an immersive luxury environment tailored to the concept.`;
       break;
     }
   }

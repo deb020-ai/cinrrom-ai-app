@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -17,9 +17,10 @@ import {
   ArrowRight,
   Upload,
   ShieldCheck,
-  CheckCircle2,
   Image as ImageIcon,
-  Info,
+  Plus,
+  X,
+  Layers,
 } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -31,6 +32,11 @@ import {
   ETHNICITIES_LIST,
   AI_DIRECTOR_EXAMPLES,
 } from "@/lib/modes";
+
+interface UploadedItem {
+  file?: File;
+  previewUrl: string;
+}
 
 export default function GeneratePage() {
   const router = useRouter();
@@ -48,11 +54,13 @@ export default function GeneratePage() {
   const [duration, setDuration] = useState<"5s" | "10s" | "15s">("10s");
   const [aspectRatio, setAspectRatio] = useState<"16:9" | "9:16" | "1:1">("16:9");
 
-  // Image File States & Preview URLs
-  const [jewelryFile, setJewelryFile] = useState<File | null>(null);
-  const [jewelryPreview, setJewelryPreview] = useState<string>("/hero-ring.png");
-  const [brandFile, setBrandFile] = useState<File | null>(null);
-  const [brandPreview, setBrandPreview] = useState<string | null>(null);
+  // MULTIPLE JEWELRY IMAGES STATE
+  const [jewelryItems, setJewelryItems] = useState<UploadedItem[]>([
+    { previewUrl: "/hero-ring.png" },
+  ]);
+
+  // MULTIPLE BRAND GUIDELINE IMAGES STATE
+  const [brandItems, setBrandItems] = useState<UploadedItem[]>([]);
 
   // Model Info Inputs
   const [gender, setGender] = useState("Female");
@@ -73,22 +81,48 @@ export default function GeneratePage() {
 
   const creditCost = 3; // 3 credits per 4K Commercial Video
 
+  // Handle Uploading Multiple Jewelry Images
   const handleJewelryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setJewelryFile(file);
-      setJewelryPreview(URL.createObjectURL(file));
-      toast.success(`Selected Jewelry Asset: ${file.name}`);
+    if (e.target.files && e.target.files.length > 0) {
+      const filesArray = Array.from(e.target.files);
+      const newItems: UploadedItem[] = filesArray.map((file) => ({
+        file,
+        previewUrl: URL.createObjectURL(file),
+      }));
+
+      // If existing list only contains the default placeholder `/hero-ring.png`, replace it
+      if (jewelryItems.length === 1 && !jewelryItems[0].file) {
+        setJewelryItems(newItems);
+      } else {
+        setJewelryItems((prev) => [...prev, ...newItems]);
+      }
+      toast.success(`Added ${filesArray.length} Jewelry Image(s)`);
     }
   };
 
-  const handleBrandUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setBrandFile(file);
-      setBrandPreview(URL.createObjectURL(file));
-      toast.success(`Selected Brand Guideline: ${file.name}`);
+  const removeJewelryItem = (index: number) => {
+    if (jewelryItems.length === 1) {
+      setJewelryItems([{ previewUrl: "/hero-ring.png" }]);
+    } else {
+      setJewelryItems((prev) => prev.filter((_, i) => i !== index));
     }
+  };
+
+  // Handle Uploading Multiple Brand Guideline Images
+  const handleBrandUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const filesArray = Array.from(e.target.files);
+      const newItems: UploadedItem[] = filesArray.map((file) => ({
+        file,
+        previewUrl: URL.createObjectURL(file),
+      }));
+      setBrandItems((prev) => [...prev, ...newItems]);
+      toast.success(`Added ${filesArray.length} Brand Guideline Image(s)`);
+    }
+  };
+
+  const removeBrandItem = (index: number) => {
+    setBrandItems((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleGenerate = async () => {
@@ -109,38 +143,37 @@ export default function GeneratePage() {
       }
 
       const userId = session.user.id;
+      setIsUploading(true);
 
-      // 1. Upload Jewelry Image to R2 if a new file was uploaded
-      let uploadedJewelryUrl = jewelryPreview;
-      if (jewelryFile) {
-        setIsUploading(true);
-        const formData = new FormData();
-        formData.append("file", jewelryFile);
-        const uploadRes = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-        const uploadData = await uploadRes.json();
-        if (uploadData.url) {
-          uploadedJewelryUrl = uploadData.url;
-        }
-        setIsUploading(false);
-      }
-
-      // 2. Upload Brand Guideline Image if provided
-      let uploadedBrandUrl = brandPreview || null;
-      if (brandFile) {
-        const formData = new FormData();
-        formData.append("file", brandFile);
-        const uploadRes = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-        const uploadData = await uploadRes.json();
-        if (uploadData.url) {
-          uploadedBrandUrl = uploadData.url;
+      // 1. Upload all Jewelry Images to Cloudflare R2
+      const uploadedJewelryUrls: string[] = [];
+      for (const item of jewelryItems) {
+        if (item.file) {
+          const formData = new FormData();
+          formData.append("file", item.file);
+          const res = await fetch("/api/upload", { method: "POST", body: formData });
+          const data = await res.json();
+          if (data.url) uploadedJewelryUrls.push(data.url);
+        } else {
+          uploadedJewelryUrls.push(item.previewUrl);
         }
       }
+
+      // 2. Upload all Brand Guideline Images to Cloudflare R2
+      const uploadedBrandUrls: string[] = [];
+      for (const item of brandItems) {
+        if (item.file) {
+          const formData = new FormData();
+          formData.append("file", item.file);
+          const res = await fetch("/api/upload", { method: "POST", body: formData });
+          const data = await res.json();
+          if (data.url) uploadedBrandUrls.push(data.url);
+        } else {
+          uploadedBrandUrls.push(item.previewUrl);
+        }
+      }
+
+      setIsUploading(false);
 
       // 3. Fetch user wallet balance
       const { data: wallet } = await supabase
@@ -167,8 +200,8 @@ export default function GeneratePage() {
       // 4. Construct Hidden Master Prompt internally
       const masterPrompt = buildMasterPrompt({
         mode: selectedMode,
-        jewelry_image: uploadedJewelryUrl,
-        brand_guideline_image: uploadedBrandUrl || undefined,
+        jewelry_images: uploadedJewelryUrls,
+        brand_guideline_images: uploadedBrandUrls,
         duration,
         aspect_ratio: aspectRatio,
         gender,
@@ -264,7 +297,7 @@ export default function GeneratePage() {
         </span>
         <h1 className="text-3xl font-light text-white tracking-tight">Jewelry Video Generator</h1>
         <p className="text-xs text-neutral-400 font-light mt-1">
-          Select a mode, upload your jewelry piece, and render an ad-quality 4K cinematic commercial.
+          Select a mode, upload your jewelry images (supports multiple angles), and render an ad-quality 4K commercial.
         </p>
       </div>
 
@@ -319,41 +352,66 @@ export default function GeneratePage() {
 
       {/* MAIN TWO-COLUMN FORM LAYOUT */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* LEFT COLUMN: ASSET UPLOAD & LIVE PREVIEW */}
+        {/* LEFT COLUMN: MULTI-IMAGE UPLOADS & LIVE PREVIEWS */}
         <div className="lg:col-span-1 space-y-6">
-          {/* Jewelry Image Upload (REQUIRED) */}
+          {/* MULTIPLE JEWELRY IMAGES UPLOAD */}
           <Card className="glass-panel border-white/10 bg-[#08080a] p-5 rounded-2xl">
             <CardHeader className="px-0 pt-0 pb-3">
               <CardTitle className="text-xs font-mono uppercase tracking-wider text-amber-200 flex items-center justify-between">
-                <span>1. Upload Jewelry Image</span>
-                <span className="text-[9px] text-red-400 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">
-                  REQUIRED
+                <span>1. Upload Jewelry Images</span>
+                <span className="text-[9px] text-amber-200/80 font-mono bg-amber-400/10 px-2 py-0.5 rounded border border-amber-200/20">
+                  {jewelryItems.length} {jewelryItems.length === 1 ? "Image" : "Images"}
                 </span>
               </CardTitle>
               <CardDescription className="text-[11px] text-neutral-400 font-light">
-                Single source of truth. Your product is preserved 100% exactly.
+                Upload 1 or multiple angles of your jewelry. Preserved 100% exactly.
               </CardDescription>
             </CardHeader>
 
-            <CardContent className="px-0 pb-0 space-y-3">
-              {/* Preview Container */}
-              <div className="relative aspect-square rounded-xl overflow-hidden bg-black border border-white/10 group flex items-center justify-center">
+            <CardContent className="px-0 pb-0 space-y-4">
+              {/* Primary Main Preview */}
+              <div className="relative aspect-square rounded-xl overflow-hidden bg-black border border-white/10 flex items-center justify-center">
                 <img
-                  src={jewelryPreview}
-                  alt="Jewelry Preview"
+                  src={jewelryItems[0]?.previewUrl || "/hero-ring.png"}
+                  alt="Primary Jewelry View"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
+                <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 backdrop-blur-md border border-white/10 text-[9px] font-mono text-amber-200">
+                  Primary Angle
+                </div>
+              </div>
 
-                <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer p-4 text-center">
-                  <div className="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-200/40 flex items-center justify-center text-amber-200 mb-2 backdrop-blur-md">
-                    <Upload className="w-5 h-5" />
+              {/* Multi-Image Thumbnails Gallery Grid */}
+              <div className="grid grid-cols-3 gap-2">
+                {jewelryItems.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="relative aspect-square rounded-lg overflow-hidden border border-white/15 bg-black group"
+                  >
+                    <img
+                      src={item.previewUrl}
+                      alt={`Jewelry Angle ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeJewelryItem(idx)}
+                      className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-white/20 hover:bg-red-500"
+                      title="Remove image"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
                   </div>
-                  <span className="text-xs font-mono text-white font-medium">Change Jewelry Image</span>
-                  <span className="text-[9px] font-mono text-neutral-400 mt-1">PNG or JPG up to 25MB</span>
+                ))}
+
+                {/* Add More Button */}
+                <label className="aspect-square rounded-lg border border-dashed border-white/20 hover:border-amber-200/50 bg-white/[0.02] hover:bg-amber-400/10 flex flex-col items-center justify-center cursor-pointer transition-all text-neutral-400 hover:text-amber-200">
+                  <Plus className="w-5 h-5 mb-0.5" />
+                  <span className="text-[9px] font-mono text-center">Add Angle</span>
                   <input
                     type="file"
                     accept="image/*"
+                    multiple
                     onChange={handleJewelryUpload}
                     className="hidden"
                   />
@@ -362,42 +420,60 @@ export default function GeneratePage() {
             </CardContent>
           </Card>
 
-          {/* Brand Guideline Image Upload (OPTIONAL) */}
+          {/* MULTIPLE BRAND GUIDELINES / COLORS UPLOAD */}
           <Card className="glass-panel border-white/10 bg-[#08080a] p-5 rounded-2xl">
             <CardHeader className="px-0 pt-0 pb-3">
               <CardTitle className="text-xs font-mono uppercase tracking-wider text-neutral-300 flex items-center justify-between">
-                <span>2. Brand Color / Guideline</span>
-                <span className="text-[9px] text-neutral-400 bg-white/5 px-2 py-0.5 rounded">
-                  OPTIONAL
+                <span>2. Brand Guidelines / Colors</span>
+                <span className="text-[9px] text-neutral-400 bg-white/5 px-2 py-0.5 rounded font-mono">
+                  {brandItems.length > 0 ? `${brandItems.length} Attached` : "OPTIONAL"}
                 </span>
               </CardTitle>
               <CardDescription className="text-[11px] text-neutral-400 font-light">
-                Optional brand palette or aesthetic guide. If omitted, AI auto-creates a luxury visual identity.
+                Upload 1 or multiple brand color palettes, logos, or visual guides.
               </CardDescription>
             </CardHeader>
 
-            <CardContent className="px-0 pb-0">
-              <label className="border border-dashed border-white/15 hover:border-amber-200/40 rounded-xl p-4 flex items-center gap-3 cursor-pointer bg-white/[0.02] hover:bg-white/[0.04] transition-all">
-                {brandPreview ? (
-                  <img
-                    src={brandPreview}
-                    alt="Brand Preview"
-                    className="w-10 h-10 rounded-lg object-cover border border-white/10"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-neutral-400">
-                    <ImageIcon className="w-5 h-5" />
-                  </div>
-                )}
+            <CardContent className="px-0 pb-0 space-y-3">
+              {brandItems.length > 0 && (
+                <div className="grid grid-cols-3 gap-2">
+                  {brandItems.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="relative aspect-square rounded-lg overflow-hidden border border-white/15 bg-black group"
+                    >
+                      <img
+                        src={item.previewUrl}
+                        alt={`Brand Guide ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeBrandItem(idx)}
+                        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-white/20 hover:bg-red-500"
+                        title="Remove brand image"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <label className="border border-dashed border-white/15 hover:border-amber-200/40 rounded-xl p-3.5 flex items-center gap-3 cursor-pointer bg-white/[0.02] hover:bg-white/[0.04] transition-all">
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-amber-200 shrink-0">
+                  <Plus className="w-4 h-4" />
+                </div>
                 <div>
-                  <div className="text-xs font-mono text-white">
-                    {brandFile ? brandFile.name : "Upload Brand Palette"}
+                  <div className="text-xs font-mono text-white font-medium">
+                    {brandItems.length > 0 ? "+ Add More Brand Files" : "Upload Brand Palette(s)"}
                   </div>
-                  <div className="text-[9px] font-mono text-neutral-500">Click to attach brand image</div>
+                  <div className="text-[9px] font-mono text-neutral-500">Attach PNG/JPG colors & guides</div>
                 </div>
                 <input
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleBrandUpload}
                   className="hidden"
                 />
@@ -664,7 +740,7 @@ export default function GeneratePage() {
                 <div>
                   <div className="text-amber-200 font-bold mb-0.5">Strict Product Integrity Guarantee</div>
                   <p className="text-[11px] text-neutral-400 font-light leading-relaxed">
-                    The uploaded jewelry image is the single source of truth. The AI preserves your product 100% exactly as provided with zero alterations to gems, metal structure, or design.
+                    The uploaded jewelry image(s) are the single source of truth. The AI preserves your product 100% exactly as provided with zero alterations to gems, metal structure, or design.
                   </p>
                 </div>
               </div>
@@ -678,7 +754,7 @@ export default function GeneratePage() {
             className="w-full h-13 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-2xl shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] cursor-pointer disabled:opacity-50"
           >
             {isSubmitting
-              ? "Initializing Render Pipeline..."
+              ? "Uploading Assets & Initializing Pipeline..."
               : `Generate ${activeModeConfig.title} Commercial (${creditCost} Credits)`}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
