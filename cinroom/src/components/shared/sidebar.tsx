@@ -13,7 +13,7 @@ const navItems = [
 ];
 
 const secondaryItems = [
-  { name: "Credits & Plan", href: "/dashboard/settings", icon: CreditCard },
+  { name: "Credits & Plan", href: "/dashboard/billing", icon: CreditCard },
   { name: "Atelier Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
@@ -131,17 +131,24 @@ export function Sidebar() {
           <div className="px-3 mt-8 mb-2 text-[10px] font-sans font-medium text-neutral-500 uppercase tracking-[0.2em]">
             Management
           </div>
-          {secondaryItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 text-xs font-sans tracking-wide text-neutral-400 rounded-xl hover:text-white hover:bg-white/[0.04] transition-all"
-            >
-              <item.icon className="w-4 h-4 text-neutral-500" />
-              {item.name}
-            </Link>
-          ))}
+          {secondaryItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2.5 text-xs font-sans tracking-wide rounded-xl transition-all duration-200 ${
+                  isActive
+                    ? "bg-amber-400/10 text-white border border-amber-200/30 font-semibold shadow-[0_0_15px_rgba(197,168,128,0.15)]"
+                    : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
+                }`}
+              >
+                <item.icon className={`w-4 h-4 ${isActive ? "text-amber-200" : "text-neutral-500"}`} />
+                {item.name}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Account Info & Sign Out */}
