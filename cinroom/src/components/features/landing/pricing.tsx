@@ -381,7 +381,7 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
           <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/90 mb-2 block">
             UNIFIED CREDIT CONVERSION RULE
           </span>
-          <h3 className="text-xl font-serif text-white mb-2">1 Commercial Video = 3 Credits | 1 Editorial Image = 1 Credit</h3>
+          <h3 className="text-xl font-serif text-white mb-2">10s Video = 2 Credits | 15s Video = 3 Credits | Editorial Image = 1 Credit</h3>
           <p className="text-xs text-neutral-400 font-light max-w-xl mx-auto">
             Credits give you complete studio freedom across both Video and Image generation engines.
           </p>

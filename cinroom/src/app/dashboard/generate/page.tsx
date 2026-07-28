@@ -60,8 +60,8 @@ export default function GeneratePage() {
       : "product_hero"
   );
 
-  // Common Required Inputs
-  const [duration, setDuration] = useState<"5s" | "10s" | "15s">("10s");
+  // Common Required Inputs (10s = 2 credits, 15s = 3 credits)
+  const [duration, setDuration] = useState<"10s" | "15s">("10s");
   const [aspectRatio, setAspectRatio] = useState<"16:9" | "9:16" | "1:1">("16:9");
 
   // MULTIPLE JEWELRY IMAGES STATE
@@ -90,7 +90,8 @@ export default function GeneratePage() {
   const activeModeConfig =
     GENERATION_MODES.find((m) => m.id === selectedMode) || GENERATION_MODES[0];
 
-  const creditCost = 3; // 3 credits per Commercial Video
+  // Dynamic Credit Cost: 10s = 2 Credits, 15s = 3 Credits
+  const creditCost = duration === "15s" ? 3 : 2;
 
   // Fetch recent generated videos for current user
   useEffect(() => {
@@ -222,7 +223,7 @@ export default function GeneratePage() {
 
       if (availableCredits < creditCost) {
         toast.error(
-          `Insufficient credits (${availableCredits} available). Required: ${creditCost} credits.`,
+          `Insufficient credits (${availableCredits} available). Required: ${creditCost} credits for ${duration} video.`,
           {
             action: {
               label: "Recharge Credits",
@@ -249,12 +250,12 @@ export default function GeneratePage() {
         creative_prompt: creativePrompt,
       });
 
-      // 5. Deduct Credits
+      // 5. Deduct Credits dynamically based on duration (2 credits for 10s, 3 credits for 15s)
       const { data: rpcRes, error: rpcErr } = await supabase.rpc("deduct_user_credits", {
         p_user_id: userId,
         p_cost: creditCost,
         p_asset_type: "COMMERCIAL_VIDEO",
-        p_description: `Render Mode: ${activeModeConfig.title} (${aspectRatio})`,
+        p_description: `Render Mode: ${activeModeConfig.title} (${duration}, ${aspectRatio})`,
         p_reference_id: `gen_${Date.now()}`,
       });
 
@@ -274,7 +275,7 @@ export default function GeneratePage() {
           balance_before: availableCredits,
           balance_after: newBalance,
           type: "deduction",
-          description: `Render Mode: ${activeModeConfig.title} (${aspectRatio})`,
+          description: `Render Mode: ${activeModeConfig.title} (${duration}, ${aspectRatio})`,
           created_at: new Date().toISOString(),
         });
       }
@@ -336,7 +337,7 @@ export default function GeneratePage() {
         </div>
         <div className="hidden sm:block text-right">
           <span className="text-[10px] font-sans text-amber-200/90 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-200/20">
-            3 CREDITS PER COMMERCIAL
+            {creditCost} CREDITS ({duration.toUpperCase()})
           </span>
         </div>
       </div>
@@ -638,25 +639,28 @@ export default function GeneratePage() {
               </div>
             )}
 
-            {/* DURATION & ASPECT RATIO */}
+            {/* DURATION & ASPECT RATIO (10s = 2 Credits, 15s = 3 Credits) */}
             <div className="grid grid-cols-2 gap-4 pt-2 border-t border-white/[0.06]">
               <div>
                 <label className="text-[10px] font-sans text-neutral-300 uppercase block mb-1.5">
                   DURATION
                 </label>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {(["5s", "10s", "15s"] as const).map((val) => (
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { id: "10s", label: "10s (2 Credits)" },
+                    { id: "15s", label: "15s (3 Credits)" },
+                  ].map((opt) => (
                     <button
-                      key={val}
+                      key={opt.id}
                       type="button"
-                      onClick={() => setDuration(val)}
+                      onClick={() => setDuration(opt.id as any)}
                       className={`py-2 rounded-xl text-xs font-sans border transition-all ${
-                        duration === val
+                        duration === opt.id
                           ? "border-amber-200/60 bg-amber-400/10 text-amber-100 font-bold"
                           : "border-white/10 text-neutral-400 hover:text-white"
                       }`}
                     >
-                      {val}
+                      {opt.label}
                     </button>
                   ))}
                 </div>
@@ -770,7 +774,7 @@ export default function GeneratePage() {
               {activeModeConfig.title} Commercial Video
             </div>
             <div className="text-[10px] font-sans text-neutral-400">
-              Requires {creditCost} Credits • {aspectRatio}
+              Requires {creditCost} Credits • {duration} • {aspectRatio}
             </div>
           </div>
         </div>
