@@ -10,7 +10,8 @@ interface Plan {
   id: string;
   name: string;
   type: "onetime" | "subscription";
-  price: string;
+  priceUsd: string;
+  priceInr: string;
   billing: string;
   credits: number;
   creditsLabel: string;
@@ -25,7 +26,8 @@ const paidPlans: Plan[] = [
     id: "starter_onetime",
     name: "STARTER",
     type: "onetime",
-    price: "₹3,999",
+    priceUsd: "$39",
+    priceInr: "₹3,999",
     billing: "one-time purchase",
     credits: 7,
     creditsLabel: "7 Credits",
@@ -42,7 +44,8 @@ const paidPlans: Plan[] = [
     id: "growth_monthly",
     name: "GROWTH",
     type: "subscription",
-    price: "₹9,999",
+    priceUsd: "$99",
+    priceInr: "₹9,999",
     billing: "per month",
     credits: 18,
     creditsLabel: "18 Credits every month",
@@ -63,7 +66,8 @@ const paidPlans: Plan[] = [
     id: "business_monthly",
     name: "BUSINESS",
     type: "subscription",
-    price: "₹24,999",
+    priceUsd: "$249",
+    priceInr: "₹24,999",
     billing: "per month",
     credits: 48,
     creditsLabel: "48 Credits every month",
@@ -81,11 +85,11 @@ const paidPlans: Plan[] = [
 ];
 
 const topUpPacks = [
-  { id: "topup_6", credits: 6, price: "₹3,499", priceRaw: 3499 },
-  { id: "topup_12", credits: 12, price: "₹6,499", priceRaw: 6499 },
-  { id: "topup_24", credits: 24, price: "₹11,999", priceRaw: 11999, popular: true },
-  { id: "topup_48", credits: 48, price: "₹22,999", priceRaw: 22999 },
-  { id: "topup_96", credits: 96, price: "₹42,999", priceRaw: 42999 },
+  { id: "topup_6", credits: 6, priceUsd: "$35", priceInr: "₹3,499" },
+  { id: "topup_12", credits: 12, priceUsd: "$69", priceInr: "₹6,499" },
+  { id: "topup_24", credits: 24, priceUsd: "$119", priceInr: "₹11,999", popular: true },
+  { id: "topup_48", credits: 48, priceUsd: "$229", priceInr: "₹22,999" },
+  { id: "topup_96", credits: 96, priceUsd: "$429", priceInr: "₹42,999" },
 ];
 
 const faqs = [
@@ -141,6 +145,7 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
   const [loadingPack, setLoadingPack] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [userTier, setUserTier] = useState<string>(activePlanTier || "free");
+  const [currency, setCurrency] = useState<"USD" | "INR">("USD");
 
   const activeTopUpObj = topUpPacks.find((t) => t.id === selectedTopUp) || topUpPacks[2];
 
@@ -268,16 +273,40 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-8">
           <span className="text-[11px] font-sans uppercase tracking-[0.25em] text-amber-200/80 mb-3 block">
             COMMERCIAL PRODUCTION PLANS
           </span>
           <h2 className="text-3xl sm:text-5xl font-serif text-white tracking-tight mb-4">
             Invest in <span className="gold-text-gradient font-normal italic">High-Converting</span> Marketing Assets
           </h2>
-          <p className="text-sm text-neutral-400 font-light tracking-wide max-w-xl mx-auto">
+          <p className="text-sm text-neutral-400 font-light tracking-wide max-w-xl mx-auto mb-6">
             High-efficiency commercial asset production for luxury jewelry brands. Scale marketing campaigns without traditional studio overhead.
           </p>
+
+          {/* CURRENCY TOGGLE (USD / INR @ 1 USD = 96 INR) */}
+          <div className="inline-flex items-center p-1 rounded-xl bg-white/[0.04] border border-white/10 gap-1">
+            <button
+              onClick={() => setCurrency("USD")}
+              className={`px-4 py-1.5 rounded-lg text-xs font-sans font-medium transition-all ${
+                currency === "USD"
+                  ? "bg-white text-black font-semibold shadow"
+                  : "text-neutral-400 hover:text-white"
+              }`}
+            >
+              🇺🇸 USD ($)
+            </button>
+            <button
+              onClick={() => setCurrency("INR")}
+              className={`px-4 py-1.5 rounded-lg text-xs font-sans font-medium transition-all ${
+                currency === "INR"
+                  ? "bg-white text-black font-semibold shadow"
+                  : "text-neutral-400 hover:text-white"
+              }`}
+            >
+              🇮🇳 INR (₹)
+            </button>
+          </div>
         </div>
 
         {/* Notice Banner */}
@@ -293,6 +322,7 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
           {paidPlans.map((plan) => {
             const isPopular = plan.popular;
             const btnState = getPlanButtonState(plan.id);
+            const displayPrice = currency === "USD" ? plan.priceUsd : plan.priceInr;
 
             return (
               <div
@@ -333,7 +363,7 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
 
                   <div className="mb-6 pb-6 border-b border-white/[0.08]">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl sm:text-5xl font-light text-white font-serif tracking-tight">{plan.price}</span>
+                      <span className="text-4xl sm:text-5xl font-light text-white font-serif tracking-tight">{displayPrice}</span>
                       <span className="text-xs font-mono text-neutral-500 uppercase">{plan.billing}</span>
                     </div>
 
@@ -401,6 +431,8 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
             {topUpPacks.map((pack) => {
               const isSelected = selectedTopUp === pack.id;
+              const displayTopUpPrice = currency === "USD" ? pack.priceUsd : pack.priceInr;
+
               return (
                 <div
                   key={pack.id}
@@ -417,7 +449,7 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
                     </span>
                   )}
                   <div className="text-xl font-serif text-white mb-1">{pack.credits} Credits</div>
-                  <div className="text-sm font-mono text-amber-200 font-semibold">{pack.price}</div>
+                  <div className="text-sm font-mono text-amber-200 font-semibold">{displayTopUpPrice}</div>
                 </div>
               );
             })}
@@ -431,7 +463,7 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
             </div>
             <div className="flex items-center justify-between text-xs font-sans text-neutral-300 mb-6">
               <span>Price:</span>
-              <span className="text-white font-bold">{activeTopUpObj.price}</span>
+              <span className="text-white font-bold">{currency === "USD" ? activeTopUpObj.priceUsd : activeTopUpObj.priceInr}</span>
             </div>
 
             <Button
@@ -441,7 +473,7 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
             >
               {loadingPack === activeTopUpObj.id
                 ? "Processing..."
-                : `Recharge ${activeTopUpObj.credits} Credits • ${activeTopUpObj.price}`}
+                : `Recharge ${activeTopUpObj.credits} Credits • ${currency === "USD" ? activeTopUpObj.priceUsd : activeTopUpObj.priceInr}`}
             </Button>
           </div>
         </div>
