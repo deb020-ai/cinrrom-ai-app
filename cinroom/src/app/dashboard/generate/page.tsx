@@ -61,7 +61,7 @@ export default function GeneratePage() {
   );
 
   // Common Required Inputs (10s = 2 credits, 15s = 3 credits)
-  const [duration, setDuration] = useState<"10s" | "15s">("10s");
+  const [duration, setDuration] = useState<"10s" | "15s">("15s");
   const [aspectRatio, setAspectRatio] = useState<"16:9" | "9:16" | "1:1">("16:9");
 
   // MULTIPLE JEWELRY IMAGES STATE
