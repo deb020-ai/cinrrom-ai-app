@@ -477,78 +477,70 @@ export default function GenerateImagePage() {
               </div>
             )}
 
-            {/* PROGRESSIVE DISCLOSURE: ADVANCED MODEL CASTING */}
+            {/* MODEL & CASTING PROFILE - ALWAYS OPEN & VISIBLE */}
             {activeModeConfig.requiresModelInfo && (
-              <div className="pt-2 border-t border-white/[0.06]">
-                <button
-                  type="button"
-                  onClick={() => setShowAdvancedCasting(!showAdvancedCasting)}
-                  className="w-full flex items-center justify-between text-xs font-sans text-amber-200 hover:text-white py-1.5 cursor-pointer"
-                >
-                  <span className="font-medium tracking-wide">Advanced Model & Casting Options</span>
-                  {showAdvancedCasting ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                </button>
-
-                {showAdvancedCasting && (
-                  <div className="grid grid-cols-2 gap-3 pt-3 animate-in fade-in duration-300">
-                    <div>
-                      <label className="text-[10px] font-sans text-neutral-400 block mb-1">GENDER</label>
-                      <select
-                        value={gender}
-                        onChange={(e) => setGender(e.target.value)}
-                        style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
-                        className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
-                      >
-                        <option value="Female">Female Model</option>
-                        <option value="Male">Male Model</option>
-                        <option value="Unisex">Unisex / High Fashion</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[10px] font-sans text-neutral-400 block mb-1">AGE RANGE</label>
-                      <select
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                        style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
-                        className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
-                      >
-                        <option value="18-25">18–25 Years</option>
-                        <option value="25-35">25–35 Years</option>
-                        <option value="35-45">35–45 Years</option>
-                        <option value="45+">45+ Years</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[10px] font-sans text-neutral-400 block mb-1">COUNTRY ORIGIN</label>
-                      <select
-                        value={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                        style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
-                        className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
-                      >
-                        {COUNTRIES_LIST.map((c) => (
-                          <option key={c} value={c}>{c}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[10px] font-sans text-neutral-400 block mb-1">ETHNICITY</label>
-                      <select
-                        value={ethnicity}
-                        onChange={(e) => setEthnicity(e.target.value)}
-                        style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
-                        className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
-                      >
-                        {ETHNICITIES_LIST.map((eth) => (
-                          <option key={eth} value={eth}>{eth}</option>
-                        ))}
-                      </select>
-                    </div>
+              <div className="space-y-3 pt-2 border-t border-white/[0.06]">
+                <label className="text-xs font-sans text-amber-200 font-medium uppercase tracking-wider block">
+                  Model & Character Profile
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[10px] font-sans text-neutral-400 block mb-1">GENDER</label>
+                    <select
+                      value={gender}
+                      onChange={(e) => setGender(e.target.value)}
+                      style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
+                      className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
+                    >
+                      <option value="Female">Female Model</option>
+                      <option value="Male">Male Model</option>
+                      <option value="Unisex">Unisex / High Fashion</option>
+                    </select>
                   </div>
-                )}
+
+                  <div>
+                    <label className="text-[10px] font-sans text-neutral-400 block mb-1">AGE RANGE</label>
+                    <select
+                      value={age}
+                      onChange={(e) => setAge(e.target.value)}
+                      style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
+                      className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
+                    >
+                      <option value="18-25">18–25 Years</option>
+                      <option value="25-35">25–35 Years</option>
+                      <option value="35-45">35–45 Years</option>
+                      <option value="45+">45+ Years</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-sans text-neutral-400 block mb-1">COUNTRY ORIGIN</label>
+                    <select
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
+                      className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
+                    >
+                      {COUNTRIES_LIST.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-sans text-neutral-400 block mb-1">ETHNICITY</label>
+                    <select
+                      value={ethnicity}
+                      onChange={(e) => setEthnicity(e.target.value)}
+                      style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
+                      className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
+                    >
+                      {ETHNICITIES_LIST.map((eth) => (
+                        <option key={eth} value={eth}>{eth}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
             )}
 
