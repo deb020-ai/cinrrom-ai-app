@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Sparkles,
@@ -19,6 +19,9 @@ import {
   Plus,
   X,
   Video,
+  Upload,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -65,6 +68,7 @@ export default function GeneratePage() {
   const [age, setAge] = useState("25-35");
   const [country, setCountry] = useState("France");
   const [ethnicity, setEthnicity] = useState("Caucasian");
+  const [showAdvancedCasting, setShowAdvancedCasting] = useState(false);
 
   // Mode Specific Optional Inputs
   const [fantasyTheme, setFantasyTheme] = useState("");
@@ -124,7 +128,7 @@ export default function GeneratePage() {
 
   const handleGenerate = async () => {
     if (selectedMode === "ai_director" && !creativePrompt.trim()) {
-      toast.error("Please provide a Creative Concept idea for AI Director mode.");
+      toast.error("Please provide a Creative Concept prompt for AI Director mode.");
       return;
     }
 
@@ -185,7 +189,7 @@ export default function GeneratePage() {
 
       if (availableCredits < creditCost) {
         toast.error(
-          `Insufficient credits (${availableCredits} available). This render requires ${creditCost} credits.`,
+          `Insufficient credits (${availableCredits} available). Required: ${creditCost} credits.`,
           {
             action: {
               label: "Recharge Credits",
@@ -288,32 +292,31 @@ export default function GeneratePage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 animate-in fade-in duration-500 pb-28">
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-28">
       {/* Page Header */}
-      <div className="border-b border-blue-500/15 pb-4 flex items-center justify-between">
+      <div className="border-b border-white/[0.06] pb-4 flex items-center justify-between">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-blue-300 block">
-            // CINROOM VIDEO STUDIO ENGINE
+          <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/80 block mb-0.5">
+            ATELIER CREATIVE SUITE
           </span>
-          <h1 className="text-2xl sm:text-3xl font-light text-white tracking-tight">Jewelry Video Generator</h1>
+          <h1 className="text-2xl sm:text-3xl font-serif text-white tracking-tight">Jewelry Video Generator</h1>
         </div>
         <div className="hidden sm:block text-right">
-          <span className="text-[10px] font-mono text-blue-300 bg-blue-600/15 px-3 py-1 rounded-full border border-blue-400/30 shadow-[0_0_12px_rgba(59,130,246,0.2)]">
-            SEADANCE 2 • 3 CREDITS
+          <span className="text-[10px] font-sans text-amber-200/90 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-200/20">
+            3 CREDITS PER COMMERCIAL
           </span>
         </div>
       </div>
 
-      {/* STEP 1: MODE SELECTOR CARDS */}
-      <div className="space-y-2">
+      {/* STEP 1: VISUAL TEMPLATE MODE SELECTION */}
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-mono text-white font-semibold uppercase tracking-wider block">
-            STEP 1: SELECT TEMPLATE MODE
+          <label className="text-xs font-sans text-neutral-300 uppercase tracking-widest block font-medium">
+            1. Select Campaign Mode
           </label>
-          <span className="text-[10px] font-mono text-slate-400">Choose 1 of 5 Workflows</span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {GENERATION_MODES.map((mode) => {
             const isSelected = selectedMode === mode.id;
             return (
@@ -321,29 +324,29 @@ export default function GeneratePage() {
                 key={mode.id}
                 type="button"
                 onClick={() => setSelectedMode(mode.id)}
-                className={`p-3.5 rounded-2xl border text-left flex flex-col justify-between transition-all duration-300 cursor-pointer ${
+                className={`p-4 rounded-2xl text-left flex flex-col justify-between transition-all duration-300 cursor-pointer ${
                   isSelected
-                    ? "bg-blue-600/20 border-blue-400/60 shadow-[0_0_25px_rgba(59,130,246,0.25)] text-white scale-[1.02]"
-                    : "bg-[#080d22] border-blue-500/10 text-slate-300 hover:text-white hover:border-blue-400/30"
+                    ? "bg-[#111116] border border-amber-200/50 shadow-[0_0_25px_rgba(197,168,128,0.15)] text-white scale-[1.02]"
+                    : "bg-[#0a0a0d] border border-white/5 text-neutral-400 hover:text-white hover:border-white/15"
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <div
-                      className={`p-1.5 rounded-xl ${
+                      className={`p-2 rounded-xl ${
                         isSelected
-                          ? "bg-blue-500/30 text-blue-300 border border-blue-400/50"
-                          : "bg-white/5 text-slate-400"
+                          ? "bg-amber-400/20 text-amber-200 border border-amber-200/40"
+                          : "bg-white/5 text-neutral-400"
                       }`}
                     >
                       {renderIcon(mode.iconName)}
                     </div>
-                    <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-300 uppercase border border-blue-400/20">
+                    <span className="text-[8px] font-sans px-1.5 py-0.5 rounded bg-white/5 text-amber-200/80 uppercase">
                       {mode.badge}
                     </span>
                   </div>
-                  <h3 className="text-xs sm:text-sm font-semibold text-white mb-0.5">{mode.title}</h3>
-                  <p className="text-[9px] text-slate-400 font-light line-clamp-2 leading-relaxed">
+                  <h3 className="text-xs sm:text-sm font-medium text-white mb-1 font-serif">{mode.title}</h3>
+                  <p className="text-[10px] text-neutral-400 font-light line-clamp-2 leading-relaxed">
                     {mode.description}
                   </p>
                 </div>
@@ -353,43 +356,68 @@ export default function GeneratePage() {
         </div>
       </div>
 
-      {/* MAIN TWO-COLUMN FORM LAYOUT */}
+      {/* MAIN LAYOUT */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* LEFT COLUMN: MULTI-IMAGE UPLOADS */}
+        {/* LEFT COLUMN: HERO DRAG AND DROP UPLOAD ZONE */}
         <div className="lg:col-span-5 space-y-4">
-          <Card className="glass-panel border-blue-500/15 bg-[#080d22]/80 p-4 rounded-2xl">
-            <CardHeader className="px-0 pt-0 pb-2">
-              <CardTitle className="text-xs font-mono uppercase tracking-wider text-blue-300 flex items-center justify-between">
-                <span>STEP 2: UPLOAD JEWELRY</span>
-                <span className="text-[9px] text-blue-300 font-mono bg-blue-500/20 px-2 py-0.5 rounded border border-blue-400/30">
-                  {jewelryItems.length} {jewelryItems.length === 1 ? "Image" : "Images"}
-                </span>
-              </CardTitle>
-            </CardHeader>
+          <Card className="glass-panel border-white/10 bg-[#0a0a0d] p-5 rounded-2xl">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-sans uppercase tracking-widest text-amber-200 font-medium">
+                2. Upload Jewelry
+              </span>
+              <span className="text-[9px] text-neutral-400 font-mono bg-white/5 px-2 py-0.5 rounded">
+                {jewelryItems.length} {jewelryItems.length === 1 ? "File" : "Files"}
+              </span>
+            </div>
 
-            <CardContent className="px-0 pb-0 space-y-3">
-              {/* Primary Preview */}
-              <div className="relative aspect-video rounded-xl overflow-hidden bg-slate-950 border border-blue-500/20 flex items-center justify-center">
-                <img
-                  src={jewelryItems[0]?.previewUrl || "/hero-ring.png"}
-                  alt="Primary Jewelry View"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur-md border border-blue-400/30 text-[9px] font-mono text-blue-300">
-                  Primary Angle
+            {/* MASSIVE DROP ZONE HERO */}
+            <label className="border border-dashed border-white/20 hover:border-amber-200/50 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer bg-white/[0.01] hover:bg-amber-400/[0.03] transition-all group relative overflow-hidden">
+              {jewelryItems.length > 0 && jewelryItems[0].previewUrl ? (
+                <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black border border-white/10 mb-3">
+                  <img
+                    src={jewelryItems[0].previewUrl}
+                    alt="Primary Jewelry View"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 text-[9px] font-mono text-amber-200">
+                    Primary Image
+                  </div>
+                </div>
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-neutral-400 mb-3 group-hover:scale-110 transition-transform">
+                  <Upload className="w-6 h-6 text-amber-200" />
+                </div>
+              )}
+
+              <div className="text-center">
+                <div className="text-xs font-medium text-white mb-0.5">
+                  {jewelryItems.length > 0 ? "Click or Drag to Add More Angles" : "Drop Your Jewelry Photo Here"}
+                </div>
+                <div className="text-[10px] text-neutral-400 font-light">
+                  Supports PNG, JPG, WEBP. Preserved 100% exactly.
                 </div>
               </div>
 
-              {/* Thumbnails */}
-              <div className="grid grid-cols-4 gap-2">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleJewelryUpload}
+                className="hidden"
+              />
+            </label>
+
+            {/* Thumbnails list */}
+            {jewelryItems.length > 1 && (
+              <div className="grid grid-cols-4 gap-2 pt-3">
                 {jewelryItems.map((item, idx) => (
                   <div
                     key={idx}
-                    className="relative aspect-square rounded-lg overflow-hidden border border-blue-500/20 bg-black group"
+                    className="relative aspect-square rounded-lg overflow-hidden border border-white/15 bg-black group"
                   >
                     <img
                       src={item.previewUrl}
-                      alt={`Jewelry Angle ${idx + 1}`}
+                      alt={`Angle ${idx + 1}`}
                       className="w-full h-full object-cover"
                     />
                     <button
@@ -401,89 +429,51 @@ export default function GeneratePage() {
                     </button>
                   </div>
                 ))}
-
-                <label className="aspect-square rounded-lg border border-dashed border-blue-400/30 hover:border-blue-400/60 bg-blue-900/10 hover:bg-blue-600/20 flex flex-col items-center justify-center cursor-pointer transition-all text-slate-300 hover:text-white">
-                  <Plus className="w-4 h-4 mb-0.5 text-blue-400" />
-                  <span className="text-[8px] font-mono">Add Angle</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleJewelryUpload}
-                    className="hidden"
-                  />
-                </label>
               </div>
-            </CardContent>
+            )}
           </Card>
 
-          {/* BRAND GUIDELINE UPLOAD */}
-          <Card className="glass-panel border-blue-500/15 bg-[#080d22]/80 p-4 rounded-2xl">
-            <CardHeader className="px-0 pt-0 pb-2">
-              <CardTitle className="text-xs font-mono uppercase tracking-wider text-slate-300 flex items-center justify-between">
-                <span>BRAND PALETTES (OPTIONAL)</span>
-                <span className="text-[9px] text-slate-400 bg-white/5 px-2 py-0.5 rounded font-mono">
-                  {brandItems.length > 0 ? `${brandItems.length} Attached` : "OPTIONAL"}
-                </span>
-              </CardTitle>
-            </CardHeader>
+          {/* OPTIONAL BRAND GUIDELINE UPLOAD */}
+          <Card className="glass-panel border-white/10 bg-[#0a0a0d] p-4 rounded-2xl">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-sans uppercase tracking-wider text-neutral-400">
+                Brand Colors (Optional)
+              </span>
+              <span className="text-[9px] text-neutral-500">
+                {brandItems.length > 0 ? `${brandItems.length} Attached` : "OPTIONAL"}
+              </span>
+            </div>
 
-            <CardContent className="px-0 pb-0 space-y-2">
-              {brandItems.length > 0 && (
-                <div className="grid grid-cols-4 gap-2">
-                  {brandItems.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="relative aspect-square rounded-lg overflow-hidden border border-blue-500/20 bg-black group"
-                    >
-                      <img
-                        src={item.previewUrl}
-                        alt={`Brand Guide ${idx + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeBrandItem(idx)}
-                        className="absolute top-1 right-1 w-4 h-4 rounded-full bg-black/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 cursor-pointer"
-                      >
-                        <X className="w-2.5 h-2.5" />
-                      </button>
-                    </div>
-                  ))}
+            <label className="border border-dashed border-white/15 hover:border-amber-200/40 rounded-xl p-3 flex items-center gap-3 cursor-pointer bg-white/[0.01] hover:bg-white/[0.03] transition-all">
+              <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-amber-200 shrink-0">
+                <Plus className="w-3.5 h-3.5" />
+              </div>
+              <div>
+                <div className="text-xs text-white font-medium">
+                  {brandItems.length > 0 ? "+ Add Brand Color File" : "Upload Brand Palette"}
                 </div>
-              )}
-
-              <label className="border border-dashed border-blue-500/20 hover:border-blue-400/50 rounded-xl p-3 flex items-center gap-3 cursor-pointer bg-white/[0.02] hover:bg-white/[0.04] transition-all">
-                <div className="w-7 h-7 rounded-lg bg-blue-600/20 border border-blue-400/30 flex items-center justify-center text-blue-300 shrink-0">
-                  <Plus className="w-3.5 h-3.5" />
-                </div>
-                <div>
-                  <div className="text-xs font-mono text-white font-medium">
-                    {brandItems.length > 0 ? "+ Add More Files" : "Upload Brand Palette"}
-                  </div>
-                  <div className="text-[8px] font-mono text-slate-400">Color swatches & guides</div>
-                </div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleBrandUpload}
-                  className="hidden"
-                />
-              </label>
-            </CardContent>
+                <div className="text-[9px] text-neutral-500">Applies to background & lighting</div>
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleBrandUpload}
+                className="hidden"
+              />
+            </label>
           </Card>
         </div>
 
-        {/* RIGHT COLUMN: WORKFLOW CONFIGURATION */}
+        {/* RIGHT COLUMN: WORKFLOW & PROGRESSIVE DISCLOSURE */}
         <div className="lg:col-span-7 space-y-4">
-          <Card className="glass-panel border-blue-500/15 bg-[#080d22]/80 p-5 rounded-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-blue-500/15 pb-3">
-              <h2 className="text-base font-light text-white flex items-center gap-2">
+          <Card className="glass-panel border-white/10 bg-[#0a0a0d] p-5 rounded-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+              <h2 className="text-base font-serif text-white flex items-center gap-2">
                 {renderIcon(activeModeConfig.iconName)}
-                STEP 3: {activeModeConfig.title} Details
+                3. {activeModeConfig.title} Options
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full bg-blue-600/20 border border-blue-400/30 text-blue-300 text-[10px] font-mono uppercase">
+              <span className="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-amber-200 text-[10px] font-mono uppercase">
                 {activeModeConfig.badge}
               </span>
             </div>
@@ -491,7 +481,7 @@ export default function GeneratePage() {
             {/* AI DIRECTOR CONCEPT */}
             {selectedMode === "ai_director" && (
               <div className="space-y-2">
-                <label className="text-xs font-mono text-white font-semibold uppercase tracking-wider block">
+                <label className="text-xs font-sans text-white font-medium uppercase tracking-wider block">
                   Creative Concept Prompt <span className="text-red-400">*</span>
                 </label>
                 <textarea
@@ -499,7 +489,7 @@ export default function GeneratePage() {
                   value={creativePrompt}
                   onChange={(e) => setCreativePrompt(e.target.value)}
                   placeholder="e.g. Royal Wedding, Luxury Museum, Paris Fashion Week..."
-                  className="w-full bg-slate-950/80 border border-blue-500/20 rounded-xl p-3 text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-400/60"
+                  className="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs font-sans text-white placeholder:text-neutral-600 focus:outline-none focus:border-amber-200/50"
                 />
                 <div className="flex flex-wrap gap-1.5">
                   {AI_DIRECTOR_EXAMPLES.map((ex) => (
@@ -507,7 +497,7 @@ export default function GeneratePage() {
                       key={ex}
                       type="button"
                       onClick={() => setCreativePrompt(ex)}
-                      className="px-2 py-0.5 rounded-full bg-blue-900/30 hover:bg-blue-600/30 border border-blue-400/30 text-[9px] font-mono text-slate-300 hover:text-white cursor-pointer"
+                      className="px-2 py-0.5 rounded-full bg-white/5 hover:bg-amber-400/10 border border-white/10 text-[9px] font-sans text-neutral-300 hover:text-white cursor-pointer"
                     >
                       + {ex}
                     </button>
@@ -519,7 +509,7 @@ export default function GeneratePage() {
             {/* FANTASY THEME */}
             {selectedMode === "fantasy_world" && (
               <div className="space-y-1.5">
-                <label className="text-xs font-mono text-white font-semibold uppercase tracking-wider block">
+                <label className="text-xs font-sans text-white font-medium uppercase tracking-wider block">
                   Fantasy Realm / Theme (Optional)
                 </label>
                 <Input
@@ -527,7 +517,7 @@ export default function GeneratePage() {
                   value={fantasyTheme}
                   onChange={(e) => setFantasyTheme(e.target.value)}
                   placeholder="e.g. Floating Crystal Palace, Starlight Sanctuary..."
-                  className="h-10 bg-slate-950/80 border-blue-500/20 text-white font-mono text-xs rounded-xl"
+                  className="h-10 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl"
                 />
               </div>
             )}
@@ -535,7 +525,7 @@ export default function GeneratePage() {
             {/* ANIMAL */}
             {selectedMode === "animal_campaign" && (
               <div className="space-y-1.5">
-                <label className="text-xs font-mono text-white font-semibold uppercase tracking-wider block">
+                <label className="text-xs font-sans text-white font-medium uppercase tracking-wider block">
                   Companion Animal (Optional)
                 </label>
                 <Input
@@ -543,82 +533,90 @@ export default function GeneratePage() {
                   value={animal}
                   onChange={(e) => setAnimal(e.target.value)}
                   placeholder="e.g. Black Panther, Snow Leopard, White Peacock..."
-                  className="h-10 bg-slate-950/80 border-blue-500/20 text-white font-mono text-xs rounded-xl"
+                  className="h-10 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl"
                 />
               </div>
             )}
 
-            {/* MODEL PROFILE */}
+            {/* PROGRESSIVE DISCLOSURE: ADVANCED MODEL CASTING */}
             {activeModeConfig.requiresModelInfo && (
-              <div className="space-y-3 pt-2 border-t border-blue-500/15">
-                <label className="text-xs font-mono text-blue-300 font-semibold uppercase tracking-wider block">
-                  Model & Character Profile
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[10px] font-mono text-slate-400 block mb-1">GENDER</label>
-                    <select
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value)}
-                      style={{ backgroundColor: "#090e24", color: "#ffffff" }}
-                      className="w-full bg-[#090e24] text-white border border-blue-500/20 rounded-xl py-2 px-2.5 text-xs font-mono"
-                    >
-                      <option value="Female">Female Model</option>
-                      <option value="Male">Male Model</option>
-                      <option value="Unisex">Unisex / High Fashion</option>
-                    </select>
-                  </div>
+              <div className="pt-2 border-t border-white/[0.06]">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedCasting(!showAdvancedCasting)}
+                  className="w-full flex items-center justify-between text-xs font-sans text-amber-200 hover:text-white py-1.5 cursor-pointer"
+                >
+                  <span className="font-medium tracking-wide">Advanced Model & Casting Options</span>
+                  {showAdvancedCasting ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
 
-                  <div>
-                    <label className="text-[10px] font-mono text-slate-400 block mb-1">AGE RANGE</label>
-                    <select
-                      value={age}
-                      onChange={(e) => setAge(e.target.value)}
-                      style={{ backgroundColor: "#090e24", color: "#ffffff" }}
-                      className="w-full bg-[#090e24] text-white border border-blue-500/20 rounded-xl py-2 px-2.5 text-xs font-mono"
-                    >
-                      <option value="18-25">18–25 Years</option>
-                      <option value="25-35">25–35 Years</option>
-                      <option value="35-45">35–45 Years</option>
-                      <option value="45+">45+ Years</option>
-                    </select>
-                  </div>
+                {showAdvancedCasting && (
+                  <div className="grid grid-cols-2 gap-3 pt-3 animate-in fade-in duration-300">
+                    <div>
+                      <label className="text-[10px] font-sans text-neutral-400 block mb-1">GENDER</label>
+                      <select
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                        style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
+                        className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
+                      >
+                        <option value="Female">Female Model</option>
+                        <option value="Male">Male Model</option>
+                        <option value="Unisex">Unisex / High Fashion</option>
+                      </select>
+                    </div>
 
-                  <div>
-                    <label className="text-[10px] font-mono text-slate-400 block mb-1">COUNTRY ORIGIN</label>
-                    <select
-                      value={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                      style={{ backgroundColor: "#090e24", color: "#ffffff" }}
-                      className="w-full bg-[#090e24] text-white border border-blue-500/20 rounded-xl py-2 px-2.5 text-xs font-mono"
-                    >
-                      {COUNTRIES_LIST.map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-                  </div>
+                    <div>
+                      <label className="text-[10px] font-sans text-neutral-400 block mb-1">AGE RANGE</label>
+                      <select
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
+                        className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
+                      >
+                        <option value="18-25">18–25 Years</option>
+                        <option value="25-35">25–35 Years</option>
+                        <option value="35-45">35–45 Years</option>
+                        <option value="45+">45+ Years</option>
+                      </select>
+                    </div>
 
-                  <div>
-                    <label className="text-[10px] font-mono text-slate-400 block mb-1">ETHNICITY</label>
-                    <select
-                      value={ethnicity}
-                      onChange={(e) => setEthnicity(e.target.value)}
-                      style={{ backgroundColor: "#090e24", color: "#ffffff" }}
-                      className="w-full bg-[#090e24] text-white border border-blue-500/20 rounded-xl py-2 px-2.5 text-xs font-mono"
-                    >
-                      {ETHNICITIES_LIST.map((eth) => (
-                        <option key={eth} value={eth}>{eth}</option>
-                      ))}
-                    </select>
+                    <div>
+                      <label className="text-[10px] font-sans text-neutral-400 block mb-1">COUNTRY ORIGIN</label>
+                      <select
+                        value={country}
+                        onChange={(e) => setCountry(e.target.value)}
+                        style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
+                        className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
+                      >
+                        {COUNTRIES_LIST.map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-sans text-neutral-400 block mb-1">ETHNICITY</label>
+                      <select
+                        value={ethnicity}
+                        onChange={(e) => setEthnicity(e.target.value)}
+                        style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
+                        className="w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl py-2 px-2.5 text-xs font-sans"
+                      >
+                        {ETHNICITIES_LIST.map((eth) => (
+                          <option key={eth} value={eth}>{eth}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
 
             {/* DURATION & ASPECT RATIO */}
-            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-blue-500/15">
+            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-white/[0.06]">
               <div>
-                <label className="text-[10px] font-mono text-slate-300 uppercase block mb-1.5">
+                <label className="text-[10px] font-sans text-neutral-300 uppercase block mb-1.5">
                   DURATION
                 </label>
                 <div className="grid grid-cols-3 gap-1.5">
@@ -627,10 +625,10 @@ export default function GeneratePage() {
                       key={val}
                       type="button"
                       onClick={() => setDuration(val)}
-                      className={`py-2 rounded-xl text-xs font-mono border transition-all ${
+                      className={`py-2 rounded-xl text-xs font-sans border transition-all ${
                         duration === val
-                          ? "border-blue-400/60 bg-blue-600/30 text-white font-bold"
-                          : "border-white/10 text-slate-400 hover:text-white"
+                          ? "border-amber-200/60 bg-amber-400/10 text-amber-100 font-bold"
+                          : "border-white/10 text-neutral-400 hover:text-white"
                       }`}
                     >
                       {val}
@@ -640,7 +638,7 @@ export default function GeneratePage() {
               </div>
 
               <div>
-                <label className="text-[10px] font-mono text-slate-300 uppercase block mb-1.5">
+                <label className="text-[10px] font-sans text-neutral-300 uppercase block mb-1.5">
                   ASPECT RATIO
                 </label>
                 <div className="grid grid-cols-3 gap-1.5">
@@ -653,10 +651,10 @@ export default function GeneratePage() {
                       key={opt.id}
                       type="button"
                       onClick={() => setAspectRatio(opt.id as any)}
-                      className={`py-2 rounded-xl text-xs font-mono flex items-center justify-center gap-1 border transition-all ${
+                      className={`py-2 rounded-xl text-xs font-sans flex items-center justify-center gap-1 border transition-all ${
                         aspectRatio === opt.id
-                          ? "border-blue-400/60 bg-blue-600/30 text-white font-bold"
-                          : "border-white/10 text-slate-400 hover:text-white"
+                          ? "border-amber-200/60 bg-amber-400/10 text-amber-100 font-bold"
+                          : "border-white/10 text-neutral-400 hover:text-white"
                       }`}
                     >
                       <opt.icon className="w-3 h-3" />
@@ -668,25 +666,25 @@ export default function GeneratePage() {
             </div>
 
             {/* STRICT GUARANTEE */}
-            <div className="p-3 rounded-xl bg-blue-600/10 border border-blue-400/30 text-[11px] font-mono text-slate-200 flex items-center gap-2.5">
-              <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0" />
+            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 text-[11px] font-sans text-neutral-300 flex items-center gap-2.5">
+              <ShieldCheck className="w-4 h-4 text-amber-200 shrink-0" />
               <span>Strict Product Integrity Guarantee: 100% exact jewelry preservation.</span>
             </div>
           </Card>
         </div>
       </div>
 
-      {/* FIXED STICKY GENERATE BAR AT THE BOTTOM */}
-      <div className="fixed bottom-0 left-0 lg:left-64 right-0 z-40 p-3 sm:p-4 bg-[#050a18]/95 border-t border-blue-500/30 backdrop-blur-2xl shadow-[0_-15px_40px_rgba(0,0,0,0.9)] flex items-center justify-between gap-4">
+      {/* REFINED MATTE ACTION BUTTON AT THE BOTTOM STICKY BAR */}
+      <div className="fixed bottom-0 left-0 lg:left-64 right-0 z-40 p-3 sm:p-4 bg-[#060608]/95 border-t border-white/10 backdrop-blur-2xl shadow-[0_-15px_40px_rgba(0,0,0,0.9)] flex items-center justify-between gap-4">
         <div className="hidden sm:flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-400/40 flex items-center justify-center text-blue-300">
+          <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-amber-200">
             {renderIcon(activeModeConfig.iconName)}
           </div>
           <div>
-            <div className="text-xs font-mono text-white font-semibold">
+            <div className="text-xs font-serif text-white font-semibold">
               {activeModeConfig.title} Commercial Video
             </div>
-            <div className="text-[10px] font-mono text-blue-300">
+            <div className="text-[10px] font-sans text-neutral-400">
               Requires {creditCost} Credits • {aspectRatio}
             </div>
           </div>
@@ -695,7 +693,7 @@ export default function GeneratePage() {
         <Button
           onClick={handleGenerate}
           disabled={isSubmitting || isUploading}
-          className="flex-1 sm:flex-initial h-12 px-6 sm:px-8 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 text-white font-bold rounded-xl shadow-[0_0_25px_rgba(59,130,246,0.4)] hover:shadow-[0_0_35px_rgba(59,130,246,0.6)] cursor-pointer disabled:opacity-50"
+          className="flex-1 sm:flex-initial h-12 px-6 sm:px-8 text-xs font-sans tracking-widest uppercase bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 cursor-pointer disabled:opacity-50 shadow-lg border border-amber-200/30"
         >
           {isSubmitting ? "Initializing Pipeline..." : `Generate Commercial (${creditCost} Credits)`}
           <ArrowRight className="w-4 h-4 ml-2" />

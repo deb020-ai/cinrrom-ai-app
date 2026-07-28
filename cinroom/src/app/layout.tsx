@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,9 +12,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Cinroom - Premium AI Jewelry Videos",
-  description: "Luxury Jewelry Videos. Generated in Minutes.",
+  title: "Cinroom - Premium AI Jewelry Video & Image Studio",
+  description: "Luxury Jewelry Videos & Editorial Photography. Generated in Minutes.",
 };
 
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} dark antialiased`}
     >
       <body className="min-h-screen bg-background text-foreground flex flex-col font-sans">
         <TooltipProvider>
