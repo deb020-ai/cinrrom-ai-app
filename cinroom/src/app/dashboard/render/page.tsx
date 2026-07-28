@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { X, Diamond, Cpu } from "lucide-react";
+import { X, Diamond, Cpu, AlertTriangle, RotateCcw, ShieldCheck, ArrowRight } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 const stages = [
   "ANALYZING GEM & METAL GEOMETRY...",
@@ -23,21 +25,28 @@ export default function RenderPage() {
 
   const [progress, setProgress] = useState(0);
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
+  const [status, setStatus] = useState<"PROCESSING" | "COMPLETED" | "FAILED">("PROCESSING");
+  const [friendlyErrorMessage, setFriendlyErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!genId) return;
+
+    let isSubscribed = true;
+
+    // 1. Start progress animation UI
     const totalDuration = 8000;
     const intervalTime = 40;
     const increment = 100 / (totalDuration / intervalTime);
 
     const timer = setInterval(() => {
       setProgress((prev) => {
-        const next = prev + increment;
-        if (next >= 100) {
+        if (status === "FAILED") {
           clearInterval(timer);
-          setTimeout(() => {
-            router.push(`/dashboard/result?id=${genId || ""}`);
-          }, 400);
-          return 100;
+          return prev;
+        }
+        const next = prev + increment;
+        if (next >= 95) {
+          return 95; // Hold at 95% until API confirms COMPLETED
         }
 
         const stageIndex = Math.floor((next / 100) * stages.length);
@@ -49,81 +58,195 @@ export default function RenderPage() {
       });
     }, intervalTime);
 
-    return () => clearInterval(timer);
-  }, [router, genId]);
+    // 2. Call backend process API to execute generation & failure/refund handling
+    async function processGeneration() {
+      try {
+        const res = await fetch("/api/render/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ genId }),
+        });
+
+        const data = await res.json();
+
+        if (!isSubscribed) return;
+
+        if (data.success && data.status === "COMPLETED") {
+          setProgress(100);
+          setStatus("COMPLETED");
+          toast.success("Full HD Commercial Video Rendered Successfully!");
+          setTimeout(() => {
+            router.push(`/dashboard/result?id=${genId}`);
+          }, 500);
+        } else {
+          setStatus("FAILED");
+          setFriendlyErrorMessage(
+            data.message ||
+              "Video generation failed. Your credits have been refunded automatically. This can occasionally happen due to temporary AI provider issues or safety filters. Please try again."
+          );
+          toast.error("Generation failed. Credits refunded automatically.");
+        }
+      } catch (err) {
+        if (!isSubscribed) return;
+        setStatus("FAILED");
+        setFriendlyErrorMessage(
+          "Video generation failed. Your credits have been refunded automatically. This can occasionally happen due to temporary AI provider issues or safety filters. Please try again."
+        );
+      }
+    }
+
+    processGeneration();
+
+    // 3. Supabase Realtime Subscription for instant real-time status updates
+    const supabase = createClient();
+    const channel = supabase
+      .channel(`generation-${genId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "generation_history",
+          filter: `id=eq.${genId}`,
+        },
+        (payload) => {
+          const newStatus = payload.new?.status;
+          if (newStatus === "COMPLETED") {
+            setProgress(100);
+            setStatus("COMPLETED");
+            setTimeout(() => {
+              router.push(`/dashboard/result?id=${genId}`);
+            }, 500);
+          } else if (newStatus === "FAILED") {
+            setStatus("FAILED");
+            setFriendlyErrorMessage(
+              "Video generation failed. Your credits have been refunded automatically. This can occasionally happen due to temporary AI provider issues or safety filters. Please try again."
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      isSubscribed = false;
+      clearInterval(timer);
+      supabase.removeChannel(channel);
+    };
+  }, [genId, router, status]);
 
   return (
-    <div className="max-w-4xl mx-auto min-h-[70vh] flex flex-col items-center justify-center animate-in fade-in duration-700">
-      {/* High-End Studio Render Preview Container */}
-      <div className="relative w-full max-w-lg aspect-[16/9] rounded-2xl glass-panel gold-border-glow p-2 overflow-hidden mb-12 shadow-[0_30px_100px_rgba(0,0,0,0.9)] flex items-center justify-center bg-black">
-        {/* Background Image Preview */}
-        <img
-          src="/hero-ring.png"
-          alt="Rendering Preview"
-          className="w-full h-full object-cover opacity-40 blur-sm scale-105"
-        />
+    <div className="max-w-4xl mx-auto min-h-[70vh] flex flex-col items-center justify-center animate-in fade-in duration-700 pb-16">
+      {/* RENDER SUCCESS / PROCESSING / FAILURE STATES */}
+      {status === "FAILED" ? (
+        /* FAILURE & REFUND STATE UI */
+        <div className="w-full max-w-lg space-y-6 text-center animate-in zoom-in-95 duration-500">
+          <div className="w-20 h-20 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center mx-auto text-red-400 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
+            <AlertTriangle className="w-10 h-10" />
+          </div>
 
-        {/* Ambient Ring FX */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="w-44 h-44 border border-amber-200/20 rounded-full border-dashed"
-          />
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            className="w-56 h-56 border border-white/10 rounded-full"
-          />
-          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400/20 to-white/10 border border-amber-200/40 flex items-center justify-center backdrop-blur-md shadow-[0_0_30px_rgba(197,168,128,0.3)]">
-            <Diamond className="w-7 h-7 text-amber-200 animate-pulse" />
+          <div className="space-y-2">
+            <span className="text-[10px] font-mono text-red-400 uppercase tracking-[0.25em] block">
+              STATUS: GENERATION FAILED
+            </span>
+            <h1 className="text-3xl font-light text-white font-serif">Video Generation Unsuccessful</h1>
+          </div>
+
+          {/* Friendly Refund Box */}
+          <div className="p-6 rounded-2xl glass-panel bg-red-950/20 border border-red-500/30 text-left space-y-3">
+            <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 font-semibold">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>CREDITS REFUNDED AUTOMATICALLY</span>
+            </div>
+            <p className="text-xs text-neutral-300 font-light leading-relaxed">
+              {friendlyErrorMessage}
+            </p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <Button
+              onClick={() => router.push(`/dashboard/generate${mode ? `?mode=${mode}` : ""}`)}
+              className="w-full h-12 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_30px_rgba(197,168,128,0.4)] cursor-pointer flex items-center justify-center gap-2"
+            >
+              <RotateCcw className="w-4 h-4" /> Try Again (Retry Generation)
+            </Button>
+            <Button
+              onClick={() => router.push("/dashboard")}
+              variant="outline"
+              className="w-full sm:w-auto h-12 px-6 text-xs font-mono tracking-wider uppercase border-white/10 text-neutral-300 hover:bg-white/5 rounded-xl cursor-pointer"
+            >
+              Back to Studio
+            </Button>
           </div>
         </div>
+      ) : (
+        /* PROCESSING STATE UI */
+        <>
+          <div className="relative w-full max-w-lg aspect-[16/9] rounded-2xl glass-panel gold-border-glow p-2 overflow-hidden mb-12 shadow-[0_30px_100px_rgba(0,0,0,0.9)] flex items-center justify-center bg-black">
+            <img
+              src="/hero-ring.png"
+              alt="Rendering Preview"
+              className="w-full h-full object-cover opacity-40 blur-sm scale-105"
+            />
 
-        {/* Laser Scanning Line */}
-        <motion.div
-          animate={{ y: ["-100%", "100%"] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-amber-200 to-transparent shadow-[0_0_15px_rgba(197,168,128,0.8)]"
-        />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                className="w-44 h-44 border border-amber-200/20 rounded-full border-dashed"
+              />
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                className="w-56 h-56 border border-white/10 rounded-full"
+              />
+              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400/20 to-white/10 border border-amber-200/40 flex items-center justify-center backdrop-blur-md shadow-[0_0_30px_rgba(197,168,128,0.3)]">
+                <Diamond className="w-7 h-7 text-amber-200 animate-pulse" />
+              </div>
+            </div>
 
-        {/* Top HUD */}
-        <div className="absolute top-3 left-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border border-white/10 text-[9px] font-mono text-amber-200 flex items-center gap-1.5">
-          <Cpu className="w-3 h-3 text-amber-200" />
-          <span>GPU NODE #04 // RENDERING 1920x1080 FULL HD</span>
-        </div>
-      </div>
+            <motion.div
+              animate={{ y: ["-100%", "100%"] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-amber-200 to-transparent shadow-[0_0_15px_rgba(197,168,128,0.8)]"
+            />
 
-      {/* Status Indicators */}
-      <div className="w-full max-w-xl space-y-6 text-center">
-        <h2 className="text-sm font-mono tracking-[0.2em] text-amber-200 font-medium">
-          {stages[currentStageIndex]}
-        </h2>
+            <div className="absolute top-3 left-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border border-white/10 text-[9px] font-mono text-amber-200 flex items-center gap-1.5">
+              <Cpu className="w-3 h-3 text-amber-200" />
+              <span>GPU NODE #04 // RENDERING 1920x1080 FULL HD</span>
+            </div>
+          </div>
 
-        {/* Progress Bar Container */}
-        <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden border border-white/10 p-0.5">
-          <motion.div
-            className="h-full bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] rounded-full relative"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
+          <div className="w-full max-w-xl space-y-6 text-center">
+            <h2 className="text-sm font-mono tracking-[0.2em] text-amber-200 font-medium">
+              {stages[currentStageIndex]}
+            </h2>
 
-        <div className="flex justify-between items-center text-[10px] font-mono text-neutral-400 px-1">
-          <span>{Math.round(progress)}% PROCESSED</span>
-          <span>ESTIMATED TIME REMAINING: {Math.max(0, Math.ceil((100 - progress) / 12))}s</span>
-        </div>
-      </div>
+            <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden border border-white/10 p-0.5">
+              <motion.div
+                className="h-full bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] rounded-full relative"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
 
-      <div className="mt-12">
-        <Button
-          variant="outline"
-          className="h-9 px-6 rounded-full text-xs font-mono tracking-wider uppercase border-white/10 text-neutral-400 hover:text-white hover:bg-white/5 transition-colors"
-          onClick={() => router.push("/dashboard/generate")}
-        >
-          <X className="w-3.5 h-3.5 mr-1.5" />
-          Abort Render Pipeline
-        </Button>
-      </div>
+            <div className="flex justify-between items-center text-[10px] font-mono text-neutral-400 px-1">
+              <span>{Math.round(progress)}% PROCESSED</span>
+              <span>ESTIMATED TIME REMAINING: {Math.max(0, Math.ceil((100 - progress) / 12))}s</span>
+            </div>
+          </div>
+
+          <div className="mt-12">
+            <Button
+              variant="outline"
+              className="h-9 px-6 rounded-full text-xs font-mono tracking-wider uppercase border-white/10 text-neutral-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+              onClick={() => router.push("/dashboard/generate")}
+            >
+              <X className="w-3.5 h-3.5 mr-1.5" />
+              Abort Render Pipeline
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

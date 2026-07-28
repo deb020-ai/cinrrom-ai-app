@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Film, Image as ImageIcon, Download } from "lucide-react";
+import { Sparkles, Film, Image as ImageIcon, Download, RotateCcw, ShieldCheck, AlertCircle, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -17,12 +17,17 @@ interface GenerationItem {
   aspect_ratio: string;
   status: string;
   output_url: string | null;
+  error_message?: string | null;
+  retry_count?: number | null;
+  refunded?: boolean | null;
+  refund_transaction_id?: string | null;
   created_at: string;
 }
 
 export default function HistoryPage() {
   const [items, setItems] = useState<GenerationItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedDiagnostics, setExpandedDiagnostics] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     async function fetchHistory() {
@@ -60,6 +65,10 @@ export default function HistoryPage() {
     toast.success("Downloading Full HD Commercial MP4...");
   };
 
+  const toggleDiagnostics = (id: string) => {
+    setExpandedDiagnostics((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-16">
       <div className="flex items-center justify-between border-b border-white/[0.06] pb-6">
@@ -69,12 +78,12 @@ export default function HistoryPage() {
           </span>
           <h1 className="text-3xl font-light text-white tracking-tight">Generation History</h1>
           <p className="text-xs text-neutral-400 font-mono mt-1">
-            View and download your commercial video renders stored permanently on your account.
+            View, retry, and download your commercial video renders stored permanently on your account.
           </p>
         </div>
 
         <Link href="/dashboard/generate">
-          <Button className="h-10 px-5 text-xs font-mono tracking-wider uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_30px_rgba(197,168,128,0.4)]">
+          <Button className="h-10 px-5 text-xs font-mono tracking-wider uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_30px_rgba(197,168,128,0.4)] cursor-pointer">
             <Sparkles className="w-3.5 h-3.5 mr-2" /> New Render
           </Button>
         </Link>
@@ -96,7 +105,7 @@ export default function HistoryPage() {
           </p>
           <div className="pt-2">
             <Link href="/dashboard/generate">
-              <Button className="h-11 px-6 text-xs font-mono uppercase tracking-widest bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)]">
+              <Button className="h-11 px-6 text-xs font-mono uppercase tracking-widest bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] cursor-pointer">
                 Create First Commercial Asset
               </Button>
             </Link>
@@ -120,12 +129,23 @@ export default function HistoryPage() {
                       )
                     ) : (
                       <div className="text-center p-4">
-                        <Film className="w-8 h-8 text-neutral-600 mx-auto mb-2" />
-                        <span className="text-[10px] font-mono text-neutral-500 block">Rendering Asset...</span>
+                        {item.status === "FAILED" ? (
+                          <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
+                        ) : (
+                          <Film className="w-8 h-8 text-neutral-600 mx-auto mb-2" />
+                        )}
+                        <span className="text-[10px] font-mono text-neutral-400 block">
+                          {item.status === "FAILED" ? "Generation Failed" : "Rendering Asset..."}
+                        </span>
                       </div>
                     )}
 
-                    <div className="absolute top-3 right-3 z-10">
+                    <div className="absolute top-3 right-3 z-10 flex gap-1.5">
+                      {item.refunded && (
+                        <Badge className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono text-[9px]">
+                          REFUNDED
+                        </Badge>
+                      )}
                       <Badge
                         className={
                           item.status === "COMPLETED"
@@ -153,6 +173,36 @@ export default function HistoryPage() {
                       "{item.prompt}"
                     </p>
 
+                    {item.status === "FAILED" && (
+                      <div className="p-3 rounded-xl bg-red-950/20 border border-red-500/20 text-[11px] font-mono text-neutral-300 space-y-1">
+                        <div className="flex items-center gap-1.5 text-emerald-400 font-semibold text-[10px]">
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                          <span>CREDITS REFUNDED TO WALLET</span>
+                        </div>
+                        <p className="text-[10px] text-neutral-400 font-light">
+                          Temporary provider issue or safety filter. Your credits were credited back.
+                        </p>
+
+                        {/* Collapsible Admin Diagnostics */}
+                        <button
+                          type="button"
+                          onClick={() => toggleDiagnostics(item.id)}
+                          className="text-[9px] text-neutral-500 hover:text-amber-200 flex items-center gap-1 pt-1 underline cursor-pointer"
+                        >
+                          <span>{expandedDiagnostics[item.id] ? "Hide Admin Diagnostics" : "Admin Diagnostics"}</span>
+                          <ChevronDown className="w-3 h-3" />
+                        </button>
+
+                        {expandedDiagnostics[item.id] && (
+                          <div className="pt-2 border-t border-white/10 text-[9px] font-mono space-y-1 text-neutral-400 bg-black/40 p-2 rounded">
+                            <div><span className="text-neutral-500">Retries:</span> {item.retry_count || 0}</div>
+                            <div><span className="text-neutral-500">Refund Tx:</span> {item.refund_transaction_id || "Completed"}</div>
+                            <div><span className="text-neutral-500">Raw Error:</span> {item.error_message || "Provider Error"}</div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     <div className="flex justify-between items-center text-[10px] font-mono text-neutral-500 pt-2 border-t border-white/[0.06]">
                       <span>Format: {item.aspect_ratio}</span>
                       <span>{new Date(item.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
@@ -160,8 +210,8 @@ export default function HistoryPage() {
                   </div>
                 </div>
 
-                {item.output_url && (
-                  <div className="p-4 pt-0">
+                <div className="p-4 pt-0 space-y-2">
+                  {item.output_url && item.status === "COMPLETED" && (
                     <Button
                       onClick={() => handleDownload(item.output_url!, item.id)}
                       variant="outline"
@@ -170,8 +220,20 @@ export default function HistoryPage() {
                       <Download className="w-3.5 h-3.5 mr-2 text-amber-200" />
                       Download Full HD MP4
                     </Button>
-                  </div>
-                )}
+                  )}
+
+                  {item.status === "FAILED" && (
+                    <Link href="/dashboard/generate" className="block w-full">
+                      <Button
+                        variant="outline"
+                        className="w-full h-9 text-[11px] font-mono tracking-wider uppercase border-amber-200/40 text-amber-200 hover:bg-amber-400/10 rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5" />
+                        Try Again (Retry)
+                      </Button>
+                    </Link>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}
