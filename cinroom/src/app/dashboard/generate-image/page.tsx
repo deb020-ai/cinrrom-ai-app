@@ -87,7 +87,7 @@ export default function GenerateImagePage() {
   const activeModeConfig =
     IMAGE_GENERATION_MODES.find((m) => m.id === selectedMode) || IMAGE_GENERATION_MODES[0];
 
-  const creditCost = 1; // 1 credit per Image Campaign Render
+  const creditCost = 0.2; // 0.2 credits per Editorial Image
 
   // Fetch recent generated images for current user
   useEffect(() => {
@@ -275,7 +275,7 @@ export default function GenerateImagePage() {
         </div>
         <div className="hidden sm:block text-right">
           <span className="text-[10px] font-sans text-amber-200/90 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-200/20">
-            1 CREDIT PER EDITORIAL CAMPAIGN
+            0.2 CREDITS PER EDITORIAL IMAGE
           </span>
         </div>
       </div>

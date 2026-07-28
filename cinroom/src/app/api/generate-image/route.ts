@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized: User session required" }, { status: 401 });
     }
 
-    const creditCost = 1; // 1 Credit per Editorial Image Render
+    const creditCost = 0.2; // 0.2 Credits per Editorial Image Render
 
     // 1. Check user credit balance
     const { data: wallet } = await supabase
