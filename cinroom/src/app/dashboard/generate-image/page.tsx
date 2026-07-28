@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -20,8 +20,8 @@ import {
   X,
   Camera,
   Upload,
-  ChevronDown,
-  ChevronUp,
+  Download,
+  Image as ImageIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -35,6 +35,15 @@ import { COUNTRIES_LIST, ETHNICITIES_LIST } from "@/lib/modes";
 interface UploadedItem {
   file?: File;
   previewUrl: string;
+}
+
+interface ImageHistoryItem {
+  id: string;
+  output_url: string | null;
+  status: string;
+  created_at: string;
+  prompt: string;
+  aspect_ratio: string;
 }
 
 export default function GenerateImagePage() {
@@ -65,7 +74,6 @@ export default function GenerateImagePage() {
   const [age, setAge] = useState("25-35");
   const [country, setCountry] = useState("France");
   const [ethnicity, setEthnicity] = useState("Caucasian");
-  const [showAdvancedCasting, setShowAdvancedCasting] = useState(false);
 
   // Mode Specific Optional Inputs
   const [fantasyTheme, setFantasyTheme] = useState("");
@@ -74,11 +82,36 @@ export default function GenerateImagePage() {
 
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [recentImages, setRecentImages] = useState<ImageHistoryItem[]>([]);
 
   const activeModeConfig =
     IMAGE_GENERATION_MODES.find((m) => m.id === selectedMode) || IMAGE_GENERATION_MODES[0];
 
   const creditCost = 1; // 1 credit per Image Campaign Render
+
+  // Fetch recent generated images for current user
+  useEffect(() => {
+    async function fetchUserImages() {
+      try {
+        const supabase = createClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { data } = await supabase
+            .from("generation_history")
+            .select("id, output_url, status, created_at, prompt, aspect_ratio")
+            .eq("user_id", session.user.id)
+            .eq("asset_type", "EDITORIAL_IMAGE")
+            .order("created_at", { ascending: false })
+            .limit(12);
+
+          if (data) setRecentImages(data as ImageHistoryItem[]);
+        }
+      } catch (err) {
+        console.error("Error fetching user images:", err);
+      }
+    }
+    fetchUserImages();
+  }, []);
 
   // Handle Uploading Multiple Jewelry Images
   const handleJewelryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +158,7 @@ export default function GenerateImagePage() {
 
   const handleGenerate = async () => {
     if (selectedMode === "ai_director" && !creativePrompt.trim()) {
-      toast.error("Please provide a Creative Concept prompt for AI Director mode.");
+      toast.error("Please provide a Creative Concept idea for AI Director mode.");
       return;
     }
 
@@ -404,7 +437,7 @@ export default function GenerateImagePage() {
           </Card>
         </div>
 
-        {/* RIGHT COLUMN: WORKFLOW & PROGRESSIVE DISCLOSURE */}
+        {/* RIGHT COLUMN: WORKFLOW OPTIONS */}
         <div className="lg:col-span-7 space-y-4">
           <Card className="glass-panel border-white/10 bg-[#0a0a0d] p-5 rounded-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
@@ -579,6 +612,66 @@ export default function GenerateImagePage() {
             </div>
           </Card>
         </div>
+      </div>
+
+      {/* YOUR GENERATED IMAGES SECTION */}
+      <div className="pt-8 border-t border-white/[0.06] space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/80 block mb-0.5">
+              CREATOR VAULT
+            </span>
+            <h2 className="text-xl font-serif text-white tracking-tight">Your Generated Images</h2>
+          </div>
+          <span className="text-xs font-mono text-neutral-400">
+            {recentImages.length} {recentImages.length === 1 ? "Image" : "Images"} Created
+          </span>
+        </div>
+
+        {recentImages.length === 0 ? (
+          <div className="p-8 rounded-2xl glass-panel bg-[#0a0a0d] border border-white/10 text-center space-y-2">
+            <ImageIcon className="w-8 h-8 text-neutral-500 mx-auto mb-1" />
+            <p className="text-xs text-neutral-300 font-sans">No editorial images generated yet. Your created images will automatically appear here!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {recentImages.map((item) => (
+              <Card key={item.id} className="glass-panel bg-[#0a0a0d] border-white/10 overflow-hidden rounded-xl group flex flex-col justify-between">
+                <div className="aspect-square relative bg-black flex items-center justify-center overflow-hidden">
+                  {item.output_url ? (
+                    <img src={item.output_url} alt="Editorial Image" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center p-3">
+                      <ImageIcon className="w-6 h-6 text-neutral-500 mx-auto mb-1" />
+                      <span className="text-[10px] text-neutral-400 font-mono">{item.status}</span>
+                    </div>
+                  )}
+                  <div className="absolute top-2 right-2">
+                    <span className={`text-[8px] font-mono px-2 py-0.5 rounded ${
+                      item.status === 'COMPLETED' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-400/20 text-amber-200'
+                    }`}>
+                      {item.status}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-3 space-y-2">
+                  <p className="text-[10px] text-neutral-300 line-clamp-2 font-sans font-light leading-relaxed">
+                    "{item.prompt}"
+                  </p>
+                  {item.output_url && item.status === "COMPLETED" && (
+                    <a
+                      href={item.output_url}
+                      download={`Cinroom_Image_${item.id}.png`}
+                      className="w-full py-1.5 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-white font-sans text-[10px] uppercase font-medium flex items-center justify-center gap-1.5 border border-white/10 transition-colors"
+                    >
+                      <Download className="w-3 h-3 text-amber-200" /> Download Image
+                    </a>
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* REFINED MATTE ACTION BUTTON AT THE BOTTOM STICKY BAR */}

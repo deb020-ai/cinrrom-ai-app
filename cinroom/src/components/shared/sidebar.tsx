@@ -9,7 +9,6 @@ import { createClient } from "@/lib/supabase/client";
 const navItems = [
   { name: "Video Studio", href: "/dashboard/generate", icon: Video },
   { name: "Image Studio", href: "/dashboard/generate-image", icon: Camera },
-  { name: "Cinroom Vault Rigs", href: "/dashboard/templates", icon: LayoutTemplate },
   { name: "Projects Vault", href: "/dashboard/history", icon: FolderOpen },
 ];
 
