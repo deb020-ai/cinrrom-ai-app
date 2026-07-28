@@ -540,11 +540,12 @@ export default function GeneratePage() {
                       <select
                         value={gender}
                         onChange={(e) => setGender(e.target.value)}
-                        className="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2.5 px-3 text-xs font-mono text-white focus:outline-none focus:border-amber-200/50"
+                        style={{ backgroundColor: "#0c0c10", color: "#ffffff" }}
+                        className="w-full bg-[#0c0c10] text-white border border-white/10 rounded-xl py-2.5 px-3 text-xs font-mono focus:outline-none focus:border-amber-200/50"
                       >
-                        <option value="Female">Female Model</option>
-                        <option value="Male">Male Model</option>
-                        <option value="Unisex">Unisex / High Fashion</option>
+                        <option value="Female" style={{ backgroundColor: "#0c0c10", color: "#ffffff" }} className="bg-[#0c0c10] text-white py-2">Female Model</option>
+                        <option value="Male" style={{ backgroundColor: "#0c0c10", color: "#ffffff" }} className="bg-[#0c0c10] text-white py-2">Male Model</option>
+                        <option value="Unisex" style={{ backgroundColor: "#0c0c10", color: "#ffffff" }} className="bg-[#0c0c10] text-white py-2">Unisex / High Fashion</option>
                       </select>
                     </div>
 
@@ -554,12 +555,13 @@ export default function GeneratePage() {
                       <select
                         value={age}
                         onChange={(e) => setAge(e.target.value)}
-                        className="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2.5 px-3 text-xs font-mono text-white focus:outline-none focus:border-amber-200/50"
+                        style={{ backgroundColor: "#0c0c10", color: "#ffffff" }}
+                        className="w-full bg-[#0c0c10] text-white border border-white/10 rounded-xl py-2.5 px-3 text-xs font-mono focus:outline-none focus:border-amber-200/50"
                       >
-                        <option value="18-25">18–25 Years</option>
-                        <option value="25-35">25–35 Years (Editorial Standard)</option>
-                        <option value="35-45">35–45 Years (Mature Luxury)</option>
-                        <option value="45+">45+ Years (Heritage Luxury)</option>
+                        <option value="18-25" style={{ backgroundColor: "#0c0c10", color: "#ffffff" }} className="bg-[#0c0c10] text-white py-2">18–25 Years</option>
+                        <option value="25-35" style={{ backgroundColor: "#0c0c10", color: "#ffffff" }} className="bg-[#0c0c10] text-white py-2">25–35 Years (Editorial Standard)</option>
+                        <option value="35-45" style={{ backgroundColor: "#0c0c10", color: "#ffffff" }} className="bg-[#0c0c10] text-white py-2">35–45 Years (Mature Luxury)</option>
+                        <option value="45+" style={{ backgroundColor: "#0c0c10", color: "#ffffff" }} className="bg-[#0c0c10] text-white py-2">45+ Years (Heritage Luxury)</option>
                       </select>
                     </div>
 
@@ -569,10 +571,11 @@ export default function GeneratePage() {
                       <select
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
-                        className="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2.5 px-3 text-xs font-mono text-white focus:outline-none focus:border-amber-200/50"
+                        style={{ backgroundColor: "#0c0c10", color: "#ffffff" }}
+                        className="w-full bg-[#0c0c10] text-white border border-white/10 rounded-xl py-2.5 px-3 text-xs font-mono focus:outline-none focus:border-amber-200/50"
                       >
                         {COUNTRIES_LIST.map((c) => (
-                          <option key={c} value={c}>
+                          <option key={c} value={c} style={{ backgroundColor: "#0c0c10", color: "#ffffff" }} className="bg-[#0c0c10] text-white py-2">
                             {c}
                           </option>
                         ))}
@@ -585,10 +588,11 @@ export default function GeneratePage() {
                       <select
                         value={ethnicity}
                         onChange={(e) => setEthnicity(e.target.value)}
-                        className="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2.5 px-3 text-xs font-mono text-white focus:outline-none focus:border-amber-200/50"
+                        style={{ backgroundColor: "#0c0c10", color: "#ffffff" }}
+                        className="w-full bg-[#0c0c10] text-white border border-white/10 rounded-xl py-2.5 px-3 text-xs font-mono focus:outline-none focus:border-amber-200/50"
                       >
                         {ETHNICITIES_LIST.map((eth) => (
-                          <option key={eth} value={eth}>
+                          <option key={eth} value={eth} style={{ backgroundColor: "#0c0c10", color: "#ffffff" }} className="bg-[#0c0c10] text-white py-2">
                             {eth}
                           </option>
                         ))}
