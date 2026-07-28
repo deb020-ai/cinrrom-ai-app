@@ -482,7 +482,7 @@ export default function GeneratePage() {
             {selectedMode === "ai_director" && (
               <div className="space-y-2">
                 <label className="text-xs font-sans text-white font-medium uppercase tracking-wider block">
-                  Creative Concept Prompt <span className="text-red-400">*</span>
+                  Creative Concept Idea <span className="text-red-400">*</span>
                 </label>
                 <textarea
                   rows={3}
