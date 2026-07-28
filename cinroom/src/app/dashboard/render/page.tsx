@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { X, Diamond, Cpu, AlertTriangle, RotateCcw, ShieldCheck, ArrowRight } from "lucide-react";
+import { X, Diamond, Cpu, AlertTriangle, RotateCcw, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
@@ -152,12 +152,12 @@ export default function RenderPage() {
           </div>
 
           {/* Friendly Refund Box */}
-          <div className="p-6 rounded-2xl glass-panel bg-red-950/20 border border-red-500/30 text-left space-y-3">
+          <div className="p-6 rounded-2xl glass-panel bg-red-950/30 border border-red-500/30 text-left space-y-3">
             <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 font-semibold">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span>CREDITS REFUNDED AUTOMATICALLY</span>
             </div>
-            <p className="text-xs text-neutral-300 font-light leading-relaxed">
+            <p className="text-xs text-slate-200 font-light leading-relaxed">
               {friendlyErrorMessage}
             </p>
           </div>
@@ -166,14 +166,14 @@ export default function RenderPage() {
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <Button
               onClick={() => router.push(`/dashboard/generate${mode ? `?mode=${mode}` : ""}`)}
-              className="w-full h-12 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_30px_rgba(197,168,128,0.4)] cursor-pointer flex items-center justify-center gap-2"
+              className="w-full h-12 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] cursor-pointer flex items-center justify-center gap-2"
             >
               <RotateCcw className="w-4 h-4" /> Try Again (Retry Generation)
             </Button>
             <Button
               onClick={() => router.push("/dashboard")}
               variant="outline"
-              className="w-full sm:w-auto h-12 px-6 text-xs font-mono tracking-wider uppercase border-white/10 text-neutral-300 hover:bg-white/5 rounded-xl cursor-pointer"
+              className="w-full sm:w-auto h-12 px-6 text-xs font-mono tracking-wider uppercase border-blue-500/20 text-slate-300 hover:bg-white/5 rounded-xl cursor-pointer"
             >
               Back to Studio
             </Button>
@@ -182,7 +182,7 @@ export default function RenderPage() {
       ) : (
         /* PROCESSING STATE UI */
         <>
-          <div className="relative w-full max-w-lg aspect-[16/9] rounded-2xl glass-panel gold-border-glow p-2 overflow-hidden mb-12 shadow-[0_30px_100px_rgba(0,0,0,0.9)] flex items-center justify-center bg-black">
+          <div className="relative w-full max-w-lg aspect-[16/9] rounded-2xl glass-panel navy-border-glow p-2 overflow-hidden mb-12 shadow-[0_30px_100px_rgba(0,0,0,0.9)] flex items-center justify-center bg-[#050a18]">
             <img
               src="/hero-ring.png"
               alt="Rendering Preview"
@@ -193,43 +193,43 @@ export default function RenderPage() {
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                className="w-44 h-44 border border-amber-200/20 rounded-full border-dashed"
+                className="w-44 h-44 border border-blue-400/30 rounded-full border-dashed"
               />
               <motion.div
                 animate={{ rotate: -360 }}
                 transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
                 className="w-56 h-56 border border-white/10 rounded-full"
               />
-              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400/20 to-white/10 border border-amber-200/40 flex items-center justify-center backdrop-blur-md shadow-[0_0_30px_rgba(197,168,128,0.3)]">
-                <Diamond className="w-7 h-7 text-amber-200 animate-pulse" />
+              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-600/30 to-white/10 border border-blue-400/50 flex items-center justify-center backdrop-blur-md shadow-[0_0_30px_rgba(59,130,246,0.4)]">
+                <Diamond className="w-7 h-7 text-blue-300 animate-pulse" />
               </div>
             </div>
 
             <motion.div
               animate={{ y: ["-100%", "100%"] }}
               transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-amber-200 to-transparent shadow-[0_0_15px_rgba(197,168,128,0.8)]"
+              className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.8)]"
             />
 
-            <div className="absolute top-3 left-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border border-white/10 text-[9px] font-mono text-amber-200 flex items-center gap-1.5">
-              <Cpu className="w-3 h-3 text-amber-200" />
+            <div className="absolute top-3 left-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border border-blue-400/30 text-[9px] font-mono text-blue-300 flex items-center gap-1.5">
+              <Cpu className="w-3 h-3 text-blue-400" />
               <span>GPU NODE #04 // RENDERING 1920x1080 FULL HD</span>
             </div>
           </div>
 
           <div className="w-full max-w-xl space-y-6 text-center">
-            <h2 className="text-sm font-mono tracking-[0.2em] text-amber-200 font-medium">
+            <h2 className="text-sm font-mono tracking-[0.2em] text-blue-300 font-medium">
               {stages[currentStageIndex]}
             </h2>
 
-            <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden border border-white/10 p-0.5">
+            <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden border border-blue-500/20 p-0.5">
               <motion.div
-                className="h-full bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] rounded-full relative"
+                className="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 rounded-full relative"
                 style={{ width: `${progress}%` }}
               />
             </div>
 
-            <div className="flex justify-between items-center text-[10px] font-mono text-neutral-400 px-1">
+            <div className="flex justify-between items-center text-[10px] font-mono text-slate-400 px-1">
               <span>{Math.round(progress)}% PROCESSED</span>
               <span>ESTIMATED TIME REMAINING: {Math.max(0, Math.ceil((100 - progress) / 12))}s</span>
             </div>
@@ -238,7 +238,7 @@ export default function RenderPage() {
           <div className="mt-12">
             <Button
               variant="outline"
-              className="h-9 px-6 rounded-full text-xs font-mono tracking-wider uppercase border-white/10 text-neutral-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+              className="h-9 px-6 rounded-full text-xs font-mono tracking-wider uppercase border-blue-500/20 text-slate-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
               onClick={() => router.push("/dashboard/generate")}
             >
               <X className="w-3.5 h-3.5 mr-1.5" />

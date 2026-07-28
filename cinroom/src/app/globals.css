@@ -42,62 +42,62 @@
 }
 
 :root {
-  --background: #050505;
-  --foreground: #f4f4f5;
-  --card: #0a0a0b;
-  --card-foreground: #f4f4f5;
-  --popover: #0a0a0b;
-  --popover-foreground: #f4f4f5;
-  --primary: #d4af37;
-  --primary-foreground: #000000;
-  --secondary: #18181b;
-  --secondary-foreground: #f4f4f5;
-  --muted: #121215;
-  --muted-foreground: #9a9a9f;
-  --accent: #1f1f23;
-  --accent-foreground: #d4af37;
-  --destructive: #7f1d1d;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #c5a880;
+  --background: #040814;
+  --foreground: #ffffff;
+  --card: #090e24;
+  --card-foreground: #ffffff;
+  --popover: #090e24;
+  --popover-foreground: #ffffff;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #0f172a;
+  --secondary-foreground: #ffffff;
+  --muted: #0b132b;
+  --muted-foreground: #94a3b8;
+  --accent: #1e293b;
+  --accent-foreground: #60a5fa;
+  --destructive: #991b1b;
+  --border: rgba(96, 165, 250, 0.12);
+  --input: rgba(96, 165, 250, 0.12);
+  --ring: #3b82f6;
   --radius: 0.75rem;
-  --sidebar: #080809;
-  --sidebar-foreground: #f4f4f5;
-  --sidebar-primary: #d4af37;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #18181b;
-  --sidebar-accent-foreground: #f4f4f5;
-  --sidebar-border: rgba(255, 255, 255, 0.06);
-  --sidebar-ring: #c5a880;
+  --sidebar: #050a18;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #0f172a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(96, 165, 250, 0.1);
+  --sidebar-ring: #3b82f6;
 }
 
 .dark {
-  --background: #050505;
-  --foreground: #f4f4f5;
-  --card: #0a0a0b;
-  --card-foreground: #f4f4f5;
-  --popover: #0a0a0b;
-  --popover-foreground: #f4f4f5;
-  --primary: #c5a880;
-  --primary-foreground: #050505;
-  --secondary: #141416;
-  --secondary-foreground: #f4f4f5;
-  --muted: #121215;
-  --muted-foreground: #8e8e93;
-  --accent: #1a1a1e;
-  --accent-foreground: #c5a880;
-  --destructive: #7f1d1d;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #c5a880;
-  --sidebar: #080809;
-  --sidebar-foreground: #f4f4f5;
-  --sidebar-primary: #c5a880;
-  --sidebar-primary-foreground: #050505;
-  --sidebar-accent: #141416;
-  --sidebar-accent-foreground: #f4f4f5;
-  --sidebar-border: rgba(255, 255, 255, 0.06);
-  --sidebar-ring: #c5a880;
+  --background: #040814;
+  --foreground: #ffffff;
+  --card: #090e24;
+  --card-foreground: #ffffff;
+  --popover: #090e24;
+  --popover-foreground: #ffffff;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #0f172a;
+  --secondary-foreground: #ffffff;
+  --muted: #0b132b;
+  --muted-foreground: #94a3b8;
+  --accent: #1e293b;
+  --accent-foreground: #60a5fa;
+  --destructive: #991b1b;
+  --border: rgba(96, 165, 250, 0.12);
+  --input: rgba(96, 165, 250, 0.12);
+  --ring: #3b82f6;
+  --sidebar: #050a18;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #0f172a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(96, 165, 250, 0.1);
+  --sidebar-ring: #3b82f6;
 }
 
 @layer base {
@@ -105,29 +105,29 @@
     @apply border-border outline-none;
   }
   body {
-    @apply bg-[#050505] text-[#f4f4f5] font-sans antialiased selection:bg-amber-900/30 selection:text-amber-200;
+    @apply bg-[#040814] text-[#ffffff] font-sans antialiased selection:bg-blue-900/40 selection:text-blue-200;
   }
   html {
     @apply font-sans scroll-smooth;
   }
 }
 
-/* Custom Art Director Luxury Utilities */
+/* Custom Art Director Deep Navy Luxury Utilities */
 .glass-panel {
-  background: rgba(18, 18, 20, 0.5);
+  background: rgba(9, 14, 36, 0.65);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 20px 50px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(96, 165, 250, 0.15);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1), 0 20px 50px rgba(0, 0, 0, 0.7);
 }
 
 .glass-panel-hover {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .glass-panel-hover:hover {
-  background: rgba(26, 26, 30, 0.7);
-  border-color: rgba(197, 168, 128, 0.3);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(197, 168, 128, 0.05);
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(59, 130, 246, 0.15);
 }
 
 .luxury-text-gradient {
@@ -136,32 +136,32 @@
   -webkit-text-fill-color: transparent;
 }
 
-.gold-text-gradient {
-  background: linear-gradient(135deg, #FFF6E5 0%, #EAD4AA 35%, #C5A880 70%, #9E7D52 100%);
+.navy-text-gradient {
+  background: linear-gradient(135deg, #FFFFFF 0%, #93C5FD 40%, #3B82F6 70%, #1D4ED8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.gold-border-glow {
+.navy-border-glow {
   position: relative;
 }
-.gold-border-glow::before {
+.navy-border-glow::before {
   content: '';
   position: absolute;
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(229, 213, 197, 0.4), rgba(197, 168, 128, 0.1), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.5), rgba(37, 99, 235, 0.2), rgba(255, 255, 255, 0.05));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
 }
 
-/* Subtle luxury noise grid texture */
+/* Subtle luxury deep navy grid texture */
 .subtle-grid {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(to right, rgba(96, 165, 250, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(96, 165, 250, 0.03) 1px, transparent 1px);
 }
