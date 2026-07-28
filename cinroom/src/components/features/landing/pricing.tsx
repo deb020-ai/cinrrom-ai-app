@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Sparkles, Zap, ShieldCheck, ArrowRight, RefreshCw, Building2, HelpCircle, Layers, Star, Award, ShieldAlert, X, Info } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Check, ShieldCheck, ArrowRight, Building2, Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -18,7 +18,6 @@ interface Plan {
   badge?: string;
   popular?: boolean;
   features: string[];
-  cta: string;
 }
 
 const paidPlans: Plan[] = [
@@ -38,7 +37,6 @@ const paidPlans: Plan[] = [
       "Secure asset cloud storage",
       "Instant top-up recharge enabled",
     ],
-    cta: "Buy Credits",
   },
   {
     id: "growth_monthly",
@@ -60,7 +58,6 @@ const paidPlans: Plan[] = [
       "Premium 24/7 Dedicated Support",
       "Recharge Credits Anytime",
     ],
-    cta: "Subscribe",
   },
   {
     id: "business_monthly",
@@ -80,7 +77,6 @@ const paidPlans: Plan[] = [
       "Custom Motion Brand Watermarks",
       "ProRes MOV 4K Exports",
     ],
-    cta: "Upgrade",
   },
 ];
 
@@ -135,13 +131,93 @@ const faqs = [
   },
 ];
 
-export function Pricing() {
+interface PricingProps {
+  activePlanTier?: string;
+}
+
+export function Pricing({ activePlanTier }: PricingProps = {}) {
   const [selectedTopUp, setSelectedTopUp] = useState("topup_24");
   const [modalCredits, setModalCredits] = useState<number | null>(null);
   const [loadingPack, setLoadingPack] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [userTier, setUserTier] = useState<string>(activePlanTier || "free");
 
   const activeTopUpObj = topUpPacks.find((t) => t.id === selectedTopUp) || topUpPacks[2];
+
+  useEffect(() => {
+    async function fetchUserTier() {
+      try {
+        const supabase = createClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { data: walletRes } = await supabase
+            .from("user_wallets")
+            .select("plan_tier")
+            .eq("user_id", session.user.id)
+            .single();
+
+          if (walletRes?.plan_tier) {
+            setUserTier(walletRes.plan_tier);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching user plan tier:", err);
+      }
+    }
+
+    if (activePlanTier) {
+      setUserTier(activePlanTier);
+    } else {
+      fetchUserTier();
+    }
+  }, [activePlanTier]);
+
+  // Dynamic Subscription Button Logic based on User Active Plan Tier
+  const getPlanButtonState = (cardPlanId: string) => {
+    const currentTier = (userTier || "free").toLowerCase();
+
+    // Tier Ranks: free=0, starter=1, growth=2, business=3
+    const getRank = (tierOrId: string) => {
+      const str = tierOrId.toLowerCase();
+      if (str.includes("business")) return 3;
+      if (str.includes("growth")) return 2;
+      if (str.includes("starter")) return 1;
+      return 0; // free / not subscribed
+    };
+
+    const currentRank = getRank(currentTier);
+    const cardRank = getRank(cardPlanId);
+
+    if (currentRank === 0) {
+      return {
+        label: "Subscribe Now",
+        isCurrent: false,
+        isDisabled: false,
+      };
+    }
+
+    if (currentRank === cardRank) {
+      return {
+        label: "Subscribed (Current Plan)",
+        isCurrent: true,
+        isDisabled: true,
+      };
+    }
+
+    if (cardRank > currentRank) {
+      return {
+        label: "Upgrade",
+        isCurrent: false,
+        isDisabled: false,
+      };
+    }
+
+    return {
+      label: "Downgrade",
+      isCurrent: false,
+      isDisabled: false,
+    };
+  };
 
   const startCheckout = async (productId: string) => {
     setLoadingPack(productId);
@@ -152,7 +228,6 @@ export function Pricing() {
         return;
       }
 
-      // Fetch active logged in user from Supabase session
       const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
       const userEmail = session?.user?.email || "";
@@ -170,7 +245,6 @@ export function Pricing() {
 
       const data = await response.json();
       if (data.checkoutUrl) {
-        // Open checkout in a NEW TAB so the user stays logged in on CINROOM
         window.open(data.checkoutUrl, "_blank", "noopener,noreferrer");
         toast.success("Payment checkout opened in a new tab. Complete your purchase there!");
         setTimeout(() => setLoadingPack(null), 1500);
@@ -186,7 +260,7 @@ export function Pricing() {
   };
 
   return (
-    <section id="pricing" className="py-28 bg-[#050505] relative z-20 border-t border-white/[0.06] overflow-hidden">
+    <section id="pricing" className="py-28 bg-[#060608] relative z-20 border-t border-white/[0.06] overflow-hidden">
       
       {/* Glow Vignette */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-500/5 blur-[160px] pointer-events-none rounded-full" />
@@ -195,10 +269,10 @@ export function Pricing() {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-amber-200/80 mb-3 block">
-            // COMMERCIAL PRODUCTION PLANS
+          <span className="text-[11px] font-sans uppercase tracking-[0.25em] text-amber-200/80 mb-3 block">
+            COMMERCIAL PRODUCTION PLANS
           </span>
-          <h2 className="text-3xl sm:text-5xl font-light text-white tracking-tight mb-4">
+          <h2 className="text-3xl sm:text-5xl font-serif text-white tracking-tight mb-4">
             Invest in <span className="gold-text-gradient font-normal italic">High-Converting</span> Marketing Assets
           </h2>
           <p className="text-sm text-neutral-400 font-light tracking-wide max-w-xl mx-auto">
@@ -208,7 +282,7 @@ export function Pricing() {
 
         {/* Notice Banner */}
         <div className="mb-14 max-w-2xl mx-auto p-4 rounded-xl glass-panel bg-amber-500/[0.03] border border-amber-200/20 text-center">
-          <p className="text-xs font-mono text-amber-200/90 flex items-center justify-center gap-2">
+          <p className="text-xs font-sans text-amber-200/90 flex items-center justify-center gap-2">
             <ShieldCheck className="w-4 h-4 text-amber-200 shrink-0" />
             <span>Create your account for free. Purchase Credits or subscribe when you're ready to generate commercial assets.</span>
           </p>
@@ -218,28 +292,38 @@ export function Pricing() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto mb-20">
           {paidPlans.map((plan) => {
             const isPopular = plan.popular;
+            const btnState = getPlanButtonState(plan.id);
+
             return (
               <div
                 key={plan.id}
                 className={`glass-panel rounded-2xl p-8 flex flex-col justify-between relative transition-all duration-300 ${
-                  isPopular
-                    ? "border-amber-200/50 shadow-[0_0_70px_rgba(197,168,128,0.25)] bg-gradient-to-b from-[#181820] via-[#0e0e12] to-[#070709] md:scale-105 z-20"
-                    : "border-white/[0.08] hover:border-white/20 bg-[#08080a]"
+                  btnState.isCurrent
+                    ? "border-emerald-500/50 bg-[#0d1612] shadow-[0_0_50px_rgba(16,185,129,0.15)]"
+                    : isPopular
+                    ? "border-amber-200/50 shadow-[0_0_70px_rgba(197,168,128,0.2)] bg-[#0d0d10] md:scale-105 z-20"
+                    : "border-white/[0.08] hover:border-white/20 bg-[#0a0a0d]"
                 }`}
               >
                 {/* Badge */}
-                {plan.badge && (
+                {btnState.isCurrent ? (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-30">
-                    <span className="px-4 py-1 rounded-full bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-mono text-[10px] font-bold tracking-widest uppercase shadow-lg">
+                    <span className="px-4 py-1 rounded-full bg-emerald-500 text-black font-sans text-[10px] font-bold tracking-widest uppercase shadow-lg">
+                      CURRENT SUBSCRIBED PLAN
+                    </span>
+                  </div>
+                ) : plan.badge ? (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-30">
+                    <span className="px-4 py-1 rounded-full bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-sans text-[10px] font-bold tracking-widest uppercase shadow-lg">
                       {plan.badge}
                     </span>
                   </div>
-                )}
+                ) : null}
 
                 <div>
                   <div className="mb-6">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="text-2xl font-light text-white tracking-tight">{plan.name}</h3>
+                      <h3 className="text-2xl font-serif text-white tracking-tight">{plan.name}</h3>
                       <span className="px-3 py-1 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 text-xs font-mono font-semibold">
                         {plan.credits} Credits
                       </span>
@@ -253,10 +337,9 @@ export function Pricing() {
                       <span className="text-xs font-mono text-neutral-500 uppercase">{plan.billing}</span>
                     </div>
 
-                    {/* What can I create? Modal trigger */}
                     <button
                       onClick={() => setModalCredits(plan.credits)}
-                      className="text-[11px] font-mono text-amber-200/90 underline hover:text-white transition-colors mt-3 flex items-center gap-1.5"
+                      className="text-[11px] font-sans text-amber-200/90 underline hover:text-white transition-colors mt-3 flex items-center gap-1.5"
                     >
                       <Info className="w-3.5 h-3.5" /> What can I create with {plan.credits} Credits?
                     </button>
@@ -273,16 +356,20 @@ export function Pricing() {
                 </div>
 
                 <Button
-                  onClick={() => startCheckout(plan.id)}
-                  disabled={loadingPack === plan.id}
-                  className={`w-full h-12 text-xs font-mono tracking-[0.15em] uppercase rounded-xl transition-all duration-300 cursor-pointer ${
-                    isPopular
-                      ? "bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.3)] hover:shadow-[0_0_35px_rgba(197,168,128,0.5)]"
+                  onClick={() => !btnState.isDisabled && startCheckout(plan.id)}
+                  disabled={btnState.isDisabled || loadingPack === plan.id}
+                  className={`w-full h-12 text-xs font-sans tracking-[0.15em] uppercase rounded-xl transition-all duration-300 cursor-pointer font-semibold ${
+                    btnState.isCurrent
+                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 cursor-default opacity-90"
+                      : isPopular
+                      ? "bg-white text-black hover:bg-neutral-200 shadow-lg border border-amber-200/30"
                       : "bg-white/[0.06] hover:bg-white/[0.12] text-white border border-white/10"
                   }`}
                 >
-                  {loadingPack === plan.id ? "Processing..." : plan.cta}
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  {loadingPack === plan.id
+                    ? "Processing..."
+                    : btnState.label}
+                  {!btnState.isCurrent && <ArrowRight className="w-4 h-4 ml-2" />}
                 </Button>
               </div>
             );
@@ -290,23 +377,23 @@ export function Pricing() {
         </div>
 
         {/* CREDIT CONVERSION MATH EXPLANATION */}
-        <div className="mb-20 p-8 rounded-2xl glass-panel gold-border-glow bg-gradient-to-r from-amber-950/20 via-[#0e0e12] to-amber-950/10 border border-amber-200/20 shadow-2xl max-w-5xl mx-auto text-center">
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-200/90 mb-2 block">
+        <div className="mb-20 p-8 rounded-2xl glass-panel gold-border-glow bg-[#0d0d10] border border-amber-200/20 shadow-2xl max-w-5xl mx-auto text-center">
+          <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/90 mb-2 block">
             UNIFIED CREDIT CONVERSION RULE
           </span>
-          <h3 className="text-xl font-light text-white mb-2">1 Commercial Video = 3 Credits | 5 Performance Creatives = 1 Credit</h3>
+          <h3 className="text-xl font-serif text-white mb-2">1 Commercial Video = 3 Credits | 1 Editorial Image = 1 Credit</h3>
           <p className="text-xs text-neutral-400 font-light max-w-xl mx-auto">
-            (Performance Creatives consume 0.2 Credits each. Credits give you complete freedom across all campaign formats.)
+            Credits give you complete studio freedom across both Video and Image generation engines.
           </p>
         </div>
 
         {/* RECHARGE CREDITS SECTION */}
-        <div id="topup" className="mb-20 p-8 rounded-2xl glass-panel border border-white/10 bg-[#08080b] max-w-5xl mx-auto">
+        <div id="topup" className="mb-20 p-8 rounded-2xl glass-panel border border-white/10 bg-[#0a0a0d] max-w-5xl mx-auto">
           <div className="text-center max-w-xl mx-auto mb-10">
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-200/80 mb-2 block">
+            <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/80 mb-2 block">
               INSTANT CREDIT RECHARGE
             </span>
-            <h3 className="text-2xl font-light text-white tracking-tight mb-1">Recharge Credits</h3>
+            <h3 className="text-2xl font-serif text-white tracking-tight mb-1">Recharge Credits</h3>
             <p className="text-xs text-neutral-400 font-light">Purchase additional Credits anytime without changing your subscription.</p>
           </div>
 
@@ -329,7 +416,7 @@ export function Pricing() {
                       POPULAR
                     </span>
                   )}
-                  <div className="text-xl font-light text-white font-serif mb-1">{pack.credits} Credits</div>
+                  <div className="text-xl font-serif text-white mb-1">{pack.credits} Credits</div>
                   <div className="text-sm font-mono text-amber-200 font-semibold">{pack.price}</div>
                 </div>
               );
@@ -338,11 +425,11 @@ export function Pricing() {
 
           {/* Purchase Summary & Action Button */}
           <div className="max-w-md mx-auto p-6 rounded-xl bg-white/[0.02] border border-white/10 text-center">
-            <div className="flex items-center justify-between text-xs font-mono text-neutral-300 mb-2 pb-2 border-b border-white/10">
+            <div className="flex items-center justify-between text-xs font-sans text-neutral-300 mb-2 pb-2 border-b border-white/10">
               <span>Selected Pack:</span>
               <span className="text-amber-200 font-bold">{activeTopUpObj.credits} Credits</span>
             </div>
-            <div className="flex items-center justify-between text-xs font-mono text-neutral-300 mb-6">
+            <div className="flex items-center justify-between text-xs font-sans text-neutral-300 mb-6">
               <span>Price:</span>
               <span className="text-white font-bold">{activeTopUpObj.price}</span>
             </div>
@@ -350,7 +437,7 @@ export function Pricing() {
             <Button
               onClick={() => startCheckout(activeTopUpObj.id)}
               disabled={loadingPack === activeTopUpObj.id}
-              className="w-full h-12 text-xs font-mono tracking-widest uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_30px_rgba(197,168,128,0.4)] cursor-pointer"
+              className="w-full h-12 text-xs font-sans tracking-widest uppercase bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 cursor-pointer shadow-lg border border-amber-200/30"
             >
               {loadingPack === activeTopUpObj.id
                 ? "Processing..."
@@ -360,17 +447,17 @@ export function Pricing() {
         </div>
 
         {/* ENTERPRISE SECTION */}
-        <div className="mb-24 p-8 rounded-2xl glass-panel border border-white/10 bg-gradient-to-r from-[#0d0d12] via-[#12121a] to-[#0d0d12] max-w-5xl mx-auto">
+        <div className="mb-24 p-8 rounded-2xl glass-panel border border-white/10 bg-[#0a0a0d] max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Building2 className="w-5 h-5 text-amber-200" />
-                <h3 className="text-2xl font-light text-white tracking-tight">Enterprise</h3>
+                <h3 className="text-2xl font-serif text-white tracking-tight">Enterprise</h3>
               </div>
               <p className="text-xs text-neutral-400 font-light max-w-xl">
                 For agencies, manufacturers and high-volume jewelry brands requiring custom GPU capacity and SLA.
               </p>
-              <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-neutral-300 pt-2">
+              <div className="flex flex-wrap items-center gap-4 text-xs font-sans text-neutral-300 pt-2">
                 <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-200" /> Unlimited Team Members</span>
                 <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-200" /> Dedicated Infrastructure</span>
                 <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-200" /> SLA</span>
@@ -380,7 +467,7 @@ export function Pricing() {
 
             <Button
               onClick={() => startCheckout("enterprise_contact")}
-              className="h-12 px-8 text-xs font-mono tracking-widest uppercase bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/15 rounded-xl shrink-0 cursor-pointer"
+              className="h-12 px-8 text-xs font-sans tracking-widest uppercase bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/15 rounded-xl shrink-0 cursor-pointer"
             >
               Contact Sales
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -391,10 +478,10 @@ export function Pricing() {
         {/* FREQUENTLY ASKED QUESTIONS */}
         <div id="faq" className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-neutral-500 mb-2 block">
-              // CLARIFICATIONS & POLICIES
+            <span className="text-[11px] font-sans uppercase tracking-[0.2em] text-neutral-500 mb-2 block">
+              CLARIFICATIONS & POLICIES
             </span>
-            <h3 className="text-2xl font-light text-white tracking-tight mb-2">Frequently Asked Questions</h3>
+            <h3 className="text-2xl font-serif text-white tracking-tight mb-2">Frequently Asked Questions</h3>
             <p className="text-xs text-neutral-400 font-light">Everything you need to know about CINROOM studio credit wallet and subscription options.</p>
           </div>
 
@@ -428,7 +515,7 @@ export function Pricing() {
 
       </div>
 
-      {/* DYNAMIC CREDIT CALCULATION MODAL ("What can I create?") */}
+      {/* DYNAMIC CREDIT CALCULATION MODAL */}
       {modalCredits !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
           <div className="w-full max-w-md glass-panel gold-border-glow p-6 rounded-2xl bg-[#0c0c10] border border-amber-200/40 relative">
@@ -440,40 +527,31 @@ export function Pricing() {
             </button>
 
             <div className="text-center mb-6">
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-200 mb-1 block">
+              <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200 mb-1 block">
                 CREDIT BREAKDOWN
               </span>
-              <h3 className="text-xl font-light text-white">What can I create with {modalCredits} Credits?</h3>
+              <h3 className="text-xl font-serif text-white">What can I create with {modalCredits} Credits?</h3>
             </div>
 
             <div className="space-y-3 mb-6">
               <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
-                <div className="text-xs font-mono text-amber-200 font-bold mb-1">Option 1: Max Commercial Videos</div>
-                <div className="text-xs font-mono text-white">
-                  {Math.floor(modalCredits / 3)} Commercial Videos + {Math.round((modalCredits % 3) / 0.2)} Performance Creatives
+                <div className="text-xs font-sans text-amber-200 font-bold mb-1">Option 1: Max Commercial Videos</div>
+                <div className="text-xs font-sans text-white">
+                  {Math.floor(modalCredits / 3)} Commercial Videos + {modalCredits % 3} Editorial Images
                 </div>
               </div>
 
               <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
-                <div className="text-xs font-mono text-amber-200 font-bold mb-1">Option 2: Max Performance Creatives</div>
-                <div className="text-xs font-mono text-white">
-                  {Math.round(modalCredits / 0.2)} Performance Creatives
+                <div className="text-xs font-sans text-amber-200 font-bold mb-1">Option 2: Max Editorial Images</div>
+                <div className="text-xs font-sans text-white">
+                  {modalCredits} Editorial Images
                 </div>
               </div>
-
-              {modalCredits >= 6 && (
-                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
-                  <div className="text-xs font-mono text-amber-200 font-bold mb-1">Option 3: Balanced Campaign Mix</div>
-                  <div className="text-xs font-mono text-white">
-                    1 Commercial Video + {Math.round((modalCredits - 3) / 0.2)} Performance Creatives
-                  </div>
-                </div>
-              )}
             </div>
 
             <Button
               onClick={() => setModalCredits(null)}
-              className="w-full h-10 text-xs font-mono uppercase bg-amber-400/10 text-amber-200 border border-amber-200/30 hover:bg-amber-400/20 rounded-xl"
+              className="w-full h-10 text-xs font-sans uppercase bg-white/10 text-white border border-white/20 hover:bg-white/20 rounded-xl"
             >
               Got it
             </Button>

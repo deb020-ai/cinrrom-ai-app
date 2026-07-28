@@ -246,12 +246,12 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <Pricing />
+          <Pricing activePlanTier={wallet?.plan_tier} />
         </TabsContent>
 
         {/* Subscription & Plans Tab */}
         <TabsContent value="billing">
-          <Pricing />
+          <Pricing activePlanTier={wallet?.plan_tier} />
         </TabsContent>
 
         {/* Profile Tab */}
