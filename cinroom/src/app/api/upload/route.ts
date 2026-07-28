@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
-import { uploadToR2 } from "@/lib/r2";
+import { uploadUserAssetToR2 } from "@/lib/r2";
 
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File;
+    const userIdParam = (formData.get("user_id") as string) || "shared";
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const publicUrl = await uploadToR2(buffer, file.name, file.type);
+    const publicUrl = await uploadUserAssetToR2(userIdParam, "uploads", buffer, file.name, file.type);
 
     return NextResponse.json({ success: true, url: publicUrl });
   } catch (error: any) {
