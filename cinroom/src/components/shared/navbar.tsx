@@ -74,13 +74,20 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           {user ? (
             <>
+              <Link href="/dashboard" className="hidden sm:block">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono text-neutral-300 hover:text-white transition-colors">
+                  <User className="w-3.5 h-3.5 text-amber-200" />
+                  <span className="truncate max-w-[130px]">
+                    {user.user_metadata?.full_name || user.email?.split("@")[0] || "Member"}
+                  </span>
+                </div>
+              </Link>
               <Link href="/dashboard">
                 <Button 
-                  variant="ghost" 
-                  className="text-xs font-mono tracking-wider uppercase text-amber-200 hover:text-white hover:bg-white/5 h-9 px-4 rounded-full flex items-center gap-2"
+                  className="h-9 px-5 rounded-full text-xs font-mono tracking-wider uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_20px_rgba(197,168,128,0.25)] hover:shadow-[0_0_25px_rgba(197,168,128,0.4)] transition-all duration-300 border border-amber-200/40"
                 >
-                  <User className="w-3.5 h-3.5" />
-                  {user.user_metadata?.full_name || user.email?.split("@")[0] || "Studio Dashboard"}
+                  Open Studio
+                  <ArrowUpRight className="w-3.5 h-3.5 ml-1.5 opacity-70" />
                 </Button>
               </Link>
               <Button 

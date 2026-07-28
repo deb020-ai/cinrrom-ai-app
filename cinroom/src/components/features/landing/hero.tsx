@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Play, Sparkles, SlidersHorizontal, Camera, Aperture, Layers, CheckCircle2 } from "lucide-react";
+import { Play, Sparkles, SlidersHorizontal, Camera, Aperture, Layers, CheckCircle2, ArrowUpRight } from "lucide-react";
 import { useState } from "react";
 
 export function Hero() {
@@ -50,9 +50,10 @@ export function Hero() {
             <Link href="/dashboard">
               <Button 
                 size="lg" 
-                className="h-13 px-8 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_30px_rgba(197,168,128,0.3)] hover:shadow-[0_0_40px_rgba(197,168,128,0.5)] transition-all duration-300 rounded-full border border-amber-200/50"
+                className="h-13 px-8 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_30px_rgba(197,168,128,0.3)] hover:shadow-[0_0_40px_rgba(197,168,128,0.5)] transition-all duration-300 rounded-full border border-amber-200/50 flex items-center gap-2"
               >
-                Generate First Video
+                Open Studio & Generate Video
+                <ArrowUpRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
             <Link href="#templates">
