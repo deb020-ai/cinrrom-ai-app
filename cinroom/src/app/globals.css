@@ -176,10 +176,23 @@
   }
 }
 
+@keyframes shine-border {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .animate-spotlight {
   animation: spotlight 2s ease .75s 1 forwards;
 }
 
 .animate-shimmer-slide {
   animation: shimmer-slide 2.5s linear infinite;
+}
+
+.before\:animate-shine-border::before {
+  animation: shine-border var(--duration, 14s) linear infinite;
 }

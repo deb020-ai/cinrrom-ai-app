@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { CreditCard, Wallet, ShieldCheck, RefreshCw, Clock, History, ArrowDownRight, ArrowUpRight, Inbox } from "lucide-react";
 import { Pricing } from "@/components/features/landing/pricing";
 import { createClient } from "@/lib/supabase/client";
+import { AnimatedGridPattern } from "@/components/ui/animate/animated-grid-pattern";
+import { NumberTicker } from "@/components/ui/animate/number-ticker";
+import { ShineBorder } from "@/components/ui/animate/shine-border";
 
 interface WalletData {
   available_credits: number;
@@ -85,9 +88,12 @@ export default function BillingPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-16">
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-16 relative">
+      {/* Animate UI Interactive Grid Pattern */}
+      <AnimatedGridPattern numSquares={24} maxOpacity={0.15} duration={3} className="inset-x-0 inset-y-[-30%] h-[200%] opacity-40" />
+
       {/* Header */}
-      <div>
+      <div className="relative z-10">
         <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 font-semibold block mb-0.5">
           FINANCIAL MANAGEMENT
         </span>
@@ -97,7 +103,7 @@ export default function BillingPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="credits" className="w-full">
+      <Tabs defaultValue="credits" className="w-full relative z-10">
         <TabsList className="bg-white/5 border border-white/10 h-12 px-2 gap-2 mb-8 rounded-xl">
           <TabsTrigger
             value="credits"
@@ -115,41 +121,42 @@ export default function BillingPage() {
 
         {/* Credit Wallet Tab */}
         <TabsContent value="credits" className="space-y-8">
-          {/* Credit Wallet Widget */}
-          <Card className="glass-panel blood-red-border-glow bg-[#0a0a0d] border-red-500/30 p-8 rounded-2xl shadow-2xl">
-            <CardHeader className="px-0 pt-0 pb-6 border-b border-white/[0.08]">
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 font-semibold mb-1 block">
-                    ATELIER WALLET
-                  </span>
-                  <CardTitle className="text-2xl font-serif text-white">Credit Balance & Ledger</CardTitle>
-                </div>
-                <div className="px-3.5 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-300 font-sans text-xs flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-red-400" />
-                  {wallet?.plan_tier ? `${wallet.plan_tier.toUpperCase()} PLAN` : "FREE ACCOUNT"}
-                </div>
-              </div>
-            </CardHeader>
-
-            <CardContent className="px-0 pb-0 pt-8">
-              {/* Wallet Stats Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
-                  <div className="text-[11px] font-sans text-neutral-400 uppercase tracking-wider mb-2">Available Credits</div>
-                  <div className="text-4xl font-light text-red-400 font-serif">
-                    {loading ? "..." : wallet?.available_credits ?? 0}
+          {/* Credit Wallet Widget wrapped in Animate UI ShineBorder */}
+          <ShineBorder borderRadius={24} borderWidth={1.5} color={["#ef4444", "#990000", "#ffffff"]}>
+            <Card className="glass-panel border-0 bg-[#0a0a0d] p-8 rounded-2xl w-full">
+              <CardHeader className="px-0 pt-0 pb-6 border-b border-white/[0.08]">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 font-semibold mb-1 block">
+                      ATELIER WALLET
+                    </span>
+                    <CardTitle className="text-2xl font-serif text-white">Credit Balance & Ledger</CardTitle>
                   </div>
-                  <div className="text-[10px] font-sans text-neutral-500 mt-2">Ready for commercial rendering</div>
-                </div>
-
-                <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
-                  <div className="text-[11px] font-sans text-neutral-400 uppercase tracking-wider mb-2">Credits Used</div>
-                  <div className="text-4xl font-light text-white font-serif">
-                    {loading ? "..." : wallet?.credits_used ?? 0}
+                  <div className="px-3.5 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-300 font-sans text-xs flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-red-400" />
+                    {wallet?.plan_tier ? `${wallet.plan_tier.toUpperCase()} PLAN` : "FREE ACCOUNT"}
                   </div>
-                  <div className="text-[10px] font-sans text-neutral-500 mt-2">Commercial assets produced</div>
                 </div>
+              </CardHeader>
+
+              <CardContent className="px-0 pb-0 pt-8">
+                {/* Wallet Stats Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                  <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
+                    <div className="text-[11px] font-sans text-neutral-400 uppercase tracking-wider mb-2">Available Credits</div>
+                    <div className="text-4xl font-light text-red-400 font-serif">
+                      {loading ? "..." : <NumberTicker value={wallet?.available_credits ?? 0} decimalPlaces={1} className="text-red-400" />}
+                    </div>
+                    <div className="text-[10px] font-sans text-neutral-500 mt-2">Ready for commercial rendering</div>
+                  </div>
+
+                  <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
+                    <div className="text-[11px] font-sans text-neutral-400 uppercase tracking-wider mb-2">Credits Used</div>
+                    <div className="text-4xl font-light text-white font-serif">
+                      {loading ? "..." : <NumberTicker value={wallet?.credits_used ?? 0} decimalPlaces={1} />}
+                    </div>
+                    <div className="text-[10px] font-sans text-neutral-500 mt-2">Commercial assets produced</div>
+                  </div>
 
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
                   <div className="text-[11px] font-sans text-neutral-400 uppercase tracking-wider mb-2">Wallet Status</div>
@@ -247,6 +254,7 @@ export default function BillingPage() {
               </div>
             </CardContent>
           </Card>
+        </ShineBorder>
 
           <Pricing activePlanTier={wallet?.plan_tier} />
         </TabsContent>
