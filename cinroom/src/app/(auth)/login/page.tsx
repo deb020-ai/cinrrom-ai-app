@@ -349,12 +349,22 @@ export default function LoginPage() {
           </form>
         )}
 
-        <div className="mt-8 pt-6 border-t border-white/[0.06] text-center">
+        <div className="mt-8 pt-6 border-t border-white/[0.06] text-center space-y-2">
           <p className="text-xs text-neutral-400 font-light">
             Don't have an Atelier account yet?{" "}
             <Link href="/signup" className="text-amber-200 font-mono underline hover:text-white transition-colors">
               Create Workspace
             </Link>
+          </p>
+          <p className="text-[10px] text-neutral-500 font-mono">
+            By signing in, you agree to Cinroom&apos;s{" "}
+            <Link href="/terms" className="text-neutral-400 underline hover:text-white">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="text-neutral-400 underline hover:text-white">
+              Privacy Policy
+            </Link>.
           </p>
         </div>
       </div>

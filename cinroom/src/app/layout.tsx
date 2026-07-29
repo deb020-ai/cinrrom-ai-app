@@ -24,6 +24,7 @@ export const metadata: Metadata = {
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
+import { CookieBanner } from "@/components/shared/cookie-banner";
 
 export default function RootLayout({
   children,
@@ -39,6 +40,7 @@ export default function RootLayout({
         <SmoothScrollProvider>
           <TooltipProvider>
             {children}
+            <CookieBanner />
           </TooltipProvider>
         </SmoothScrollProvider>
       </body>
