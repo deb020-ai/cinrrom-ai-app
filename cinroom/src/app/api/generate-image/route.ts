@@ -81,7 +81,7 @@ export async function POST(req: Request) {
             model: "dall-e-3",
             prompt: masterPrompt,
             n: 1,
-            size: aspectRatio === "9:16" ? "1024x1792" : aspectRatio === "1:1" ? "1024x1024" : "1792x1024",
+            size: (aspectRatio === "9:16" || aspectRatio === "4:5" || aspectRatio === "3:4") ? "1024x1792" : aspectRatio === "1:1" ? "1024x1024" : "1792x1024",
             quality: "hd",
           }),
         });

@@ -73,7 +73,7 @@ export interface ImageModeInputState {
   mode: ImageGenerationModeId;
   jewelry_images?: string[];
   brand_guideline_images?: string[];
-  aspect_ratio: "16:9" | "9:16" | "1:1";
+  aspect_ratio: "1:1" | "4:5" | "9:16" | "16:9" | "3:4";
   gender?: string;
   age?: string;
   country?: string;

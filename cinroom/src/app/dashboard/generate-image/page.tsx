@@ -63,7 +63,7 @@ export default function GenerateImagePage() {
   );
 
   // Common Inputs
-  const [aspectRatio, setAspectRatio] = useState<"16:9" | "9:16" | "1:1">("16:9");
+  const [aspectRatio, setAspectRatio] = useState<"1:1" | "4:5" | "9:16" | "16:9" | "3:4">("1:1");
 
   // MULTIPLE JEWELRY IMAGES STATE
   const [jewelryItems, setJewelryItems] = useState<UploadedItem[]>([
@@ -587,27 +587,34 @@ export default function GenerateImagePage() {
 
             {/* ASPECT RATIO */}
             <div className="pt-2 border-t border-white/[0.06]">
-              <label className="text-[10px] font-sans text-neutral-300 uppercase block mb-1.5">
+              <label className="text-[10px] font-sans text-neutral-300 uppercase block mb-1.5 font-medium tracking-wider">
                 IMAGE ASPECT RATIO
               </label>
-              <div className="grid grid-cols-3 gap-1.5">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
                 {[
-                  { id: "16:9", label: "16:9 Landscape", icon: Monitor },
-                  { id: "9:16", label: "9:16 Portrait", icon: Smartphone },
-                  { id: "1:1", label: "1:1 Square", icon: Square },
+                  { id: "1:1", name: "Square", sub: "Instagram feed, Shopify", icon: Square },
+                  { id: "4:5", name: "Portrait", sub: "Instagram feed", icon: Smartphone },
+                  { id: "9:16", name: "Story", sub: "Stories, TikTok", icon: Smartphone },
+                  { id: "16:9", name: "Landscape", sub: "Web banners", icon: Monitor },
+                  { id: "3:4", name: "Editorial", sub: "Print, Pinterest", icon: Camera },
                 ].map((opt) => (
                   <button
                     key={opt.id}
                     type="button"
                     onClick={() => setAspectRatio(opt.id as any)}
-                    className={`py-2 rounded-xl text-xs font-sans flex items-center justify-center gap-1.5 border transition-all ${
+                    title={`${opt.name} (${opt.id}) - ${opt.sub}`}
+                    className={`p-2 rounded-xl text-xs font-sans flex flex-col items-center justify-center gap-0.5 border transition-all ${
                       aspectRatio === opt.id
                         ? "border-red-500/60 bg-red-600/20 text-red-200 font-bold shadow-[0_0_12px_rgba(220,38,38,0.2)]"
-                        : "border-white/10 text-neutral-400 hover:text-white"
+                        : "border-white/10 text-neutral-400 hover:text-white bg-black/40"
                     }`}
                   >
-                    <opt.icon className="w-3 h-3" />
-                    <span>{opt.id}</span>
+                    <div className="flex items-center gap-1">
+                      <opt.icon className="w-3 h-3 text-amber-200" />
+                      <span className="font-mono font-semibold">{opt.id}</span>
+                    </div>
+                    <span className="text-[10px] font-sans text-neutral-200 font-medium">{opt.name}</span>
+                    <span className="text-[8px] font-sans text-neutral-400 truncate max-w-full text-center leading-tight">{opt.sub}</span>
                   </button>
                 ))}
               </div>
