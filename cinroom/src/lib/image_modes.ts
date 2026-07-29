@@ -33,9 +33,9 @@ export const IMAGE_GENERATION_MODES: ImageModeOption[] = [
   },
   {
     id: "model_campaign",
-    title: "Model Campaign",
+    title: "Luxury Jewelry Model Campaign",
     badge: "VOGUE EDITORIAL",
-    description: "Create a premium luxury fashion campaign featuring a model wearing the uploaded jewelry.",
+    description: "Create an iconic luxury jewelry campaign where the model exists solely to elevate the uploaded jewelry.",
     iconName: "UserCheck",
     tagline: "High-Fashion Editorial & Cultural Styling",
     requiresModelInfo: true,
@@ -289,10 +289,247 @@ Create a timeless luxury product campaign where the jewelry commands immediate a
       break;
     }
 
-    case "model_campaign":
-      masterPrompt =
-        `MODEL CAMPAIGN HIGH-FASHION EDITORIAL${multiAngleNote}${brandGuideNote}: Premium luxury fashion campaign featuring a ${age} year old ${ethnicity} ${gender} model from ${country} wearing the uploaded jewelry piece. Cultural styling and fashion attire appropriate for ${country} and ${ethnicity}. Shot on 85mm f/1.2 lens with soft key lighting, shallow depth of field, Vogue editorial aesthetic.`;
+    case "model_campaign": {
+      const productImageRef = jewelry_images.length > 0 ? "the uploaded product image" : "the uploaded jewelry reference image";
+      const brandGuideRef = brand_guideline_images.length > 0 ? "the uploaded brand guideline color palette image" : "the brand guideline image";
+      const modelGenderVal = gender?.trim() ? gender.trim() : "Female";
+      const modelAgeVal = age?.trim() ? age.trim() : "25-35";
+      const modelCountryVal = country?.trim() ? country.trim() : "France";
+      const modelEthnicityVal = ethnicity?.trim() ? ethnicity.trim() : "Caucasian";
+
+      masterPrompt = `###############################################################
+LUXURY JEWELRY MODEL CAMPAIGN ENGINE 
+###############################################################
+ROLE
+You are the world's leading Luxury Fashion Creative Director, Jewelry Campaign Director, Fashion Photographer, Casting Director, Fashion Stylist, Beauty Director, Production Designer and Editorial Art Director.
+Your task is NOT to create a fashion portrait.
+Your task is to create an iconic luxury jewelry campaign where the model exists solely to elevate the desire, elegance and emotional value of the uploaded jewelry.
+The jewelry is always the product being sold.
+The model is the visual storyteller.
+The final image should feel like an international luxury fashion campaign photographed for the world's finest haute joaillerie maisons.
+###############################################################
+INPUTS
+###############################################################
+PRODUCT_IMAGE
+${productImageRef}
+BRAND_GUIDELINE_IMAGE (Optional)
+${brandGuideRef}
+GENDER
+${modelGenderVal}
+AGE_RANGE
+${modelAgeVal}
+COUNTRY_ORIGIN
+${modelCountryVal}
+ETHNICITY
+${modelEthnicityVal}
+###############################################################
+PRODUCT AUTHORITY
+###############################################################
+Treat PRODUCT_IMAGE as the exact manufactured jewelry.
+Never redesign, regenerate, simplify, improve or invent any visible detail.
+Preserve every gemstone, proportion, setting, prong, engraving, craftsmanship, reflection, texture and geometry exactly.
+The jewelry always remains visually accurate.
+###############################################################
+BRAND DNA
+###############################################################
+If BRAND_GUIDELINE_IMAGE is provided, extract only the brand's visual identity, luxury positioning, artistic direction, styling language, material palette and emotional atmosphere.
+Apply these only to the campaign styling.
+Never modify the jewelry.
+###############################################################
+MODEL PROFILE ENGINE
+###############################################################
+Create one highly believable luxury fashion model using the provided profile.
+Gender:
+${modelGenderVal}
+Age:
+${modelAgeVal}
+Country Origin:
+${modelCountryVal}
+Ethnicity:
+${modelEthnicityVal}
+The model should naturally represent the selected profile without appearing stereotypical or exaggerated.
+Create timeless beauty rather than trend-driven beauty.
+Skin should exhibit realistic pores, subtle imperfections and natural tonal variation.
+Hair should possess believable strand definition and movement.
+Eyes should display authentic depth, moisture and lifelike reflections.
+Hands should appear elegant, refined and naturally proportioned.
+Nothing about the model should reveal AI generation.
+###############################################################
+CHARACTER AUTHORITY
+###############################################################
+The model is supporting the jewelry.
+Never allow the model to become the primary subject.
+The first thing viewers notice should always be the jewelry.
+The model should enhance luxury, emotion and aspiration while directing visual attention toward the product.
+Every pose, expression, movement and gesture must increase the perceived value of the jewelry.
+###############################################################
+WARDROBE INTELLIGENCE
+###############################################################
+Design wardrobe that complements the jewelry without competing with it.
+Choose silhouettes, fabrics and tailoring that communicate quiet luxury.
+Prioritize timeless elegance over fashion trends.
+Use premium materials such as silk, satin, cashmere, fine wool, linen or couture-quality fabrics.
+Avoid busy prints, loud branding, heavy embellishments or distracting accessories.
+The wardrobe should frame the jewelry rather than steal attention.
+###############################################################
+STYLING ENGINE
+###############################################################
+Create a cohesive luxury editorial look.
+Hairstyle, wardrobe, accessories and beauty styling should feel intentionally designed as one visual system.
+Avoid visual clutter.
+Avoid excessive layering.
+Luxury should be communicated through simplicity, refinement and precision.
+Every styling decision should increase the perceived value of the jewelry.
+###############################################################
+HAIR & MAKEUP ENGINE
+###############################################################
+Hair should feel healthy, premium and naturally styled.
+Avoid exaggerated volume or unrealistic perfection.
+Makeup should enhance facial structure without becoming noticeable.
+Use elegant skin finishes, subtle eye definition and sophisticated lip tones.
+Beauty styling should never compete with the jewelry.
+###############################################################
+EXPRESSION ENGINE
+###############################################################
+Create authentic emotional expression.
+Avoid exaggerated smiles or dramatic fashion poses.
+Expression should communicate confidence, sophistication, intimacy, elegance or quiet emotion.
+Luxury is understated.
+The emotion should feel naturally captured rather than intentionally performed.
+###############################################################
+POSE & HAND INTELLIGENCE
+###############################################################
+Every pose must naturally showcase the jewelry.
+Hands should remain elegant, relaxed and anatomically correct.
+Finger placement should feel intentional but effortless.
+Avoid awkward finger bends, stiff wrists or unnatural hand positions.
+Never obscure the jewelry.
+Every pose should guide attention toward the product while maintaining believable body mechanics.
+The pose should feel like a candid moment captured by an elite fashion photographer rather than an artificial pose.
+###############################################################
+WORLD BUILDING ENGINE
+Before creating the campaign, deeply analyze the jewelry.
+Study its silhouette, geometry, craftsmanship, gemstones, metal finish, elegance, proportions, emotional feeling and luxury positioning.
+Design one bespoke luxury world inspired by these characteristics.
+Never use generic fashion sets.
+Never use random luxury backgrounds.
+Every campaign should feel uniquely designed for this exact jewelry collection.
+The environment should resemble a custom-built editorial production created by architects, sculptors, lighting artists and luxury set designers.
+Draw inspiration from contemporary luxury architecture, premium interiors, museum installations, natural stone, crystal formations, sculptural spaces, premium textiles, handcrafted materials, refined nature and timeless design.
+Every element should have purpose.
+Nothing should exist simply for decoration.
+###############################################################
+LUXURY SET DESIGN ENGINE
+###############################################################
+The set exists only to elevate both the model and the jewelry.
+Luxury should be communicated through refinement rather than complexity.
+Avoid excessive architectural details.
+Avoid distracting sculptures.
+Avoid visually dominant backgrounds.
+Avoid busy environments.
+Use no more than one dominant architectural language and a limited premium material palette.
+The production should feel extraordinarily expensive while remaining visually effortless.
+The background should support the campaign without becoming memorable on its own.
+###############################################################
+EDITORIAL COMPOSITION ENGINE
+###############################################################
+Compose the image like a world-class Vogue, Harper's Bazaar or luxury jewelry editorial.
+The visual hierarchy must remain:
+1. Jewelry
+2. Model
+3. Lighting
+4. Environment
+The jewelry should immediately attract attention.
+The model naturally guides the viewer toward the jewelry.
+The environment quietly supports both.
+Use elegant negative space, refined geometry, sophisticated balance, premium framing and natural visual rhythm.
+Create magazine-quality composition suitable for luxury advertising.
+###############################################################
+JEWELRY VISIBILITY ENGINE
+Every composition must maximize jewelry visibility.
+Never hide the jewelry behind hair, clothing, hands or body posture.
+Use elegant posing that naturally reveals the jewelry.
+Maintain clear visibility without making the pose feel artificial.
+The jewelry must remain the visual destination of the image.
+###############################################################
+EYE FLOW ENGINE
+###############################################################
+Control how the viewer explores the image.
+Within the first second, attention should land on the jewelry.
+Within the next moments, the viewer appreciates the model's elegance.
+Only afterward should they notice the sophistication of the production.
+Use lighting, pose, body direction, facial orientation, leading lines, depth and composition to naturally guide the eye back toward the jewelry.
+If any element competes with the jewelry, simplify or remove it.
+###############################################################
+LIGHTING & COLOR SCIENCE
+###############################################################
+Create physically believable luxury fashion lighting.
+Use elegant soft directional light, controlled highlights, refined shadows, premium skin rendering, realistic gemstone brilliance and natural metal reflections.
+Skin tones should appear realistic.
+Materials should respond naturally to light.
+Maintain restrained, sophisticated color harmony.
+Avoid oversaturation, fake glow, excessive HDR or artificial effects.
+###############################################################
+HUMAN REALISM ENGINE
+###############################################################
+The model must appear completely real.
+Natural skin texture.
+Visible pores.
+Subtle asymmetry.
+Authentic facial anatomy.
+Realistic hands.
+Correct finger proportions.
+Natural body mechanics.
+Believable fabric interaction.
+Realistic hair strands.
+Natural eye moisture.
+Authentic muscle tension.
+Nothing should reveal AI generation.
+###############################################################
+IMAGE QUALITY
+###############################################################
+Ultra-photorealistic.
+Luxury fashion campaign quality.
+Museum-quality commercial photography.
+Exceptional material realism.
+Natural optics.
+Premium color science.
+Perfect craftsmanship.
+Every pixel should communicate refinement.
+###############################################################
+MARKETING OBJECTIVE
+###############################################################
+Create an image that immediately communicates luxury, aspiration and emotional desire.
+The campaign should stop scrolling naturally without relying on visual noise.
+The final result should be immediately suitable for Meta Ads, Instagram campaigns, luxury websites, editorial magazines, digital campaigns and premium print advertising.
+Viewers should believe they are seeing an authentic international luxury jewelry campaign.
+###############################################################
+NEGATIVE PROMPT
+###############################################################
+No altered jewelry.
+No incorrect anatomy.
+No distorted hands.
+No extra fingers.
+No broken wrists.
+No unrealistic poses.
+No exaggerated expressions.
+No plastic skin.
+No beauty filters.
+No generic AI fashion.
+No distracting wardrobe.
+No visual clutter.
+No unrealistic reflections.
+No fake lighting.
+No text.
+No logo.
+No watermark.
+No AI artifacts.
+###############################################################
+FINAL OBJECTIVE
+###############################################################
+Create a timeless luxury jewelry fashion campaign where the model embodies elegance without overshadowing the product. Every artistic decision—including casting, wardrobe, pose, expression, lighting, set design and composition—must strengthen the emotional value of the jewelry. The viewer should first notice the jewelry, then the model, and finally the sophistication of the production. The campaign should feel indistinguishable from an authentic luxury editorial produced by one of the world's leading fashion houses, combining impeccable realism, refined restraint and extraordinary craftsmanship while remaining immediately ready for luxury Meta advertising, premium social campaigns and world-class brand marketing.`;
       break;
+    }
 
     case "fantasy_world": {
       const selectedWorld = fantasy_theme?.trim()
