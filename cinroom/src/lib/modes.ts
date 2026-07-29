@@ -285,6 +285,9 @@ Never use artificial blur or unrealistic depth of field.
 Use physically accurate lens characteristics including natural bokeh, subtle lens breathing, realistic focus falloff and authentic optical compression.
 Maintain perfect temporal consistency, lighting consistency, color consistency and product consistency throughout the entire commercial.
 Avoid flat lighting, washed-out colors, oversharpening, excessive HDR, plastic skin, fake reflections, noisy textures, AI artifacts, flickering, ghosting, warped geometry or any visual element that reveals AI generation.
+Color grading should emphasize neutral whites, cool cinematic tones and accurate color reproduction, avoiding excessive warm, orange or golden color casts.
+Use premium cinematic lighting with a neutral or cool color palette.
+Favor soft daylight, overcast luxury lighting, alpine daylight, blue-hour ambience, crisp mountain light, diffused skylight or naturally balanced studio-quality outdoor lighting.
 ----
 MUSIC & SOUND DESIGN
 Create a premium cinematic soundtrack that enhances the luxury, emotion and memorability of the campaign.
