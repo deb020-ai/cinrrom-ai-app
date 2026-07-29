@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import { Check, ShieldCheck, ArrowRight, Building2, Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Spotlight } from "@/components/ui/inspira/spotlight";
+import { BorderBeam } from "@/components/ui/inspira/border-beam";
+import { ShimmerButton } from "@/components/ui/inspira/shimmer-button";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 
@@ -261,8 +264,8 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
   return (
     <section id="pricing" className="py-28 bg-[#060608] relative z-20 border-t border-white/[0.06] overflow-hidden">
       
-      {/* Red Glow Vignette */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-red-600/10 blur-[160px] pointer-events-none rounded-full" />
+      {/* Inspira UI Spotlight Glow */}
+      <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#dc2626" />
 
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
         
@@ -296,14 +299,15 @@ export function Pricing({ activePlanTier }: PricingProps = {}) {
             return (
               <div
                 key={plan.id}
-                className={`glass-panel rounded-2xl p-8 flex flex-col justify-between relative transition-all duration-300 ${
+                className={`glass-panel rounded-2xl p-8 flex flex-col justify-between relative transition-all duration-300 overflow-hidden ${
                   btnState.isCurrent
                     ? "border-emerald-500/50 bg-[#0d1612] shadow-[0_0_50px_rgba(16,185,129,0.15)]"
                     : isPopular
-                    ? "border-red-500/60 shadow-[0_0_70px_rgba(220,38,38,0.25)] bg-[#0d0d10] md:scale-105 z-20"
+                    ? "border-red-500/60 shadow-[0_0_70px_rgba(220,38,38,0.3)] bg-[#0d0d10] md:scale-105 z-20"
                     : "border-white/[0.08] hover:border-white/20 bg-[#0a0a0d]"
                 }`}
               >
+                {isPopular && <BorderBeam size={250} duration={8} colorFrom="#ef4444" colorTo="#990000" />}
                 {/* Badge */}
                 {btnState.isCurrent ? (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-30">

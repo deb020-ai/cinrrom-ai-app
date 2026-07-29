@@ -23,6 +23,10 @@ import {
   Download,
   Film,
 } from "lucide-react";
+import { Spotlight } from "@/components/ui/inspira/spotlight";
+import { CardSpotlight } from "@/components/ui/inspira/card-spotlight";
+import { BorderBeam } from "@/components/ui/inspira/border-beam";
+import { ShimmerButton } from "@/components/ui/inspira/shimmer-button";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -326,9 +330,12 @@ export default function GeneratePage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-28">
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-28 relative">
+      {/* Inspira UI Top Spotlight Beam */}
+      <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#dc2626" />
+
       {/* Page Header */}
-      <div className="border-b border-white/[0.06] pb-4 flex items-center justify-between">
+      <div className="border-b border-white/[0.06] pb-4 flex items-center justify-between relative z-10">
         <div>
           <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 block mb-0.5 font-semibold">
             ATELIER CREATIVE SUITE
@@ -343,7 +350,7 @@ export default function GeneratePage() {
       </div>
 
       {/* STEP 1: VISUAL TEMPLATE MODE SELECTION */}
-      <div className="space-y-3">
+      <div className="space-y-3 relative z-10">
         <div className="flex items-center justify-between">
           <label className="text-xs font-sans text-neutral-300 uppercase tracking-widest block font-medium">
             1. Select Campaign Mode
@@ -354,16 +361,17 @@ export default function GeneratePage() {
           {GENERATION_MODES.map((mode) => {
             const isSelected = selectedMode === mode.id;
             return (
-              <button
+              <CardSpotlight
                 key={mode.id}
-                type="button"
                 onClick={() => setSelectedMode(mode.id)}
-                className={`p-4 rounded-2xl text-left flex flex-col justify-between transition-all duration-300 cursor-pointer ${
+                className={`p-4 rounded-2xl text-left flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden ${
                   isSelected
-                    ? "bg-[#140b0d] border border-red-500/60 shadow-[0_0_25px_rgba(220,38,38,0.25)] text-white scale-[1.02]"
-                    : "bg-[#0a0a0d] border border-white/5 text-neutral-400 hover:text-white hover:border-white/15"
+                    ? "bg-[#140b0d] border-red-500/80 shadow-[0_0_30px_rgba(220,38,38,0.3)] text-white scale-[1.02]"
+                    : "bg-[#0a0a0d] border-white/5 text-neutral-400 hover:text-white hover:border-white/15"
                 }`}
               >
+                {isSelected && <BorderBeam size={180} duration={6} colorFrom="#ef4444" colorTo="#990000" />}
+
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <div
@@ -384,7 +392,7 @@ export default function GeneratePage() {
                     {mode.description}
                   </p>
                 </div>
-              </button>
+              </CardSpotlight>
             );
           })}
         </div>
@@ -779,14 +787,17 @@ export default function GeneratePage() {
           </div>
         </div>
 
-        <Button
+        <ShimmerButton
           onClick={handleGenerate}
           disabled={isSubmitting || isUploading}
-          className="flex-1 sm:flex-initial h-12 px-6 sm:px-8 text-xs font-sans tracking-widest uppercase bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-semibold rounded-xl cursor-pointer disabled:opacity-50 shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-400/40"
+          shimmerColor="#ffffff"
+          shimmerSize="0.1em"
+          background="linear-gradient(135deg, #dc2626 0%, #990000 100%)"
+          className="flex-1 sm:flex-initial h-12 px-6 sm:px-8 text-xs font-sans tracking-widest uppercase font-semibold cursor-pointer disabled:opacity-50"
         >
           {isSubmitting ? "Initializing Pipeline..." : `Generate Commercial (${creditCost} Credits)`}
           <ArrowRight className="w-4 h-4 ml-2" />
-        </Button>
+        </ShimmerButton>
       </div>
     </div>
   );
