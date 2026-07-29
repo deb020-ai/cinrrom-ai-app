@@ -216,21 +216,33 @@ The final commercial must follow the same color theme and emotional identity whi
 ###############################################################
 HERO SCENE DESIGN
 ###############################################################
-Design one premium hero environment inspired entirely by the uploaded jewelry.
-Analyze the jewelry's material, metal tone, craftsmanship, gemstone colors, finish, texture and design language before designing the scene.
-The hero environment must feel iconic, timeless, elegant and visually unforgettable.
-Possible premium hero environments include sculptural architecture, museum-quality galleries, premium marble, polished obsidian, crystal formations, premium glass structures, floating silk, luxury fabrics, natural stone, water, ice, reflective surfaces, elegant floral installations and minimalist architectural spaces.
-Every object inside the environment must exist only to elevate the jewelry.
-Avoid unnecessary props.
-Avoid visual clutter.
-The environment must feel expensive, refined and intentional.
-The environment is permanently locked.
-The entire commercial must take place inside this single hero environment.
-Never switch to another location.
-Never redesign the environment.
-Only camera position, composition and lighting may change between shots.
-The environment always adapts to the jewelry.
-The jewelry never adapts to the environment.
+Design one iconic 3D luxury hero environment inspired entirely by the uploaded jewelry.
+Before creating the environment, analyze the jewelry's metal, gemstones, craftsmanship, texture, finish, patterns, shape language, colors and overall luxury identity.
+The environment must feel custom-designed specifically for this jewelry, not like a generic studio background.
+Transform the visual language of the jewelry into architecture, sculptures, materials, surfaces and environmental design.
+For example, decorative patterns may become large architectural forms, gemstone cuts may inspire crystal structures, metal textures may evolve into sculptural surfaces, woven threads may become elegant flowing installations, engraved details may influence walls and flooring, and premium materials may inspire bespoke set design.
+Use rich three-dimensional elements such as:
+• Luxury stone formations
+• Sculptural architecture
+• Designer fabrics and flowing silk
+• Woven luxury threads
+• Metallic structures
+• Crystal installations
+• Glass sculptures
+• Reflective premium surfaces
+• Marble compositions
+• Elegant floral structures
+• Luxury geometric forms
+• Artistic product-inspired sculptures
+• Premium environmental lighting features
+Avoid flat, plain or solid-color backgrounds.
+Every frame should contain visual depth, layered foreground, midground and background elements that naturally draw attention toward the jewelry.
+The environment should feel handcrafted, immersive, cinematic and visually expensive while remaining clean and uncluttered.
+The jewelry always remains the hero.
+The environment exists only to enhance the jewelry, never compete with it.
+The entire commercial takes place within this single custom-designed hero world.
+The hero world remains permanently locked throughout the commercial.
+Only camera angle, composition, lighting and focus may change between shots.
 ###############################################################
 CAMERA ENGINE
 ###############################################################
