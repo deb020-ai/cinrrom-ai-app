@@ -22,6 +22,7 @@ import {
   Layers,
   Activity,
   Zap,
+  Lock,
 } from "lucide-react";
 
 interface AdminMetrics {
@@ -152,7 +153,8 @@ export default function SuperAdminDashboardPage() {
   const [studioFilter, setStudioFilter] = useState<"video" | "image">("video");
   const [selectedPromptKey, setSelectedPromptKey] = useState<string>("video_product_hero");
 
-  // Metrics State
+  // Security & Metrics State
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [metrics, setMetrics] = useState<AdminMetrics | null>(null);
   const [loadingMetrics, setLoadingMetrics] = useState(true);
 
@@ -184,6 +186,10 @@ export default function SuperAdminDashboardPage() {
     setLoadingMetrics(true);
     try {
       const res = await fetch("/api/admin/metrics");
+      if (res.status === 403) {
+        setIsUnauthorized(true);
+        return;
+      }
       const data = await res.json();
       if (data.success && data.metrics) {
         setMetrics(data.metrics);
@@ -295,6 +301,28 @@ export default function SuperAdminDashboardPage() {
   const filteredConfigs = PROMPT_CONFIGS.filter((p) => p.studio_type === studioFilter);
   const activeConfig = PROMPT_CONFIGS.find((p) => `${p.studio_type}_${p.mode_id}` === selectedPromptKey);
   const isOverridden = Boolean(promptOverrides[selectedPromptKey]?.template_text);
+
+  if (isUnauthorized) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center space-y-5">
+        <div className="w-20 h-20 rounded-full bg-red-600/20 border border-red-500/50 flex items-center justify-center text-red-400 shadow-[0_0_30px_rgba(220,38,38,0.4)]">
+          <Lock className="w-10 h-10" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-extrabold text-white font-mono tracking-wider">403 FORBIDDEN - SUPERADMIN LOCKOUT</h2>
+          <p className="text-sm text-neutral-400 max-w-md mx-auto">
+            Access to the Cinroom SuperAdmin Control Center is strictly locked and restricted to verified administrator accounts.
+          </p>
+        </div>
+        <a
+          href="/dashboard"
+          className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-mono font-semibold text-white transition-all shadow-lg"
+        >
+          Return to Member Dashboard
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#050508] text-white p-4 sm:p-8 font-sans">

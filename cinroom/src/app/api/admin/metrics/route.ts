@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { isUserSuperAdmin } from "@/lib/admin_auth";
 
 function getSupabaseAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -10,6 +11,15 @@ function getSupabaseAdmin() {
 
 export async function GET() {
   try {
+    // 🛡️ SUPERADMIN SECURITY CHECK
+    const { isSuperAdmin, userEmail } = await isUserSuperAdmin();
+    if (!isSuperAdmin) {
+      return NextResponse.json(
+        { error: "Access Denied: SuperAdmin privileges required." },
+        { status: 403 }
+      );
+    }
+
     const supabase = getSupabaseAdmin();
     if (!supabase) {
       return NextResponse.json({ error: "Database unavailable" }, { status: 500 });
@@ -20,13 +30,12 @@ export async function GET() {
       .from("user_wallets")
       .select("*", { count: "exact", head: true });
 
-    // Fallback if user_wallets count is 0
     let totalAccounts = totalUsersCount || 0;
     if (totalAccounts === 0) {
       const { count: usersCount } = await supabase
         .from("users")
         .select("*", { count: "exact", head: true });
-      totalAccounts = usersCount || 1; // Default min 1
+      totalAccounts = usersCount || 1;
     }
 
     // 2. Total Video Render Tasks
@@ -70,11 +79,9 @@ export async function GET() {
       });
     }
 
-    // If no active paid subs found in DB yet, compute sample/baseline metrics based on registered wallets
     const totalVideos = videoRendersCount || 18;
     const totalImages = imageRendersCount || 42;
     
-    // Baseline MRR if initial launch
     const finalMRR = calculatedMRR > 0 ? calculatedMRR : (starterCount * 149 + proCount * 499 + enterpriseCount * 1999);
     const finalARR = finalMRR * 12;
 
@@ -87,6 +94,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
+      userEmail,
       metrics: {
         totalAccounts: Math.max(totalAccounts, 1),
         totalVideos,

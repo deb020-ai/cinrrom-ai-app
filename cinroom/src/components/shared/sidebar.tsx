@@ -18,6 +18,12 @@ const secondaryItems = [
   { name: "Atelier Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
+const SUPERADMIN_LIST = [
+  "debabratabairagyvfx@gmail.com",
+  "debabratabairagy020@gmail.com",
+  "debabratabairagy757@gmail.com",
+];
+
 export function Sidebar() {
   const pathname = usePathname();
   const supabase = createClient();
@@ -37,6 +43,8 @@ export function Sidebar() {
       authListener.subscription.unsubscribe();
     };
   }, []);
+
+  const isSuperAdmin = Boolean(user?.email && SUPERADMIN_LIST.includes(user.email.toLowerCase()));
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -132,9 +140,11 @@ export function Sidebar() {
           <div className="px-3 mt-8 mb-2 text-[10px] font-sans font-medium text-neutral-500 uppercase tracking-[0.2em]">
             Management
           </div>
-          {secondaryItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
+          {secondaryItems
+            .filter((item) => item.href !== "/dashboard/admin" || isSuperAdmin)
+            .map((item) => {
+              const isActive = pathname === item.href;
+              return (
               <Link
                 key={item.name}
                 href={item.href}

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { updateMasterPromptTemplate, resetMasterPromptTemplate } from "@/lib/dynamic_prompts";
+import { isUserSuperAdmin } from "@/lib/admin_auth";
 
 function getSupabaseAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -11,6 +12,15 @@ function getSupabaseAdmin() {
 
 export async function GET() {
   try {
+    // 🛡️ SUPERADMIN SECURITY CHECK
+    const { isSuperAdmin } = await isUserSuperAdmin();
+    if (!isSuperAdmin) {
+      return NextResponse.json(
+        { error: "Access Denied: SuperAdmin privileges required." },
+        { status: 403 }
+      );
+    }
+
     const supabase = getSupabaseAdmin();
     let dbPrompts: Record<string, any> = {};
 
@@ -35,6 +45,15 @@ export async function GET() {
 
 export async function PUT(req: Request) {
   try {
+    // 🛡️ SUPERADMIN SECURITY CHECK
+    const { isSuperAdmin } = await isUserSuperAdmin();
+    if (!isSuperAdmin) {
+      return NextResponse.json(
+        { error: "Access Denied: SuperAdmin privileges required." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const { studio_type, mode_id, name, template_text, action } = body;
 
