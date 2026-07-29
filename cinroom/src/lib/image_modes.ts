@@ -51,12 +51,12 @@ export const IMAGE_GENERATION_MODES: ImageModeOption[] = [
   },
   {
     id: "animal_campaign",
-    title: "Animal Campaign",
+    title: "Luxury Jewelry Animal Campaign",
     badge: "MAJESTIC WILD",
-    description: "Create a luxury campaign where the uploaded jewelry is beautifully paired with a majestic animal.",
+    description: "Create an unforgettable luxury campaign where a magnificent companion animal elevates the emotional value of the uploaded jewelry.",
     iconName: "PawPrint",
     tagline: "Complemented by Regal Wildlife",
-    requiresModelInfo: false,
+    requiresModelInfo: true,
   },
   {
     id: "ai_director",
@@ -942,11 +942,393 @@ Create an unforgettable international luxury jewelry campaign where an iconic re
     }
 
     case "animal_campaign": {
-      const selectedAnimal = animal?.trim()
-        ? animal.trim()
-        : "a regal panther with a sleek dark coat and golden eyes";
-      masterPrompt =
-        `ANIMAL CAMPAIGN MAJESTIC LUXURY${multiAngleNote}${brandGuideNote}: High-converting luxury editorial photography pairing the uploaded fine jewelry with ${selectedAnimal}. High-contrast obsidian studio architecture, majestic companion presence complementing the jewelry piece without dominating composition.`;
+      const productImageRef = jewelry_images.length > 0 ? "the uploaded product image" : "the uploaded jewelry reference image";
+      const brandGuideRef = brand_guideline_images.length > 0 ? "the uploaded brand guideline color palette image" : "the brand guideline image";
+      const selectedAnimalVal = animal?.trim() ? animal.trim() : "a regal Black Panther";
+      const modelGenderVal = gender?.trim() ? gender.trim() : "Female";
+      const modelAgeVal = age?.trim() ? age.trim() : "25-35";
+      const modelCountryVal = country?.trim() ? country.trim() : "France";
+      const modelEthnicityVal = ethnicity?.trim() ? ethnicity.trim() : "Caucasian";
+
+      masterPrompt = `###############################################################
+LUXURY JEWELRY ANIMAL CAMPAIGN ENGINE 
+###############################################################
+ROLE
+You are the world's leading Luxury Campaign Creative Director, Wildlife Art Director, Luxury Fashion Photographer, Animal Behavior Director, Production Designer, Fashion Stylist, Beauty Director and Editorial Art Director.
+Your task is NOT to create wildlife photography.
+Your task is NOT to create an animal portrait.
+Your task is to create an unforgettable luxury jewelry campaign where the model and a magnificent companion animal elevate the emotional value and symbolism of the uploaded jewelry.
+The jewelry is always the product being sold.
+The model creates emotional connection.
+The companion animal represents the spirit, personality and emotional identity of the jewelry.
+The final image should feel like an international luxury campaign photographed by the world's finest commercial production team with an unlimited production budget.
+###############################################################
+INPUTS
+###############################################################
+PRODUCT_IMAGE
+${productImageRef}
+BRAND_GUIDELINE_IMAGE (Optional)
+${brandGuideRef}
+COMPANION_ANIMAL (Optional)
+${selectedAnimalVal}
+GENDER
+${modelGenderVal}
+AGE_RANGE
+${modelAgeVal}
+COUNTRY_ORIGIN
+${modelCountryVal}
+ETHNICITY
+${modelEthnicityVal}
+###############################################################
+PRODUCT ANALYSIS & LOCK (HIGHEST PRIORITY)
+###############################################################
+Before generating any frame, perform an exhaustive visual analysis of ${productImageRef}.
+Analyze and permanently lock:
+• Overall silhouette
+• Geometry
+• Proportions
+• Metal type
+• Metal color
+• Metal finish
+• Surface texture
+• Craftsmanship
+• Stone count
+• Stone size
+• Stone shape
+• Stone cut
+• Stone placement
+• Stone spacing
+• Stone orientation
+• Prongs
+• Bezels
+• Pavé layout
+• Chain construction
+• Clasp
+• Engravings
+• Every visible manufacturing detail
+The uploaded jewelry is a finished manufactured product.
+It is NOT a concept.
+It is NOT inspiration.
+It is NOT a design reference.
+Treat it exactly like a real physical object being filmed.
+Maintain 100% PRECISE jewelry accuracy throughout every frame.
+Every frame must contain the EXACT SAME jewelry.
+No redesign.
+No reinterpretation.
+No regeneration.
+No improvement.
+No simplification.
+The jewelry must remain 100% visually identical to the uploaded reference.
+If the uploaded reference contains one jewelry item, preserve that exact item.
+If the uploaded reference contains multiple jewelry items, preserve the complete jewelry collection exactly as shown.
+Never invent matching accessories.
+Never add rings, earrings, necklaces, bracelets, bangles, pendants, chains or any additional jewelry unless they already exist in the uploaded reference.
+Every frame must depict the exact same approved jewelry collection.
+Every frame must contain the EXACT SAME jewelry.
+No redesign.
+No reinterpretation.
+No regeneration.
+No improvement.
+No simplification.
+The jewelry must remain 100% visually identical to the uploaded reference.
+Only the following may change throughout the commercial:
+• Camera
+• Composition
+• Lens
+• Lighting
+• Focus
+• Environment
+• Atmosphere
+• Reflections
+• Storytelling
+The jewelry itself is permanently locked.
+Product accuracy always has higher priority than cinematic beauty.
+If any generated frame changes the jewelry in any way, reject that frame and regenerate using the uploaded reference.
+###############################################################
+BRAND DNA
+###############################################################
+If BRAND_GUIDELINE_IMAGE exists, extract only the brand's visual identity, luxury positioning, styling philosophy, artistic direction, color language and emotional atmosphere.
+Apply these only to the campaign world.
+Never modify the jewelry.
+###############################################################
+COMPANION ANIMAL INTELLIGENCE
+###############################################################
+If COMPANION_ANIMAL is provided, faithfully use that exact animal.
+If left empty, deeply analyze the jewelry and automatically choose the most suitable luxury companion animal.
+The selection should be based on elegance, symbolism, craftsmanship, gemstone colors, visual rhythm and emotional character.
+Examples:
+Black Panther — mystery, power, black diamonds.
+Snow Leopard — rarity, elegance, white diamonds.
+White Swan — grace, pearls.
+Falcon — precision, geometric jewelry.
+Arabian Horse — prestige and heritage.
+White Peacock — couture luxury.
+Golden Eagle — authority.
+Elephant — royalty and strength.
+Butterfly — delicate femininity.
+The chosen animal must naturally strengthen the emotional story of the jewelry.
+Never select an animal simply because it looks impressive.
+###############################################################
+MODEL PROFILE ENGINE
+###############################################################
+Create one highly believable luxury fashion model.
+Gender:
+${modelGenderVal}
+Age:
+${modelAgeVal}
+Country Origin:
+${modelCountryVal}
+Ethnicity:
+${modelEthnicityVal}
+The model should naturally represent the selected profile.
+Natural skin texture.
+Visible pores.
+Realistic eyes.
+Healthy hair.
+Elegant hands.
+Authentic anatomy.
+Nothing should reveal AI generation.
+###############################################################
+CHARACTER AUTHORITY
+###############################################################
+The jewelry remains the commercial hero.
+The model creates emotional aspiration.
+The companion animal strengthens the narrative.
+The animal should never become the primary visual subject.
+The relationship between the model and the companion animal should feel authentic, calm and emotionally powerful.
+Every artistic decision must increase the perceived value of the jewelry.
+###############################################################
+CINEMATIC INTERACTION ENGINE
+###############################################################
+The companion animal is not background decoration.
+It is an equal storytelling partner.
+Create one authentic cinematic interaction between the model and the companion animal.
+Every interaction should feel emotionally meaningful and naturally photographed.
+Examples include:
+The model walks beside a black panther through dense rainforest while maintaining effortless eye contact with the camera.
+A snow leopard gracefully walks slightly ahead while the model confidently follows through an alpine landscape.
+A white horse runs beside the model across an open coastline with flowing fabric moving naturally in the wind.
+A falcon lands gently on the model's arm while she confidently looks toward the horizon.
+An elephant calmly walks beside the model through ancient stone architecture.
+A wolf quietly accompanies the model through a misty forest.
+A white peacock slowly opens its feathers behind the model, naturally framing the jewelry without overpowering it.
+The interaction should feel spontaneous rather than staged.
+Avoid static standing poses.
+Avoid the animal behaving like a statue.
+Avoid the model posing beside the animal.
+Instead, capture a believable moment shared between them.
+The viewer should feel they are witnessing a real relationship rather than a photoshoot.
+###############################################################
+WARDROBE & STYLING ENGINE
+###############################################################
+Design timeless luxury wardrobe appropriate for both the jewelry and the companion animal.
+Every outfit should communicate quiet luxury.
+Use premium fabrics including silk, cashmere, linen, fine wool and couture-quality tailoring.
+Avoid loud prints.
+Avoid distracting accessories.
+Avoid trend-driven fashion.
+The wardrobe should frame the jewelry while harmonizing with the companion animal and surrounding environment.
+###############################################################
+HAIR • MAKEUP • EXPRESSION • POSE
+###############################################################
+Hair should feel naturally styled and elegant.
+Makeup should remain refined and understated.
+Expression should communicate confidence, elegance, serenity and emotional depth.
+Avoid exaggerated fashion expressions.
+Every pose should naturally showcase the jewelry.
+Hands must remain elegant.
+Finger positioning should feel relaxed and anatomically correct.
+Never hide the jewelry behind clothing, hair, body posture or the companion animal.
+The model and companion animal should feel emotionally connected while maintaining a sophisticated editorial presence.
+Every pose should guide the viewer's attention back toward the jewelry.
+###############################################################
+WILD WORLD BUILDING ENGINE
+Design a breathtaking luxury campaign where nature, architecture and the companion animal exist in perfect harmony.
+The environment should feel extraordinary yet completely believable.
+Avoid fantasy.
+Avoid magical worlds.
+Avoid science fiction.
+Avoid zoo environments.
+Avoid safari photography.
+Instead, create a custom-built luxury production where nature feels intentionally curated for the jewelry.
+Every environmental decision should reinforce the emotional identity of the jewelry and the companion animal.
+###############################################################
+LIVING HABITAT ENGINE
+###############################################################
+Every companion animal should exist inside an elevated version of its natural habitat.
+Do not create a generic jungle or forest.
+Instead design the world's most beautiful interpretation of that habitat.
+Black Panther:
+Luxury rainforest with wet volcanic stone, filtered sunlight and premium tropical textures.
+Snow Leopard:
+Snow-covered mountain ridges with sculptural ice formations and soft atmospheric snowfall.
+White Horse:
+Golden coastal dunes with dramatic cliffs and flowing grass.
+Wolf:
+Ancient pine forest with cinematic fog.
+Falcon:
+Mountain cliffs above the clouds.
+White Peacock:
+Royal botanical gardens inspired by palace architecture.
+Elephant:
+Ancient sandstone temples reclaimed by nature.
+Every habitat should feel like millions of dollars were invested into creating the perfect luxury campaign location.
+The environment should never resemble wildlife photography.
+It should resemble luxury advertising inspired by nature.
+###############################################################
+EDITORIAL COMPOSITION ENGINE
+###############################################################
+Compose the image like an international luxury jewelry campaign.
+Visual hierarchy must always remain:
+1. Jewelry
+2. Model
+3. Companion Animal
+4. Environment
+The environment creates atmosphere.
+The animal creates symbolism.
+The model creates emotion.
+The jewelry creates desire.
+Everything exists to increase the perceived value of the jewelry.
+###############################################################
+CAMPAIGN CAMERA DIRECTOR
+###############################################################
+This is a luxury jewelry campaign.
+It is NOT wildlife photography.
+It is NOT a travel campaign.
+It is NOT an animal documentary.
+Never use ultra-wide landscape compositions.
+Never make the companion animal dominate the frame.
+Never allow the jewelry to become visually insignificant.
+Prioritize medium portrait or three-quarter portrait compositions where the model, jewelry and companion animal remain clearly visible.
+The model should occupy approximately 60–70% of the frame.
+The companion animal should naturally support the composition without overpowering it.
+The environment should provide context rather than become the subject.
+Frame the composition around the featured jewelry.
+If the jewelry cannot be appreciated instantly, redesign the composition and move the camera closer.
+###############################################################
+JEWELRY VISIBILITY ENGINE
+###############################################################
+The featured jewelry must always remain clearly visible.
+Never hide the jewelry behind hair, clothing, body posture or the companion animal.
+Use pose, lighting and composition to naturally emphasize the jewelry.
+The jewelry should remain readable even when viewed as a small mobile advertisement.
+###############################################################
+VISUAL HIERARCHY ENGINE
+###############################################################
+The jewelry is always the commercial hero.
+The model creates aspiration.
+The companion animal strengthens emotion.
+The environment creates atmosphere.
+If the companion animal attracts more attention than the jewelry, simplify the composition immediately.
+Luxury should feel effortless.
+Never allow visual spectacle to overpower product communication.
+###############################################################
+LIGHTING & COLOR SCIENCE
+###############################################################
+Use physically believable luxury lighting.
+Golden hour.
+Soft overcast.
+Elegant sunrise.
+Luxury sunset.
+Natural atmospheric diffusion.
+Beautiful gemstone brilliance.
+Natural metal reflections.
+Premium skin rendering.
+Realistic animal fur, feathers or scales with authentic material response.
+Maintain sophisticated color harmony.
+Avoid oversaturation.
+Avoid artificial glow.
+Avoid excessive HDR.
+###############################################################
+HUMAN & ANIMAL REALISM ENGINE
+###############################################################
+The model and companion animal must appear completely authentic.
+Natural anatomy.
+Correct proportions.
+Natural movement.
+Authentic muscle structure.
+Realistic fur, feathers or skin texture.
+Natural eye reflections.
+Correct interaction between the model and companion animal.
+Authentic contact shadows.
+Natural environmental interaction.
+Nothing should reveal AI generation.
+###############################################################
+IMAGE QUALITY
+###############################################################
+Ultra-photorealistic.
+Museum-quality luxury advertising.
+World-class commercial photography.
+Exceptional material realism.
+Premium color science.
+Perfect craftsmanship.
+Every pixel should communicate luxury, refinement and authenticity.
+###############################################################
+MARKETING OBJECTIVE
+###############################################################
+Create an unforgettable luxury jewelry campaign that immediately communicates rarity, prestige, emotional connection and extraordinary craftsmanship.
+The image should naturally stop scrolling without relying on visual noise.
+Immediately suitable for Meta Ads, Instagram campaigns, luxury websites, editorial magazines, premium print campaigns and global luxury branding.
+###############################################################
+JEWELRY PLACEMENT INTELLIGENCE
+###############################################################
+Before generating the image, identify the category of the uploaded jewelry.
+Preserve realistic placement exactly as the jewelry is intended to be worn.
+Necklace:
+Naturally rests around the neck with correct length, gravity and contact with the body.
+Earrings:
+Correctly aligned with the ears, following natural anatomy.
+Ring:
+Placed on a realistic finger with correct scale and natural finger posture.
+Bracelet:
+Naturally wraps around the wrist with believable fit and contact.
+Bangle:
+Correctly positioned around the wrist without floating or intersecting the arm.
+Watch:
+Properly fitted on the wrist with realistic orientation.
+Pendant:
+Naturally hangs from the chain following gravity.
+Never invent alternative placements.
+Never move jewelry to unrealistic body locations.
+Never partially hide the featured jewelry.
+Never distort scale.
+Never allow hair, clothing, hands, animals or environmental elements to block the jewelry.
+The jewelry should appear naturally worn exactly as it would during a real luxury campaign while remaining completely visible.
+###############################################################
+PRODUCT READABILITY TEST
+###############################################################
+Before finalizing the image, verify the following:
+Can the jewelry category be identified within one second?
+Can the craftsmanship be appreciated without zooming?
+Is the jewelry fully visible?
+Is its placement anatomically correct?
+Would a luxury brand approve this placement for a commercial campaign?
+If any answer is "No", redesign the pose, framing or composition until all conditions are satisfied.
+###############################################################
+NEGATIVE PROMPT
+###############################################################
+No altered jewelry.
+No fantasy creatures.
+No aggressive animal behavior.
+No roaring.
+No attacking.
+No exaggerated poses.
+No distorted anatomy.
+No extra limbs.
+No unrealistic fur.
+No unrealistic feathers.
+No distracting environment.
+No visual clutter.
+No fake lighting.
+No unrealistic reflections.
+No AI artifacts.
+No text.
+No logos.
+No watermark.
+###############################################################
+FINAL OBJECTIVE
+###############################################################
+Create a timeless luxury jewelry campaign where a magnificent companion animal symbolizes the personality of the jewelry without ever competing with it. The jewelry remains the commercial hero, the model creates emotional aspiration, the companion animal strengthens the narrative, and the environment quietly enhances the story. Every decision—from casting, animal selection, behavior, wardrobe, lighting, composition and production design—must increase the perceived value of the jewelry. The final image should feel indistinguishable from a real multi-million-dollar luxury campaign produced by the world's finest advertising agency, immediately ready for Meta Ads, premium social campaigns, editorial magazines and global luxury brand marketing.`;
       break;
     }
 
