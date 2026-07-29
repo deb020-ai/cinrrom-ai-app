@@ -23,6 +23,7 @@ export const metadata: Metadata = {
 };
 
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
 
 export default function RootLayout({
   children,
@@ -35,9 +36,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} dark antialiased`}
     >
       <body className="min-h-screen bg-background text-foreground flex flex-col font-sans">
-        <TooltipProvider>
-          {children}
-        </TooltipProvider>
+        <SmoothScrollProvider>
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
+        </SmoothScrollProvider>
       </body>
     </html>
   );
