@@ -105,12 +105,15 @@ export async function POST(req: Request) {
       }
     }
 
-    // Fallback to high-quality jewelry editorial render preview if API key is pending
+    // If AI generation failed, return error without deducting credits
     if (!outputImageUrl) {
-      outputImageUrl = jewelryImages[0] || "/hero-ring.png";
+      return NextResponse.json(
+        { error: "AI Image Generation engine temporary failure. No credits were deducted." },
+        { status: 500 }
+      );
     }
 
-    // 3. Deduct 1 Credit
+    // 3. Deduct Credits
     const newBalance = currentBalance - creditCost;
     await supabase
       .from("user_wallets")

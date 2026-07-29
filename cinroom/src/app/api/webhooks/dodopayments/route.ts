@@ -8,6 +8,17 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJ
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const PRODUCT_CREDIT_MAP: Record<string, { credits: number; planTier: string; isSubscription: boolean }> = {
+  // Active Dodo Product IDs (pdt_0NkB...)
+  pdt_0NkBkI4nIraCF13YnypTB: { credits: 7, planTier: "starter", isSubscription: false },
+  pdt_0NkBkI6C9sBJb6o7D3S0y: { credits: 18, planTier: "growth", isSubscription: true },
+  pdt_0NkBkI8UCl9UJrSR43j1H: { credits: 48, planTier: "business", isSubscription: true },
+  pdt_0NkBkIApGxciWGcneFJpu: { credits: 6, planTier: "topup", isSubscription: false },
+  pdt_0NkBkICBqyyyVMpq876Zd: { credits: 12, planTier: "topup", isSubscription: false },
+  pdt_0NkBkIDUiIVvssvxxafff: { credits: 24, planTier: "topup", isSubscription: false },
+  pdt_0NkBkIEuLaLgT0YDtDlPd: { credits: 48, planTier: "topup", isSubscription: false },
+  pdt_0NkBkIGHhGFWub6EI3tDx: { credits: 96, planTier: "topup", isSubscription: false },
+
+  // Legacy/Fallback Product IDs (pdt_0Njx...)
   pdt_0NjxLVOe3nEY8sjRUHX2Y: { credits: 7, planTier: "starter", isSubscription: false },
   pdt_0NjxLVR4OKFIjgwVqLH9w: { credits: 18, planTier: "growth", isSubscription: true },
   pdt_0NjxLVSkfoUw6zbz1LPuj: { credits: 48, planTier: "business", isSubscription: true },
