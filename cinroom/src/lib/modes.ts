@@ -244,6 +244,20 @@ The entire commercial takes place within this single custom-designed hero world.
 The hero world remains permanently locked throughout the commercial.
 Only camera angle, composition, lighting and focus may change between shots.
 ###############################################################
+PRODUCTION DESIGN
+###############################################################
+Every environment must feel handcrafted by world-class production designers rather than AI-generated.
+
+Transform the visual language of the jewelry into the architecture, materials, lighting, sculptures, furniture, surfaces and environmental details.
+
+Create rich foreground, midground and background layering with premium visual depth.
+
+Every object should feel intentionally designed and placed.
+
+Avoid empty spaces, flat backgrounds, repetitive layouts and generic  environments  .
+
+Every frame should resemble a meticulously art-directed luxury editorial photograph captured inside a bespoke multi-million-dollar production set.
+###############################################################
 CAMERA ENGINE
 ###############################################################
 Capture the commercial using world-class cinematic language inspired by premium luxury advertising and Hollywood blockbuster cinematography.
@@ -529,7 +543,22 @@ The entire campaign takes place inside this single premium studio world.
 The studio remains consistent throughout the commercial.
 Only camera angle, composition, lighting and set dressing emphasis may change between shots.
 The environment exists only to elevate the jewelry.
-The jewelry always remains the hero.###############################################################
+The jewelry always remains the hero.
+###############################################################
+PRODUCTION DESIGN
+###############################################################
+Every environment must feel handcrafted by world-class production designers rather than AI-generated.
+
+Transform the visual language of the jewelry into the architecture, materials, lighting, sculptures, furniture, surfaces and environmental details.
+
+Create rich foreground, midground and background layering with premium visual depth.
+
+Every object should feel intentionally designed and placed.
+
+Avoid empty spaces, flat backgrounds, repetitive layouts and generic  environments  .
+
+Every frame should resemble a meticulously art-directed luxury editorial photograph captured inside a bespoke multi-million-dollar production set.
+###############################################################
 MODEL DIRECTION
 ###############################################################
 Use a ${modelAgeVal}-year-old ${modelEthnicityVal} ${modelGenderVal} suitable for a global luxury jewelry campaign.
@@ -747,6 +776,20 @@ The environment should contain rich natural details including terrain, vegetatio
 The world must feel alive, immersive and premium without distracting from the jewelry.
 The environment always adapts to the jewelry.
 The jewelry never adapts to the environment.
+###############################################################
+PRODUCTION DESIGN
+###############################################################
+Every environment must feel handcrafted by world-class production designers rather than AI-generated.
+
+Transform the visual language of the jewelry into the architecture, materials, lighting, sculptures, furniture, surfaces and environmental details.
+
+Create rich foreground, midground and background layering with premium visual depth.
+
+Every object should feel intentionally designed and placed.
+
+Avoid empty spaces, flat backgrounds, repetitive layouts and generic  environments  .
+
+Every frame should resemble a meticulously art-directed luxury editorial photograph captured inside a bespoke multi-million-dollar production set.
 ###############################################################
 MODEL
 Use a ${modelAgeVal}-year-old ${modelEthnicityVal} ${modelGenderVal} suitable for a premium luxury jewelry campaign.
@@ -1011,7 +1054,22 @@ Never introduce additional companion animals unless explicitly requested.
 The entire world exists only to elevate the uploaded jewelry.
 The jewelry always remains the absolute visual hero.
 The environment and companion animal adapt to the jewelry.
-The jewelry never adapts to the environment or the companion animal.###############################################################
+The jewelry never adapts to the environment or the companion animal.
+###############################################################
+PRODUCTION DESIGN
+###############################################################
+Every environment must feel handcrafted by world-class production designers rather than AI-generated.
+
+Transform the visual language of the jewelry into the architecture, materials, lighting, sculptures, furniture, surfaces and environmental details.
+
+Create rich foreground, midground and background layering with premium visual depth.
+
+Every object should feel intentionally designed and placed.
+
+Avoid empty spaces, flat backgrounds, repetitive layouts and generic  environments  .
+
+Every frame should resemble a meticulously art-directed luxury editorial photograph captured inside a bespoke multi-million-dollar production set.
+###############################################################
 MODEL
 Use a ${modelAgeVal}-year-old ${modelEthnicityVal} ${modelGenderVal} suitable for a premium luxury jewelry campaign.
 The model must appear completely photorealistic and indistinguishable from a real professional fashion model photographed by a cinema camera.
