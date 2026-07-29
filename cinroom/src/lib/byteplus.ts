@@ -1,6 +1,6 @@
 /**
- * BytePlus Ark SeaDance 2 AI Video Generation Integration
- * Endpoint / Model: ep-20260726025349-6dp7r (SeaDance 2)
+ * BytePlus Ark SeaDance 2 / Cedarance 2 AI Video Generation Integration
+ * Endpoint / Model: ep-20260726025349-6dp7r (SeaDance 2 / Cedarance 2)
  * Includes Failure Classification, Automatic Retries, and Error Diagnostics
  */
 
@@ -10,6 +10,7 @@ export interface VideoGenerationParams {
   duration?: "5s" | "10s" | "15s";
   resolution?: "1080p" | "Full HD";
   imageUrl?: string;
+  brandImageUrl?: string;
 }
 
 export interface GenerationResult {
@@ -55,6 +56,9 @@ export async function generateSeaDanceVideoTask(params: VideoGenerationParams): 
     throw new Error("BYTEPLUS_ARK_API_KEY environment variable is not configured.");
   }
 
+  const durationNum = params.duration ? parseInt(params.duration.replace("s", ""), 10) : 10;
+  const aspectRatio = params.aspectRatio || "16:9";
+
   const response = await fetch("https://ark.ap-southeast-1.byteplusapi.com/api/v3/contents/generations/tasks?Action=CreateContentGenerationTask&Version=2024-01-01", {
     method: "POST",
     headers: {
@@ -63,12 +67,17 @@ export async function generateSeaDanceVideoTask(params: VideoGenerationParams): 
     },
     body: JSON.stringify({
       model: modelEndpoint,
+      watermark: false,
+      auto_watermark: false,
+      duration: durationNum,
+      aspect_ratio: aspectRatio,
       content: [
         {
           type: "text",
-          text: `High-converting Full HD commercial studio asset for luxury jewelry brand: ${params.prompt}. Ultra-photorealistic raytraced jewelry rendering. Camera motion: slow cinematic orbit. Lighting: obsidian studio lighting. Aspect ratio: ${params.aspectRatio || "16:9"}.`
+          text: params.prompt
         },
-        ...(params.imageUrl ? [{ type: "image_url", image_url: { url: params.imageUrl } }] : [])
+        ...(params.imageUrl ? [{ type: "image_url", image_url: { url: params.imageUrl } }] : []),
+        ...(params.brandImageUrl ? [{ type: "image_url", image_url: { url: params.brandImageUrl } }] : [])
       ]
     }),
   });

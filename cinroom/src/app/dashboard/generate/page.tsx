@@ -293,6 +293,9 @@ export default function GeneratePage() {
           credits_consumed: creditCost,
           prompt: masterPrompt,
           aspect_ratio: aspectRatio,
+          duration: duration,
+          jewelry_image_url: uploadedJewelryUrls[0] || null,
+          brand_guideline_image_url: uploadedBrandUrls[0] || null,
           status: "RENDERING",
           created_at: new Date().toISOString(),
         })

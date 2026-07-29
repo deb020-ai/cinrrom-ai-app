@@ -44,7 +44,9 @@ export async function POST(req: Request) {
     const result = await executeVideoGenerationWithRetry({
       prompt: record.prompt,
       aspectRatio: record.aspect_ratio || "16:9",
-      duration: "10s",
+      duration: record.duration || "15s",
+      imageUrl: record.jewelry_image_url || record.image_url,
+      brandImageUrl: record.brand_guideline_image_url,
     });
 
     if (result.success && (result.videoUrl || result.taskId)) {

@@ -27,6 +27,7 @@ export default function ModesPage() {
     product_hero: "/hero-ring.png",
     model_campaign: "/emerald-necklace.png",
     fantasy_world: "/gold-bracelet.png",
+    outdoor_campaign: "/gold-bracelet.png",
     animal_campaign: "/hero-ring.png",
     ai_director: "/emerald-necklace.png",
   };
