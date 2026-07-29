@@ -25,6 +25,8 @@ import {
   Lock,
 } from "lucide-react";
 
+import { DEFAULT_MASTER_PROMPTS } from "@/lib/default_prompts_data";
+
 interface AdminMetrics {
   totalAccounts: number;
   totalVideos: number;
@@ -60,7 +62,7 @@ const PROMPT_CONFIGS: PromptConfig[] = [
     name: "Product Hero Shot",
     description: "Pure product macro commercial with raytraced caustics and physically correct lighting.",
     icon: Sparkles,
-    defaultPrompt: `LUXURY JEWELRY HERO CAMPAIGN ENGINE v4.0`,
+    defaultPrompt: DEFAULT_MASTER_PROMPTS.video_product_hero,
     variables: ["{PRODUCT_IMAGE}", "{BRAND_GUIDELINE_IMAGE}", "{VIDEO_DURATION}", "{ASPECT_RATIO}"],
   },
   {
@@ -69,7 +71,7 @@ const PROMPT_CONFIGS: PromptConfig[] = [
     name: "Luxury Fashion Campaign",
     description: "Vogue editorial commercial featuring a high-fashion model wearing the fine jewelry.",
     icon: UserCheck,
-    defaultPrompt: `LUXURY FASHION CAMPAIGN ENGINE`,
+    defaultPrompt: DEFAULT_MASTER_PROMPTS.video_model_campaign,
     variables: ["{PRODUCT_IMAGE}", "{BRAND_GUIDELINE_IMAGE}", "{GENDER}", "{AGE_RANGE}", "{COUNTRY_ORIGIN}", "{ETHNICITY}"],
   },
   {
@@ -78,7 +80,7 @@ const PROMPT_CONFIGS: PromptConfig[] = [
     name: "Outdoor Campaign",
     description: "Cinematic commercial in breathtaking real-world architectural & natural outdoor settings.",
     icon: Compass,
-    defaultPrompt: `OUTDOOR CAMPAIGN ENGINE`,
+    defaultPrompt: DEFAULT_MASTER_PROMPTS.video_outdoor_campaign,
     variables: ["{PRODUCT_IMAGE}", "{BRAND_GUIDELINE_IMAGE}", "{GENDER}", "{AGE_RANGE}", "{COUNTRY_ORIGIN}", "{ETHNICITY}"],
   },
   {
@@ -87,7 +89,7 @@ const PROMPT_CONFIGS: PromptConfig[] = [
     name: "Animal Campaign",
     description: "High-contrast luxury commercial pairing fine jewelry with a regal companion wildlife animal.",
     icon: PawPrint,
-    defaultPrompt: `LUXURY ANIMAL CAMPAIGN ENGINE`,
+    defaultPrompt: DEFAULT_MASTER_PROMPTS.video_animal_campaign,
     variables: ["{PRODUCT_IMAGE}", "{BRAND_GUIDELINE_IMAGE}", "{COMPANION_ANIMAL}", "{GENDER}", "{AGE_RANGE}", "{COUNTRY_ORIGIN}", "{ETHNICITY}"],
   },
   {
@@ -96,7 +98,7 @@ const PROMPT_CONFIGS: PromptConfig[] = [
     name: "AI Director (Video)",
     description: "Takes any short text prompt or dream concept and expands it into an 8K luxury commercial.",
     icon: Clapperboard,
-    defaultPrompt: `AI DIRECTOR ENGINE`,
+    defaultPrompt: DEFAULT_MASTER_PROMPTS.video_ai_director,
     variables: ["{PRODUCT_IMAGE}", "{BRAND_GUIDELINE_IMAGE}", "{USER_CREATIVE_VISION}"],
   },
 
@@ -107,7 +109,7 @@ const PROMPT_CONFIGS: PromptConfig[] = [
     name: "Luxurious Jewelry Product Hero",
     description: "Iconic luxury product photography campaign where the uploaded jewelry is the masterpiece.",
     icon: Sparkles,
-    defaultPrompt: `LUXURY JEWELRY PRODUCT HERO`,
+    defaultPrompt: DEFAULT_MASTER_PROMPTS.image_product_hero,
     variables: ["{PRODUCT_IMAGE}", "{BRAND_GUIDELINE_IMAGE}"],
   },
   {
@@ -116,7 +118,7 @@ const PROMPT_CONFIGS: PromptConfig[] = [
     name: "Luxury Jewelry Model Campaign",
     description: "High-fashion Vogue editorial image campaign featuring casting, wardrobe & eye flow engines.",
     icon: UserCheck,
-    defaultPrompt: `LUXURY JEWELRY MODEL CAMPAIGN ENGINE`,
+    defaultPrompt: DEFAULT_MASTER_PROMPTS.image_model_campaign,
     variables: ["{PRODUCT_IMAGE}", "{BRAND_GUIDELINE_IMAGE}", "{GENDER}", "{AGE_RANGE}", "{COUNTRY_ORIGIN}", "{ETHNICITY}"],
   },
   {
@@ -125,7 +127,7 @@ const PROMPT_CONFIGS: PromptConfig[] = [
     name: "Outdoor Epic Environment Campaign",
     description: "Unforgettable luxury campaign inside extraordinary real-world destinations.",
     icon: Compass,
-    defaultPrompt: `LUXURY JEWELRY EPIC ENVIRONMENT CAMPAIGN ENGINE`,
+    defaultPrompt: DEFAULT_MASTER_PROMPTS.image_fantasy_world,
     variables: ["{PRODUCT_IMAGE}", "{BRAND_GUIDELINE_IMAGE}", "{EPIC_ENVIRONMENT}", "{GENDER}", "{AGE_RANGE}", "{COUNTRY_ORIGIN}", "{ETHNICITY}"],
   },
   {
@@ -134,7 +136,7 @@ const PROMPT_CONFIGS: PromptConfig[] = [
     name: "Luxury Jewelry Animal Campaign",
     description: "Unforgettable luxury image campaign pairing fine jewelry with a magnificent companion animal.",
     icon: PawPrint,
-    defaultPrompt: `LUXURY JEWELRY ANIMAL CAMPAIGN ENGINE`,
+    defaultPrompt: DEFAULT_MASTER_PROMPTS.image_animal_campaign,
     variables: ["{PRODUCT_IMAGE}", "{BRAND_GUIDELINE_IMAGE}", "{COMPANION_ANIMAL}", "{GENDER}", "{AGE_RANGE}", "{COUNTRY_ORIGIN}", "{ETHNICITY}"],
   },
   {
@@ -143,7 +145,7 @@ const PROMPT_CONFIGS: PromptConfig[] = [
     name: "CINROOM AI DIRECTOR (Image)",
     description: "Transforms any dream or single-word idea into a world-class luxury jewelry image campaign.",
     icon: Clapperboard,
-    defaultPrompt: `CINROOM AI DIRECTOR`,
+    defaultPrompt: DEFAULT_MASTER_PROMPTS.image_ai_director,
     variables: ["{PRODUCT_IMAGE}", "{BRAND_GUIDELINE_IMAGE}", "{USER_CREATIVE_IDEA}", "{GENDER}", "{AGE_RANGE}", "{COUNTRY_ORIGIN}", "{ETHNICITY}", "{IMAGE_ASPECT_RATIO}"],
   },
 ];
@@ -176,9 +178,8 @@ export default function SuperAdminDashboardPage() {
     if (override && override.template_text) {
       setEditorText(override.template_text);
     } else {
-      // Find default placeholder text
       const currentConfig = PROMPT_CONFIGS.find((p) => `${p.studio_type}_${p.mode_id}` === selectedPromptKey);
-      setEditorText(currentConfig ? `[Loading default template for ${currentConfig.name}...]` : "");
+      setEditorText(currentConfig?.defaultPrompt || "");
     }
   }, [selectedPromptKey, promptOverrides]);
 
