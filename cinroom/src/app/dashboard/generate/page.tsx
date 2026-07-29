@@ -284,14 +284,20 @@ export default function GeneratePage() {
         });
       }
 
-      // 6. Record Generation History Entry
+      // 6. Record Generation History Entry (Stores metadata only - NO master prompt text in Supabase)
+      const userDisplayLabel = `${activeModeConfig.title} Commercial (${age}-year-old ${ethnicity} ${gender})`;
       const { data: genRecord } = await supabase
         .from("generation_history")
         .insert({
           user_id: userId,
           asset_type: "COMMERCIAL_VIDEO",
           credits_consumed: creditCost,
-          prompt: masterPrompt,
+          prompt: userDisplayLabel,
+          mode: selectedMode,
+          gender: gender,
+          age: age,
+          country: country,
+          ethnicity: ethnicity,
           aspect_ratio: aspectRatio,
           duration: duration,
           jewelry_image_url: uploadedJewelryUrls[0] || null,

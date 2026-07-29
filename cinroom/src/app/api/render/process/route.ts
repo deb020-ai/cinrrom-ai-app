@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { executeVideoGenerationWithRetry } from "@/lib/byteplus";
 import { saveGeneratedVideoToR2 } from "@/lib/r2";
+import { buildMasterPrompt } from "@/lib/modes";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
 const supabaseServiceKey =
@@ -40,9 +41,22 @@ export async function POST(req: Request) {
       });
     }
 
-    // 2. Execute AI Video Generation with up to 3 automatic retries for transient errors
+    // 2. Re-assemble master prompt in server RAM dynamically from inputs metadata (Zero prompt text stored in DB)
+    const masterPromptInRam = buildMasterPrompt({
+      mode: record.mode || "outdoor_campaign",
+      jewelry_images: record.jewelry_image_url ? [record.jewelry_image_url] : [],
+      brand_guideline_images: record.brand_guideline_image_url ? [record.brand_guideline_image_url] : [],
+      duration: record.duration || "15s",
+      aspect_ratio: record.aspect_ratio || "16:9",
+      gender: record.gender || "Female",
+      age: record.age || "25",
+      country: record.country || "France",
+      ethnicity: record.ethnicity || "Caucasian",
+    });
+
+    // 3. Execute AI Video Generation with up to 3 automatic retries for transient errors
     const result = await executeVideoGenerationWithRetry({
-      prompt: record.prompt,
+      prompt: masterPromptInRam,
       aspectRatio: record.aspect_ratio || "16:9",
       duration: record.duration || "15s",
       imageUrl: record.jewelry_image_url || record.image_url,
