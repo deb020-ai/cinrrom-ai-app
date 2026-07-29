@@ -74,7 +74,7 @@ export default function SettingsPage() {
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pb-16">
       {/* Page Header */}
       <div>
-        <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/80 block mb-0.5">
+        <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 font-semibold block mb-0.5">
           WORKSPACE CONFIGURATION
         </span>
         <h1 className="text-3xl font-serif text-white tracking-tight mb-1">Atelier Settings</h1>
@@ -88,7 +88,7 @@ export default function SettingsPage() {
         <Card className="glass-panel border-white/10 p-6 rounded-2xl bg-[#0a0a0d] space-y-4">
           <CardHeader className="px-0 pt-0 pb-3 border-b border-white/[0.06]">
             <CardTitle className="text-lg font-serif text-white flex items-center gap-2">
-              <User className="w-4 h-4 text-amber-200" />
+              <User className="w-4 h-4 text-red-400" />
               Personal Profile & Contact Info
             </CardTitle>
             <CardDescription className="text-xs text-neutral-400">
@@ -105,19 +105,19 @@ export default function SettingsPage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Debabrata Bairagy"
-                  className="h-11 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl focus:border-amber-200/50"
+                  className="h-11 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl focus:border-red-500/50"
                 />
               </div>
 
               <div className="grid gap-2">
                 <label className="text-xs font-sans text-neutral-300 uppercase tracking-wider font-medium flex items-center gap-1.5">
-                  <Phone className="w-3.5 h-3.5 text-amber-200/80" /> Phone / WhatsApp Number
+                  <Phone className="w-3.5 h-3.5 text-red-400" /> Phone / WhatsApp Number
                 </label>
                 <Input
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="e.g. +91 98765 43210"
-                  className="h-11 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl focus:border-amber-200/50"
+                  className="h-11 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl focus:border-red-500/50"
                 />
               </div>
             </div>
@@ -142,7 +142,7 @@ export default function SettingsPage() {
                   value={jobRole}
                   onChange={(e) => setJobRole(e.target.value)}
                   placeholder="e.g. Founder & Creative Director, Marketing Lead"
-                  className="h-11 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl focus:border-amber-200/50"
+                  className="h-11 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl focus:border-red-500/50"
                 />
               </div>
             </div>
@@ -153,7 +153,7 @@ export default function SettingsPage() {
         <Card className="glass-panel border-white/10 p-6 rounded-2xl bg-[#0a0a0d] space-y-4">
           <CardHeader className="px-0 pt-0 pb-3 border-b border-white/[0.06]">
             <CardTitle className="text-lg font-serif text-white flex items-center gap-2">
-              <Building className="w-4 h-4 text-amber-200" />
+              <Building className="w-4 h-4 text-red-400" />
               Brand & House Details
             </CardTitle>
             <CardDescription className="text-xs text-neutral-400">
@@ -169,20 +169,20 @@ export default function SettingsPage() {
                 value={brandName}
                 onChange={(e) => setBrandName(e.target.value)}
                 placeholder="e.g. Maison Vendôme, Cartier, Tiffany & Co."
-                className="h-11 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl focus:border-amber-200/50"
+                className="h-11 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl focus:border-red-500/50"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <label className="text-xs font-sans text-neutral-300 uppercase tracking-wider font-medium flex items-center gap-1.5">
-                  <Globe className="w-3.5 h-3.5 text-amber-200/80" /> Website URL
+                  <Globe className="w-3.5 h-3.5 text-red-400" /> Website URL
                 </label>
                 <Input
                   value={websiteUrl}
                   onChange={(e) => setWebsiteUrl(e.target.value)}
                   placeholder="https://www.yourbrand.com"
-                  className="h-11 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl focus:border-amber-200/50"
+                  className="h-11 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl focus:border-red-500/50"
                 />
               </div>
 
@@ -194,7 +194,7 @@ export default function SettingsPage() {
                   value={headquarters}
                   onChange={(e) => setHeadquarters(e.target.value)}
                   style={{ backgroundColor: "#0a0a0d", color: "#ffffff" }}
-                  className="h-11 w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl px-3 text-xs font-sans focus:border-amber-200/50"
+                  className="h-11 w-full bg-[#0a0a0d] text-white border border-white/10 rounded-xl px-3 text-xs font-sans focus:border-red-500/50"
                 >
                   {COUNTRIES_LIST.map((c) => (
                     <option key={c} value={c}>{c}</option>
@@ -209,7 +209,7 @@ export default function SettingsPage() {
         <Card className="glass-panel border-white/10 p-6 rounded-2xl bg-[#0a0a0d] space-y-4">
           <CardHeader className="px-0 pt-0 pb-3 border-b border-white/[0.06]">
             <CardTitle className="text-lg font-serif text-white flex items-center gap-2">
-              <Shield className="w-4 h-4 text-amber-200" />
+              <Shield className="w-4 h-4 text-red-400" />
               Security & Notifications
             </CardTitle>
             <CardDescription className="text-xs text-neutral-400">
@@ -220,7 +220,7 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-white/10">
               <div className="space-y-0.5">
                 <div className="text-xs text-white font-medium flex items-center gap-2">
-                  <Bell className="w-3.5 h-3.5 text-amber-200" /> Email Render Completion Alerts
+                  <Bell className="w-3.5 h-3.5 text-red-400" /> Email Render Completion Alerts
                 </div>
                 <div className="text-[10px] text-neutral-400">
                   Receive instant email notification when long 4K commercial videos finish rendering.
@@ -230,12 +230,12 @@ export default function SettingsPage() {
                 type="button"
                 onClick={() => setEmailNotifications(!emailNotifications)}
                 className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
-                  emailNotifications ? "bg-amber-400/30 border border-amber-200/50" : "bg-white/10"
+                  emailNotifications ? "bg-red-600/30 border border-red-500/50" : "bg-white/10"
                 }`}
               >
                 <div
                   className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-transform ${
-                    emailNotifications ? "translate-x-6 bg-amber-200" : "translate-x-1"
+                    emailNotifications ? "translate-x-6 bg-red-400" : "translate-x-1"
                   }`}
                 />
               </button>
@@ -244,7 +244,7 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-white/10">
               <div className="space-y-0.5">
                 <div className="text-xs text-white font-medium flex items-center gap-2">
-                  <Bell className="w-3.5 h-3.5 text-amber-200" /> Product & AI Engine Updates
+                  <Bell className="w-3.5 h-3.5 text-red-400" /> Product & AI Engine Updates
                 </div>
                 <div className="text-[10px] text-neutral-400">
                   Receive priority access to new camera movements, lighting rigs, and AI models.
@@ -254,12 +254,12 @@ export default function SettingsPage() {
                 type="button"
                 onClick={() => setMarketingAlerts(!marketingAlerts)}
                 className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
-                  marketingAlerts ? "bg-amber-400/30 border border-amber-200/50" : "bg-white/10"
+                  marketingAlerts ? "bg-red-600/30 border border-red-500/50" : "bg-white/10"
                 }`}
               >
                 <div
                   className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-transform ${
-                    marketingAlerts ? "translate-x-6 bg-amber-200" : "translate-x-1"
+                    marketingAlerts ? "translate-x-6 bg-red-400" : "translate-x-1"
                   }`}
                 />
               </button>
@@ -272,7 +272,7 @@ export default function SettingsPage() {
           <Button
             onClick={handleSaveSettings}
             disabled={isSaving}
-            className="h-12 px-8 text-xs font-sans tracking-widest uppercase bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 cursor-pointer shadow-lg border border-amber-200/30"
+            className="h-12 px-8 text-xs font-sans tracking-widest uppercase bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-semibold rounded-xl cursor-pointer shadow-[0_0_25px_rgba(220,38,38,0.3)] border border-red-400/40"
           >
             {isSaving ? "Saving Settings..." : "Save Atelier Settings"}
             <CheckCircle2 className="w-4 h-4 ml-2" />

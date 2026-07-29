@@ -330,13 +330,13 @@ export default function GeneratePage() {
       {/* Page Header */}
       <div className="border-b border-white/[0.06] pb-4 flex items-center justify-between">
         <div>
-          <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/80 block mb-0.5">
+          <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 block mb-0.5 font-semibold">
             ATELIER CREATIVE SUITE
           </span>
           <h1 className="text-2xl sm:text-3xl font-serif text-white tracking-tight">Jewelry Video Generator</h1>
         </div>
         <div className="hidden sm:block text-right">
-          <span className="text-[10px] font-sans text-amber-200/90 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-200/20">
+          <span className="text-[10px] font-sans text-red-200 bg-red-950/50 px-3 py-1 rounded-full border border-red-500/30 shadow-[0_0_10px_rgba(220,38,38,0.2)]">
             {creditCost} CREDITS ({duration.toUpperCase()})
           </span>
         </div>
@@ -360,7 +360,7 @@ export default function GeneratePage() {
                 onClick={() => setSelectedMode(mode.id)}
                 className={`p-4 rounded-2xl text-left flex flex-col justify-between transition-all duration-300 cursor-pointer ${
                   isSelected
-                    ? "bg-[#111116] border border-amber-200/50 shadow-[0_0_25px_rgba(197,168,128,0.15)] text-white scale-[1.02]"
+                    ? "bg-[#140b0d] border border-red-500/60 shadow-[0_0_25px_rgba(220,38,38,0.25)] text-white scale-[1.02]"
                     : "bg-[#0a0a0d] border border-white/5 text-neutral-400 hover:text-white hover:border-white/15"
                 }`}
               >
@@ -369,13 +369,13 @@ export default function GeneratePage() {
                     <div
                       className={`p-2 rounded-xl ${
                         isSelected
-                          ? "bg-amber-400/20 text-amber-200 border border-amber-200/40"
+                          ? "bg-red-500/20 text-red-300 border border-red-500/40"
                           : "bg-white/5 text-neutral-400"
                       }`}
                     >
                       {renderIcon(mode.iconName)}
                     </div>
-                    <span className="text-[8px] font-sans px-1.5 py-0.5 rounded bg-white/5 text-amber-200/80 uppercase">
+                    <span className="text-[8px] font-sans px-1.5 py-0.5 rounded bg-white/5 text-red-300/90 uppercase border border-red-500/20">
                       {mode.badge}
                     </span>
                   </div>
@@ -396,7 +396,7 @@ export default function GeneratePage() {
         <div className="lg:col-span-5 space-y-4">
           <Card className="glass-panel border-white/10 bg-[#0a0a0d] p-5 rounded-2xl">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-sans uppercase tracking-widest text-amber-200 font-medium">
+              <span className="text-xs font-sans uppercase tracking-widest text-red-400 font-semibold">
                 2. Upload Jewelry
               </span>
               <span className="text-[9px] text-neutral-400 font-mono bg-white/5 px-2 py-0.5 rounded">
@@ -405,7 +405,7 @@ export default function GeneratePage() {
             </div>
 
             {/* MASSIVE DROP ZONE HERO */}
-            <label className="border border-dashed border-white/20 hover:border-amber-200/50 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer bg-white/[0.01] hover:bg-amber-400/[0.03] transition-all group relative overflow-hidden">
+            <label className="border border-dashed border-white/20 hover:border-red-500/60 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer bg-white/[0.01] hover:bg-red-950/[0.2] transition-all group relative overflow-hidden">
               {jewelryItems.length > 0 && jewelryItems[0].previewUrl ? (
                 <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black border border-white/10 mb-3">
                   <img
@@ -507,7 +507,7 @@ export default function GeneratePage() {
                 {renderIcon(activeModeConfig.iconName)}
                 3. {activeModeConfig.title} Options
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-amber-200 text-[10px] font-mono uppercase">
+              <span className="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-red-300 text-[10px] font-mono uppercase">
                 {activeModeConfig.badge}
               </span>
             </div>
@@ -523,7 +523,7 @@ export default function GeneratePage() {
                   value={creativePrompt}
                   onChange={(e) => setCreativePrompt(e.target.value)}
                   placeholder="e.g. Royal Wedding, Luxury Museum, Paris Fashion Week..."
-                  className="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs font-sans text-white placeholder:text-neutral-600 focus:outline-none focus:border-amber-200/50"
+                  className="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs font-sans text-white placeholder:text-neutral-600 focus:outline-none focus:border-red-500/50"
                 />
                 <div className="flex flex-wrap gap-1.5">
                   {AI_DIRECTOR_EXAMPLES.map((ex) => (
@@ -531,7 +531,7 @@ export default function GeneratePage() {
                       key={ex}
                       type="button"
                       onClick={() => setCreativePrompt(ex)}
-                      className="px-2 py-0.5 rounded-full bg-white/5 hover:bg-amber-400/10 border border-white/10 text-[9px] font-sans text-neutral-300 hover:text-white cursor-pointer"
+                      className="px-2 py-0.5 rounded-full bg-white/5 hover:bg-red-500/20 border border-white/10 text-[9px] font-sans text-neutral-300 hover:text-white cursor-pointer"
                     >
                       + {ex}
                     </button>
@@ -575,7 +575,7 @@ export default function GeneratePage() {
             {/* MODEL & CASTING PROFILE - ALWAYS OPEN & VISIBLE */}
             {activeModeConfig.requiresModelInfo && (
               <div className="space-y-3 pt-2 border-t border-white/[0.06]">
-                <label className="text-xs font-sans text-amber-200 font-medium uppercase tracking-wider block">
+                <label className="text-xs font-sans text-red-400 font-semibold uppercase tracking-wider block">
                   Model & Character Profile
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -656,7 +656,7 @@ export default function GeneratePage() {
                       onClick={() => setDuration(opt.id as any)}
                       className={`py-2 rounded-xl text-xs font-sans border transition-all ${
                         duration === opt.id
-                          ? "border-amber-200/60 bg-amber-400/10 text-amber-100 font-bold"
+                          ? "border-red-500/60 bg-red-600/20 text-red-200 font-bold shadow-[0_0_12px_rgba(220,38,38,0.2)]"
                           : "border-white/10 text-neutral-400 hover:text-white"
                       }`}
                     >
@@ -682,7 +682,7 @@ export default function GeneratePage() {
                       onClick={() => setAspectRatio(opt.id as any)}
                       className={`py-2 rounded-xl text-xs font-sans flex items-center justify-center gap-1 border transition-all ${
                         aspectRatio === opt.id
-                          ? "border-amber-200/60 bg-amber-400/10 text-amber-100 font-bold"
+                          ? "border-red-500/60 bg-red-600/20 text-red-200 font-bold shadow-[0_0_12px_rgba(220,38,38,0.2)]"
                           : "border-white/10 text-neutral-400 hover:text-white"
                       }`}
                     >
@@ -696,7 +696,7 @@ export default function GeneratePage() {
 
             {/* STRICT GUARANTEE */}
             <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 text-[11px] font-sans text-neutral-300 flex items-center gap-2.5">
-              <ShieldCheck className="w-4 h-4 text-amber-200 shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-red-400 shrink-0" />
               <span>Strict Product Integrity Guarantee: 100% exact jewelry preservation.</span>
             </div>
           </Card>
@@ -707,7 +707,7 @@ export default function GeneratePage() {
       <div className="pt-8 border-t border-white/[0.06] space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/80 block mb-0.5">
+            <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 block mb-0.5 font-semibold">
               CREATOR VAULT
             </span>
             <h2 className="text-xl font-serif text-white tracking-tight">Your Generated Videos</h2>
@@ -737,7 +737,7 @@ export default function GeneratePage() {
                   )}
                   <div className="absolute top-2 right-2">
                     <span className={`text-[8px] font-mono px-2 py-0.5 rounded ${
-                      item.status === 'COMPLETED' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-400/20 text-amber-200'
+                      item.status === 'COMPLETED' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-red-500/20 text-red-300 border border-red-500/30'
                     }`}>
                       {item.status}
                     </span>
@@ -753,7 +753,7 @@ export default function GeneratePage() {
                       download={`Cinroom_Commercial_${item.id}.mp4`}
                       className="w-full py-1.5 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-white font-sans text-[10px] uppercase font-medium flex items-center justify-center gap-1.5 border border-white/10 transition-colors"
                     >
-                      <Download className="w-3 h-3 text-amber-200" /> Download MP4
+                      <Download className="w-3 h-3 text-red-400" /> Download MP4
                     </a>
                   )}
                 </div>
@@ -763,10 +763,10 @@ export default function GeneratePage() {
         )}
       </div>
 
-      {/* REFINED MATTE ACTION BUTTON AT THE BOTTOM STICKY BAR */}
+      {/* REFINED ACTION BUTTON AT THE BOTTOM STICKY BAR */}
       <div className="fixed bottom-0 left-0 lg:left-64 right-0 z-40 p-3 sm:p-4 bg-[#060608]/95 border-t border-white/10 backdrop-blur-2xl shadow-[0_-15px_40px_rgba(0,0,0,0.9)] flex items-center justify-between gap-4">
         <div className="hidden sm:flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-amber-200">
+          <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-red-400">
             {renderIcon(activeModeConfig.iconName)}
           </div>
           <div>
@@ -782,7 +782,7 @@ export default function GeneratePage() {
         <Button
           onClick={handleGenerate}
           disabled={isSubmitting || isUploading}
-          className="flex-1 sm:flex-initial h-12 px-6 sm:px-8 text-xs font-sans tracking-widest uppercase bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 cursor-pointer disabled:opacity-50 shadow-lg border border-amber-200/30"
+          className="flex-1 sm:flex-initial h-12 px-6 sm:px-8 text-xs font-sans tracking-widest uppercase bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-semibold rounded-xl cursor-pointer disabled:opacity-50 shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-400/40"
         >
           {isSubmitting ? "Initializing Pipeline..." : `Generate Commercial (${creditCost} Credits)`}
           <ArrowRight className="w-4 h-4 ml-2" />

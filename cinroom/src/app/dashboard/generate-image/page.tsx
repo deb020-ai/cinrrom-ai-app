@@ -268,13 +268,13 @@ export default function GenerateImagePage() {
       {/* Page Header */}
       <div className="border-b border-white/[0.06] pb-4 flex items-center justify-between">
         <div>
-          <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/80 block mb-0.5">
+          <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 block mb-0.5 font-semibold">
             ATELIER EDITORIAL SUITE
           </span>
           <h1 className="text-2xl sm:text-3xl font-serif text-white tracking-tight">Jewelry Image Generator</h1>
         </div>
         <div className="hidden sm:block text-right">
-          <span className="text-[10px] font-sans text-amber-200/90 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-200/20">
+          <span className="text-[10px] font-sans text-red-200 bg-red-950/50 px-3 py-1 rounded-full border border-red-500/30 shadow-[0_0_10px_rgba(220,38,38,0.2)]">
             0.2 CREDITS PER EDITORIAL IMAGE
           </span>
         </div>
@@ -298,7 +298,7 @@ export default function GenerateImagePage() {
                 onClick={() => setSelectedMode(mode.id)}
                 className={`p-4 rounded-2xl text-left flex flex-col justify-between transition-all duration-300 cursor-pointer ${
                   isSelected
-                    ? "bg-[#111116] border border-amber-200/50 shadow-[0_0_25px_rgba(197,168,128,0.15)] text-white scale-[1.02]"
+                    ? "bg-[#140b0d] border border-red-500/60 shadow-[0_0_25px_rgba(220,38,38,0.25)] text-white scale-[1.02]"
                     : "bg-[#0a0a0d] border border-white/5 text-neutral-400 hover:text-white hover:border-white/15"
                 }`}
               >
@@ -307,13 +307,13 @@ export default function GenerateImagePage() {
                     <div
                       className={`p-2 rounded-xl ${
                         isSelected
-                          ? "bg-amber-400/20 text-amber-200 border border-amber-200/40"
+                          ? "bg-red-500/20 text-red-300 border border-red-500/40"
                           : "bg-white/5 text-neutral-400"
                       }`}
                     >
                       {renderIcon(mode.iconName)}
                     </div>
-                    <span className="text-[8px] font-sans px-1.5 py-0.5 rounded bg-white/5 text-amber-200/80 uppercase">
+                    <span className="text-[8px] font-sans px-1.5 py-0.5 rounded bg-white/5 text-red-300/90 uppercase border border-red-500/20">
                       {mode.badge}
                     </span>
                   </div>
@@ -594,7 +594,7 @@ export default function GenerateImagePage() {
                     onClick={() => setAspectRatio(opt.id as any)}
                     className={`py-2 rounded-xl text-xs font-sans flex items-center justify-center gap-1.5 border transition-all ${
                       aspectRatio === opt.id
-                        ? "border-amber-200/60 bg-amber-400/10 text-amber-100 font-bold"
+                        ? "border-red-500/60 bg-red-600/20 text-red-200 font-bold shadow-[0_0_12px_rgba(220,38,38,0.2)]"
                         : "border-white/10 text-neutral-400 hover:text-white"
                     }`}
                   >
@@ -607,7 +607,7 @@ export default function GenerateImagePage() {
 
             {/* STRICT GUARANTEE */}
             <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 text-[11px] font-sans text-neutral-300 flex items-center gap-2.5">
-              <ShieldCheck className="w-4 h-4 text-amber-200 shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-red-400 shrink-0" />
               <span>Strict Global Product Preservation: 100% exact jewelry reproduction.</span>
             </div>
           </Card>
@@ -618,7 +618,7 @@ export default function GenerateImagePage() {
       <div className="pt-8 border-t border-white/[0.06] space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/80 block mb-0.5">
+            <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 block mb-0.5 font-semibold">
               CREATOR VAULT
             </span>
             <h2 className="text-xl font-serif text-white tracking-tight">Your Generated Images</h2>
@@ -648,7 +648,7 @@ export default function GenerateImagePage() {
                   )}
                   <div className="absolute top-2 right-2">
                     <span className={`text-[8px] font-mono px-2 py-0.5 rounded ${
-                      item.status === 'COMPLETED' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-400/20 text-amber-200'
+                      item.status === 'COMPLETED' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-red-500/20 text-red-300 border border-red-500/30'
                     }`}>
                       {item.status}
                     </span>
@@ -664,7 +664,7 @@ export default function GenerateImagePage() {
                       download={`Cinroom_Image_${item.id}.png`}
                       className="w-full py-1.5 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-white font-sans text-[10px] uppercase font-medium flex items-center justify-center gap-1.5 border border-white/10 transition-colors"
                     >
-                      <Download className="w-3 h-3 text-amber-200" /> Download Image
+                      <Download className="w-3 h-3 text-red-400" /> Download Image
                     </a>
                   )}
                 </div>
@@ -674,10 +674,10 @@ export default function GenerateImagePage() {
         )}
       </div>
 
-      {/* REFINED MATTE ACTION BUTTON AT THE BOTTOM STICKY BAR */}
+      {/* REFINED ACTION BUTTON AT THE BOTTOM STICKY BAR */}
       <div className="fixed bottom-0 left-0 lg:left-64 right-0 z-40 p-3 sm:p-4 bg-[#060608]/95 border-t border-white/10 backdrop-blur-2xl shadow-[0_-15px_40px_rgba(0,0,0,0.9)] flex items-center justify-between gap-4">
         <div className="hidden sm:flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-amber-200">
+          <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-red-400">
             {renderIcon(activeModeConfig.iconName)}
           </div>
           <div>
@@ -693,7 +693,7 @@ export default function GenerateImagePage() {
         <Button
           onClick={handleGenerate}
           disabled={isSubmitting || isUploading}
-          className="flex-1 sm:flex-initial h-12 px-6 sm:px-8 text-xs font-sans tracking-widest uppercase bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 cursor-pointer disabled:opacity-50 shadow-lg border border-amber-200/30"
+          className="flex-1 sm:flex-initial h-12 px-6 sm:px-8 text-xs font-sans tracking-widest uppercase bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-semibold rounded-xl cursor-pointer disabled:opacity-50 shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-400/40"
         >
           {isSubmitting ? "Rendering..." : `Generate Image (${creditCost} Credit)`}
           <ArrowRight className="w-4 h-4 ml-2" />

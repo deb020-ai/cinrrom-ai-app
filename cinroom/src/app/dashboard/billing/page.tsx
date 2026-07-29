@@ -88,7 +88,7 @@ export default function BillingPage() {
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-16">
       {/* Header */}
       <div>
-        <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/80 block mb-0.5">
+        <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 font-semibold block mb-0.5">
           FINANCIAL MANAGEMENT
         </span>
         <h1 className="text-3xl font-serif text-white tracking-tight mb-1">Credits & Subscriptions</h1>
@@ -101,13 +101,13 @@ export default function BillingPage() {
         <TabsList className="bg-white/5 border border-white/10 h-12 px-2 gap-2 mb-8 rounded-xl">
           <TabsTrigger
             value="credits"
-            className="data-[state=active]:bg-amber-400/10 data-[state=active]:text-amber-200 data-[state=active]:border-amber-200/30 text-xs font-sans tracking-wider uppercase h-9 rounded-lg"
+            className="data-[state=active]:bg-red-600/20 data-[state=active]:text-red-200 data-[state=active]:border-red-500/40 text-xs font-sans tracking-wider uppercase h-9 rounded-lg"
           >
             <Wallet className="w-4 h-4 mr-2" /> Credit Wallet
           </TabsTrigger>
           <TabsTrigger
             value="billing"
-            className="data-[state=active]:bg-amber-400/10 data-[state=active]:text-amber-200 data-[state=active]:border-amber-200/30 text-xs font-sans tracking-wider uppercase h-9 rounded-lg"
+            className="data-[state=active]:bg-red-600/20 data-[state=active]:text-red-200 data-[state=active]:border-red-500/40 text-xs font-sans tracking-wider uppercase h-9 rounded-lg"
           >
             <CreditCard className="w-4 h-4 mr-2" /> Subscription Plans & Top-Ups
           </TabsTrigger>
@@ -116,17 +116,17 @@ export default function BillingPage() {
         {/* Credit Wallet Tab */}
         <TabsContent value="credits" className="space-y-8">
           {/* Credit Wallet Widget */}
-          <Card className="glass-panel gold-border-glow bg-[#0a0a0d] border-amber-200/30 p-8 rounded-2xl shadow-2xl">
+          <Card className="glass-panel blood-red-border-glow bg-[#0a0a0d] border-red-500/30 p-8 rounded-2xl shadow-2xl">
             <CardHeader className="px-0 pt-0 pb-6 border-b border-white/[0.08]">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-amber-200/80 mb-1 block">
+                  <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-red-400 font-semibold mb-1 block">
                     ATELIER WALLET
                   </span>
                   <CardTitle className="text-2xl font-serif text-white">Credit Balance & Ledger</CardTitle>
                 </div>
-                <div className="px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-200/30 text-amber-200 font-sans text-xs flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-amber-200" />
+                <div className="px-3.5 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-300 font-sans text-xs flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-red-400" />
                   {wallet?.plan_tier ? `${wallet.plan_tier.toUpperCase()} PLAN` : "FREE ACCOUNT"}
                 </div>
               </div>
@@ -137,7 +137,7 @@ export default function BillingPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10">
                   <div className="text-[11px] font-sans text-neutral-400 uppercase tracking-wider mb-2">Available Credits</div>
-                  <div className="text-4xl font-light text-amber-200 font-serif">
+                  <div className="text-4xl font-light text-red-400 font-serif">
                     {loading ? "..." : wallet?.available_credits ?? 0}
                   </div>
                   <div className="text-[10px] font-sans text-neutral-500 mt-2">Ready for commercial rendering</div>
@@ -163,10 +163,10 @@ export default function BillingPage() {
                   <div>
                     <div className="text-[11px] font-sans text-neutral-400 uppercase tracking-wider mb-2">Next Renewal</div>
                     <div className="text-lg font-light text-white font-serif flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-amber-200" /> {formatRenewalDate(wallet?.next_renewal_date || null)}
+                      <Clock className="w-4 h-4 text-red-400" /> {formatRenewalDate(wallet?.next_renewal_date || null)}
                     </div>
                   </div>
-                  <div className="text-[10px] font-sans text-amber-200/80 mt-2">Automatic monthly refill</div>
+                  <div className="text-[10px] font-sans text-red-300/80 mt-2">Automatic monthly refill</div>
                 </div>
               </div>
 
@@ -176,7 +176,7 @@ export default function BillingPage() {
                   Need additional credits for an upcoming campaign drop?
                 </div>
                 <a href="#topup">
-                  <Button className="h-11 px-6 text-xs font-sans tracking-widest uppercase bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 cursor-pointer shadow-lg border border-amber-200/30">
+                  <Button className="h-11 px-6 text-xs font-sans tracking-widest uppercase bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-semibold rounded-xl cursor-pointer shadow-[0_0_20px_rgba(220,38,38,0.3)] border border-red-400/40">
                     <RefreshCw className="w-4 h-4 mr-2" /> Recharge Credits
                   </Button>
                 </a>
@@ -184,8 +184,8 @@ export default function BillingPage() {
 
               {/* Recent Ledger Transactions Table */}
               <div>
-                <div className="flex items-center gap-2 text-xs font-sans text-amber-200 uppercase tracking-wider mb-4 font-medium">
-                  <History className="w-4 h-4 text-amber-200" /> Production Credit Ledger
+                <div className="flex items-center gap-2 text-xs font-sans text-red-400 uppercase tracking-wider mb-4 font-semibold">
+                  <History className="w-4 h-4 text-red-400" /> Production Credit Ledger
                 </div>
 
                 {transactions.length === 0 ? (
@@ -196,7 +196,7 @@ export default function BillingPage() {
                       Purchase credits or subscribe to view your billing ledger history.
                     </p>
                     <a href="#topup">
-                      <Button variant="outline" className="h-9 px-5 text-xs font-sans border-amber-200/30 text-amber-200 hover:bg-amber-400/10">
+                      <Button variant="outline" className="h-9 px-5 text-xs font-sans border-red-500/40 text-red-300 hover:bg-red-500/20">
                         Purchase Credits
                       </Button>
                     </a>
@@ -233,7 +233,7 @@ export default function BillingPage() {
                             </td>
                             <td className="p-3.5 text-right font-sans text-[11px]">
                               {tx.invoice_url ? (
-                                <a href={tx.invoice_url} target="_blank" rel="noopener noreferrer" className="text-amber-200/80 hover:text-amber-200 underline decoration-amber-200/30 underline-offset-4">Receipt ↗</a>
+                                <a href={tx.invoice_url} target="_blank" rel="noopener noreferrer" className="text-red-300/90 hover:text-red-200 underline decoration-red-400/30 underline-offset-4">Receipt ↗</a>
                               ) : (
                                 <span className="text-neutral-600">-</span>
                               )}

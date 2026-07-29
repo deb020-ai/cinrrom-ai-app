@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Diamond, Video, Camera, LayoutTemplate, FolderOpen, CreditCard, Settings, LogOut, Menu, X } from "lucide-react";
+import { Diamond, Video, Camera, FolderOpen, CreditCard, Settings, LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -55,8 +55,8 @@ export function Sidebar() {
       {/* MOBILE TOP BAR */}
       <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-[#060608]/95 backdrop-blur-2xl border-b border-white/[0.06] z-50 flex items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400/20 to-white/10 flex items-center justify-center border border-amber-200/40 shadow-[0_0_10px_rgba(197,168,128,0.2)]">
-            <Diamond className="w-3 h-3 text-amber-200" />
+          <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-red-600/30 to-red-900/40 flex items-center justify-center border border-red-500/50 shadow-[0_0_12px_rgba(220,38,38,0.4)]">
+            <Diamond className="w-3 h-3 text-white" />
           </div>
           <span className="font-semibold text-xs tracking-[0.2em] text-white uppercase font-serif">
             CINROOM
@@ -89,8 +89,8 @@ export function Sidebar() {
         {/* Brand header */}
         <div className="h-16 flex items-center justify-between px-6 border-b border-white/[0.06]">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400/20 to-white/10 flex items-center justify-center border border-amber-200/40 shadow-[0_0_10px_rgba(197,168,128,0.2)]">
-              <Diamond className="w-3 h-3 text-amber-200" />
+            <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-red-600/40 to-red-900/50 flex items-center justify-center border border-red-500/60 shadow-[0_0_15px_rgba(220,38,38,0.5)]">
+              <Diamond className="w-3 h-3 text-white" />
             </div>
             <span className="font-semibold text-xs tracking-[0.2em] text-white uppercase font-serif">
               CINROOM
@@ -118,11 +118,11 @@ export function Sidebar() {
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 text-xs font-sans tracking-wide rounded-xl transition-all duration-200 ${
                   isActive
-                    ? "bg-amber-400/10 text-white border border-amber-200/30 font-semibold shadow-[0_0_15px_rgba(197,168,128,0.15)]"
+                    ? "bg-red-600/20 text-white border border-red-500/40 font-semibold shadow-[0_0_20px_rgba(220,38,38,0.25)]"
                     : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
                 }`}
               >
-                <item.icon className={`w-4 h-4 ${isActive ? "text-amber-200" : "text-neutral-500"}`} />
+                <item.icon className={`w-4 h-4 ${isActive ? "text-red-400" : "text-neutral-500"}`} />
                 {item.name}
               </Link>
             );
@@ -140,11 +140,11 @@ export function Sidebar() {
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 text-xs font-sans tracking-wide rounded-xl transition-all duration-200 ${
                   isActive
-                    ? "bg-amber-400/10 text-white border border-amber-200/30 font-semibold shadow-[0_0_15px_rgba(197,168,128,0.15)]"
+                    ? "bg-red-600/20 text-white border border-red-500/40 font-semibold shadow-[0_0_20px_rgba(220,38,38,0.25)]"
                     : "text-neutral-400 hover:text-white hover:bg-white/[0.04]"
                 }`}
               >
-                <item.icon className={`w-4 h-4 ${isActive ? "text-amber-200" : "text-neutral-500"}`} />
+                <item.icon className={`w-4 h-4 ${isActive ? "text-red-400" : "text-neutral-500"}`} />
                 {item.name}
               </Link>
             );
@@ -155,12 +155,12 @@ export function Sidebar() {
         <div className="p-4 border-t border-white/[0.06] space-y-2">
           <div className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
             <div className="flex items-center gap-3 overflow-hidden">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-200/30 to-amber-600/20 border border-amber-200/40 flex items-center justify-center text-amber-200 font-sans text-xs font-semibold shrink-0">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-600/40 to-red-950/60 border border-red-500/50 flex items-center justify-center text-white font-sans text-xs font-semibold shrink-0 shadow-[0_0_10px_rgba(220,38,38,0.3)]">
                 {userInitials}
               </div>
               <div className="flex flex-col truncate">
                 <span className="text-xs font-medium text-white truncate">{userName}</span>
-                <span className="text-[10px] text-amber-200/80 truncate">
+                <span className="text-[10px] text-red-300/80 truncate">
                   {user?.email || "Pro Atelier Plan"}
                 </span>
               </div>
