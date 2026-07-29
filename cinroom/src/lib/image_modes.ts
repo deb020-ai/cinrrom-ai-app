@@ -323,12 +323,70 @@ ${modelCountryVal}
 ETHNICITY
 ${modelEthnicityVal}
 ###############################################################
-PRODUCT AUTHORITY
+PRODUCT ANALYSIS & LOCK (HIGHEST PRIORITY)
 ###############################################################
-Treat PRODUCT_IMAGE as the exact manufactured jewelry.
-Never redesign, regenerate, simplify, improve or invent any visible detail.
-Preserve every gemstone, proportion, setting, prong, engraving, craftsmanship, reflection, texture and geometry exactly.
-The jewelry always remains visually accurate.
+Before generating any frame, perform an exhaustive visual analysis of ${productImageRef}.
+Analyze and permanently lock:
+• Overall silhouette
+• Geometry
+• Proportions
+• Metal type
+• Metal color
+• Metal finish
+• Surface texture
+• Craftsmanship
+• Stone count
+• Stone size
+• Stone shape
+• Stone cut
+• Stone placement
+• Stone spacing
+• Stone orientation
+• Prongs
+• Bezels
+• Pavé layout
+• Chain construction
+• Clasp
+• Engravings
+• Every visible manufacturing detail
+The uploaded jewelry is a finished manufactured product.
+It is NOT a concept.
+It is NOT inspiration.
+It is NOT a design reference.
+Treat it exactly like a real physical object being filmed.
+Maintain 100% PRECISE jewelry accuracy throughout every frame.
+Every frame must contain the EXACT SAME jewelry.
+No redesign.
+No reinterpretation.
+No regeneration.
+No improvement.
+No simplification.
+The jewelry must remain 100% visually identical to the uploaded reference.
+If the uploaded reference contains one jewelry item, preserve that exact item.
+If the uploaded reference contains multiple jewelry items, preserve the complete jewelry collection exactly as shown.
+Never invent matching accessories.
+Never add rings, earrings, necklaces, bracelets, bangles, pendants, chains or any additional jewelry unless they already exist in the uploaded reference.
+Every frame must depict the exact same approved jewelry collection.
+Every frame must contain the EXACT SAME jewelry.
+No redesign.
+No reinterpretation.
+No regeneration.
+No improvement.
+No simplification.
+The jewelry must remain 100% visually identical to the uploaded reference.
+Only the following may change throughout the commercial:
+• Camera
+• Composition
+• Lens
+• Lighting
+• Focus
+• Environment
+• Atmosphere
+• Reflections
+• Storytelling
+The jewelry itself is permanently locked.
+Product accuracy always has higher priority than cinematic beauty.
+If any generated frame changes the jewelry in any way, reject that frame and regenerate using the uploaded reference.
 ###############################################################
 BRAND DNA
 ###############################################################
@@ -451,6 +509,23 @@ Never hide the jewelry behind hair, clothing, hands or body posture.
 Use elegant posing that naturally reveals the jewelry.
 Maintain clear visibility without making the pose feel artificial.
 The jewelry must remain the visual destination of the image.
+###############################################################
+CAMERA FRAMING ENGINE
+###############################################################
+Choose the camera framing based on maximizing both emotional connection and product visibility.
+Avoid extreme close-ups that crop out the model's identity.
+Avoid wide fashion shots where the jewelry becomes too small to appreciate.
+Prioritize elegant medium close-up or medium portrait compositions where both the model's face and the featured jewelry remain clearly visible and visually important.
+The jewelry should occupy enough of the frame for its craftsmanship, gemstones and details to be immediately recognizable without zooming.
+The model's face should remain visible to communicate emotion, beauty and luxury.
+Frame the composition around the featured jewelry.
+For earrings, prioritize the head, face and upper shoulders.
+For necklaces, prioritize the face, neck and upper torso.
+For rings, prioritize elegant compositions that clearly show both the hand and the face whenever naturally possible.
+For bracelets and watches, compose to clearly showcase the wrist while maintaining facial presence.
+The framing should always adapt to the jewelry category while preserving a strong emotional connection with the model.
+The image should feel like a luxury jewelry advertisement, not a fashion editorial where clothing or the environment dominates.
+If the jewelry cannot be clearly appreciated within one second of viewing, move the camera closer or redesign the composition until the jewelry becomes immediately readable.
 ###############################################################
 EYE FLOW ENGINE
 ###############################################################
