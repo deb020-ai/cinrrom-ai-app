@@ -42,11 +42,11 @@ export const IMAGE_GENERATION_MODES: ImageModeOption[] = [
   },
   {
     id: "fantasy_world",
-    title: "Fantasy World",
-    badge: "ETHEREAL REALM",
-    description: "Create a breathtaking luxury campaign inside a spectacular fantasy or exotic environment.",
+    title: "Outdoor Epic Environment Campaign",
+    badge: "EPIC ENVIRONMENT",
+    description: "Create an unforgettable luxury campaign where an extraordinary real-world environment amplifies the uploaded jewelry.",
     iconName: "Wand2",
-    tagline: "Cohesive Mystic Environments & Lighting",
+    tagline: "Breathtaking Real-World Luxury Destinations",
     requiresModelInfo: true,
   },
   {
@@ -607,11 +607,337 @@ Create a timeless luxury jewelry fashion campaign where the model embodies elega
     }
 
     case "fantasy_world": {
-      const selectedWorld = fantasy_theme?.trim()
-        ? fantasy_theme.trim()
-        : "an ethereal crystal starlight sanctuary with floating luminescent particles and obsidian glass caustics";
-      masterPrompt =
-        `FANTASY WORLD LUXURY CAMPAIGN${multiAngleNote}${brandGuideNote}: Breathtaking luxury jewelry editorial photography set inside a single cohesive fantasy realm: "${selectedWorld}". Features a ${age} year old ${ethnicity} ${gender} model from ${country} wearing the uploaded jewelry piece amidst ethereal atmospheric haze and raytraced reflections. Blend fantasy with premium luxury aesthetics.`;
+      const productImageRef = jewelry_images.length > 0 ? "the uploaded product image" : "the uploaded jewelry reference image";
+      const brandGuideRef = brand_guideline_images.length > 0 ? "the uploaded brand guideline color palette image" : "the brand guideline image";
+      const epicEnvironmentVal = fantasy_theme?.trim() ? fantasy_theme.trim() : "dramatic coastal marble cliffs overlooking a calm crystal azure ocean";
+      const modelGenderVal = gender?.trim() ? gender.trim() : "Female";
+      const modelAgeVal = age?.trim() ? age.trim() : "25-35";
+      const modelCountryVal = country?.trim() ? country.trim() : "France";
+      const modelEthnicityVal = ethnicity?.trim() ? ethnicity.trim() : "Caucasian";
+
+      masterPrompt = `###############################################################
+LUXURY JEWELRY EPIC ENVIRONMENT CAMPAIGN ENGINE 
+###############################################################
+ROLE
+You are the world's leading Luxury Campaign Creative Director, Luxury Fashion Photographer, Environmental Production Designer, Location Director, Fashion Stylist, Beauty Director and Editorial Art Director.
+Your task is NOT to create a travel photograph.
+Your task is NOT to create landscape photography.
+Your task is to create an unforgettable luxury jewelry campaign where an extraordinary real-world environment amplifies the emotional value of the uploaded jewelry.
+The jewelry is always the product being sold.
+The environment creates the story.
+The model creates emotional connection.
+The final image should feel like an international luxury campaign requiring months of location scouting, production planning and an unlimited production budget.
+###############################################################
+INPUTS
+###############################################################
+PRODUCT_IMAGE
+${productImageRef}
+BRAND_GUIDELINE_IMAGE (Optional)
+${brandGuideRef}
+EPIC_ENVIRONMENT (Optional)
+${epicEnvironmentVal}
+GENDER
+${modelGenderVal}
+AGE_RANGE
+${modelAgeVal}
+COUNTRY_ORIGIN
+${modelCountryVal}
+ETHNICITY
+${modelEthnicityVal}
+###############################################################
+PRODUCT ANALYSIS & LOCK (HIGHEST PRIORITY)
+###############################################################
+Before generating any frame, perform an exhaustive visual analysis of ${productImageRef}.
+Analyze and permanently lock:
+• Overall silhouette
+• Geometry
+• Proportions
+• Metal type
+• Metal color
+• Metal finish
+• Surface texture
+• Craftsmanship
+• Stone count
+• Stone size
+• Stone shape
+• Stone cut
+• Stone placement
+• Stone spacing
+• Stone orientation
+• Prongs
+• Bezels
+• Pavé layout
+• Chain construction
+• Clasp
+• Engravings
+• Every visible manufacturing detail
+The uploaded jewelry is a finished manufactured product.
+It is NOT a concept.
+It is NOT inspiration.
+It is NOT a design reference.
+Treat it exactly like a real physical object being filmed.
+Maintain 100% PRECISE jewelry accuracy throughout every frame.
+Every frame must contain the EXACT SAME jewelry.
+No redesign.
+No reinterpretation.
+No regeneration.
+No improvement.
+No simplification.
+The jewelry must remain 100% visually identical to the uploaded reference.
+If the uploaded reference contains one jewelry item, preserve that exact item.
+If the uploaded reference contains multiple jewelry items, preserve the complete jewelry collection exactly as shown.
+Never invent matching accessories.
+Never add rings, earrings, necklaces, bracelets, bangles, pendants, chains or any additional jewelry unless they already exist in the uploaded reference.
+Every frame must depict the exact same approved jewelry collection.
+Every frame must contain the EXACT SAME jewelry.
+No redesign.
+No reinterpretation.
+No regeneration.
+No improvement.
+No simplification.
+The jewelry must remain 100% visually identical to the uploaded reference.
+Only the following may change throughout the commercial:
+• Camera
+• Composition
+• Lens
+• Lighting
+• Focus
+• Environment
+• Atmosphere
+• Reflections
+• Storytelling
+The jewelry itself is permanently locked.
+Product accuracy always has higher priority than cinematic beauty.
+If any generated frame changes the jewelry in any way, reject that frame and regenerate using the uploaded reference.
+###############################################################
+BRAND DNA
+###############################################################
+If BRAND_GUIDELINE_IMAGE exists, extract only the brand's visual identity, luxury positioning, color language, styling philosophy, artistic direction and emotional tone.
+Apply these only to the campaign world.
+Never modify the jewelry.
+###############################################################
+EPIC ENVIRONMENT INTELLIGENCE
+###############################################################
+If EPIC_ENVIRONMENT is provided, faithfully build the campaign around that destination while elevating it into a world-class luxury production.
+If no environment is provided, analyze the jewelry and automatically select the most appropriate iconic location.
+The chosen environment should naturally complement the jewelry's craftsmanship, geometry, elegance and emotional character.
+Avoid fantasy.
+Avoid science fiction.
+Avoid impossible architecture.
+Prioritize breathtaking yet believable locations that could exist in the real world.
+Examples include dramatic coastlines, marble quarries, alpine peaks, volcanic landscapes, ancient temples, luxury yachts, desert dunes, crystal lakes, waterfalls, bamboo forests, sculptural architecture, Mediterranean cliffs, tropical islands and extraordinary natural environments.
+The location should feel exclusive, cinematic and globally recognizable without becoming a tourist photograph.
+###############################################################
+MODEL PROFILE ENGINE
+###############################################################
+Create one highly believable luxury fashion model.
+Gender:
+${modelGenderVal}
+Age:
+${modelAgeVal}
+Country Origin:
+${modelCountryVal}
+Ethnicity:
+${modelEthnicityVal}
+The model should naturally represent the selected profile with authentic beauty and realism.
+Natural skin.
+Natural eyes.
+Natural hair.
+Natural anatomy.
+Elegant hands.
+Nothing should reveal AI generation.
+###############################################################
+CHARACTER AUTHORITY
+###############################################################
+The model exists to elevate the jewelry.
+The environment exists to strengthen the story.
+Neither should overpower the product.
+The viewer should emotionally connect with the model while immediately recognizing the jewelry as the hero of the campaign.
+###############################################################
+WARDROBE & STYLING ENGINE
+###############################################################
+Design timeless luxury wardrobe appropriate for the selected environment.
+Every outfit should feel custom tailored using premium materials.
+Wardrobe colors should harmonize with both the jewelry and the surrounding environment.
+Avoid loud prints.
+Avoid distracting accessories.
+Avoid trend-driven fashion.
+Luxury should be communicated through refinement, tailoring and material quality.
+###############################################################
+HAIR • MAKEUP • EXPRESSION • POSE
+###############################################################
+Hair should respond naturally to the outdoor environment while remaining elegant.
+Makeup should remain refined and editorial.
+Expression should feel authentic, confident, aspirational and emotionally engaging.
+Avoid exaggerated fashion expressions.
+Every pose should naturally showcase the jewelry.
+Hands must remain elegant.
+Finger positioning must feel relaxed.
+Never hide the jewelry behind clothing, hair or body position.
+Every body angle should guide attention back toward the jewelry.
+The model should appear naturally present within the environment rather than obviously posing for the camera.
+###############################################################
+EPIC WORLD BUILDING ENGINE
+Design a breathtaking real-world luxury environment that feels impossible to produce, yet completely believable.
+The campaign should feel as though the world's best architects, environmental artists, production designers, cinematographers and luxury photographers collaborated to build it.
+Never create a generic landscape.
+Never create a tourist photograph.
+Never create fantasy.
+Instead create an extraordinary real location elevated through exceptional production design.
+The environment should become an extension of the jewelry's craftsmanship.
+Curved jewelry inspires flowing landscapes.
+Geometric jewelry inspires architectural compositions.
+Gemstone colors subtly influence surrounding materials, vegetation, minerals, water or atmosphere.
+Every environmental decision should reinforce the luxury identity of the jewelry.
+###############################################################
+LOCATION DESIGN ENGINE
+###############################################################
+Create one iconic destination worthy of a global luxury campaign.
+The environment should feel exclusive and inaccessible.
+Draw inspiration from dramatic coastlines, alpine mountains, marble quarries, crystal lakes, ancient stone architecture, Mediterranean cliffs, volcanic landscapes, waterfalls, premium gardens, sculptural deserts, luxury yachts, private islands and world-class architectural landmarks.
+Nature should feel curated rather than wild.
+Everything should appear intentionally designed.
+Nothing should feel random.
+###############################################################
+EDITORIAL COMPOSITION ENGINE
+###############################################################
+Compose the campaign like a luxury editorial photographed by the world's finest commercial photographers.
+Visual hierarchy:
+1. Jewelry
+2. Model
+3. Environment
+4. Atmosphere
+The jewelry should immediately attract attention.
+The model guides emotional connection.
+The environment creates aspiration.
+Every composition should feel balanced, elegant and timeless.
+Use premium negative space, visual rhythm, leading lines and refined geometry.
+###############################################################
+CAMERA FRAMING ENGINE
+###############################################################
+Avoid extremely wide landscape photography.
+Avoid tiny subjects inside massive environments.
+Avoid extreme close-ups.
+Prioritize medium portrait compositions where the face and jewelry remain clearly visible while enough of the environment communicates scale and grandeur.
+Frame around the jewelry.
+The environment should provide context rather than dominate the image.
+If the jewelry cannot be appreciated within one second, redesign the framing.
+###############################################################
+VISUAL HIERARCHY ENGINE
+###############################################################
+The environment should impress.
+The jewelry should mesmerize.
+The model should emotionally connect.
+The viewer must first notice the jewelry.
+Second, the model.
+Finally the extraordinary environment.
+If the environment becomes the primary attraction, simplify it immediately.
+Luxury is communicated through restraint, not visual overload.
+###############################################################
+LIGHTING & COLOR SCIENCE
+###############################################################
+Use physically believable natural luxury lighting.
+Golden hour.
+Soft overcast.
+Elegant sunrise.
+Sophisticated sunset.
+Natural atmospheric diffusion.
+Premium gemstone brilliance.
+Realistic skin rendering.
+Authentic material response.
+Maintain restrained color harmony.
+Avoid oversaturation.
+Avoid artificial glow.
+Avoid excessive HDR.
+###############################################################
+HUMAN REALISM ENGINE
+###############################################################
+The model must appear completely authentic.
+Natural facial anatomy.
+Visible skin texture.
+Realistic pores.
+Natural asymmetry.
+Authentic eyes.
+Believable hair movement.
+Correct body mechanics.
+Elegant hands.
+Natural interaction with the environment.
+Nothing should reveal AI generation.
+###############################################################
+IMAGE QUALITY
+###############################################################
+Ultra-photorealistic.
+Luxury commercial photography.
+Museum-quality production.
+Exceptional material realism.
+Natural optics.
+Premium color science.
+Every pixel should communicate refinement.
+The image should appear captured by an elite international production crew using the highest level of commercial photography.
+###############################################################
+MARKETING OBJECTIVE
+###############################################################
+Create a campaign that immediately communicates exclusivity, aspiration and extraordinary craftsmanship.
+The image should stop scrolling naturally through beauty, composition and emotional impact rather than visual noise.
+Immediately suitable for Meta Ads, Instagram campaigns, luxury websites, editorial magazines, premium print campaigns and global luxury branding.
+###############################################################
+CAMPAIGN CAMERA DIRECTOR
+###############################################################
+This is a luxury JEWELRY campaign, not a travel campaign.
+The purpose of the environment is to increase the perceived value of the jewelry, not to dominate the frame.
+The camera must always prioritize product readability over environmental scale.
+Never choose an establishing shot.
+Never choose a wide landscape composition.
+Never position the model as a small figure inside a large environment.
+Never allow the jewelry to become visually insignificant.
+Instead, compose the image as a luxury commercial portrait where the model occupies most of the frame while the environment remains clearly recognizable behind them.
+Preferred framing:
+• Medium Close-Up
+• Medium Portrait
+• Three-Quarter Portrait
+The model should typically occupy approximately 60–80% of the frame.
+The jewelry must remain large enough for its craftsmanship, gemstones and premium materials to be immediately appreciated without zooming.
+The environment should occupy approximately 20–40% of the frame, providing context and aspiration without becoming the primary subject.
+Frame every image around the featured jewelry.
+The viewer should first see the jewelry.
+Then the model.
+Then discover the extraordinary environment.
+If the environment becomes more memorable than the jewelry, redesign the composition and move the camera closer.
+###############################################################
+COMMERCIAL CROP INTELLIGENCE
+###############################################################
+Every image should appear as though selected by a luxury advertising agency for a global campaign.
+Prioritize commercially usable compositions over cinematic spectacle.
+The jewelry must remain clearly readable at Instagram feed size, Meta Ad thumbnail size and mobile viewing size.
+If the jewelry cannot be identified instantly on a smartphone screen, the composition has failed.
+Move the camera closer until the product is immediately recognizable.
+###############################################################
+NEGATIVE PROMPT
+###############################################################
+No altered jewelry.
+No fantasy creatures.
+No magical effects.
+No science fiction.
+No floating objects.
+No unrealistic landscapes.
+No generic travel photography.
+No tourist imagery.
+No distracting wardrobe.
+No exaggerated poses.
+No distorted anatomy.
+No extra fingers.
+No broken hands.
+No visual clutter.
+No unrealistic lighting.
+No fake reflections.
+No text.
+No logos.
+No watermark.
+No AI artifacts.
+###############################################################
+FINAL OBJECTIVE
+###############################################################
+Create an unforgettable international luxury jewelry campaign where an iconic real-world environment amplifies the emotional power of the jewelry without ever competing with it. The jewelry remains the commercial hero, the model creates aspiration, and the environment creates wonder. Every artistic decision—from location, wardrobe, pose, lighting, composition and production design—should increase the perceived value of the jewelry. The final image must be indistinguishable from a real multi-million-dollar luxury campaign produced by the world's leading advertising agency, immediately ready for Meta Ads, premium social media, editorial magazines and global luxury brand marketing.`;
       break;
     }
 

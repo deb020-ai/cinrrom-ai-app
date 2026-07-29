@@ -486,17 +486,17 @@ export default function GenerateImagePage() {
               </div>
             )}
 
-            {/* FANTASY THEME */}
+            {/* EPIC ENVIRONMENT */}
             {selectedMode === "fantasy_world" && (
               <div className="space-y-1.5">
                 <label className="text-xs font-sans text-white font-medium uppercase tracking-wider block">
-                  Fantasy Realm / Theme (Optional)
+                  Epic Environment / Destination (Optional)
                 </label>
                 <Input
                   type="text"
                   value={fantasyTheme}
                   onChange={(e) => setFantasyTheme(e.target.value)}
-                  placeholder="e.g. Floating Crystal Palace, Starlight Sanctuary..."
+                  placeholder="e.g. Amalfi Coast, Marble Quarries, Alpine Peaks, Volcanic Dunes..."
                   className="h-10 bg-black/60 border-white/10 text-white font-sans text-xs rounded-xl"
                 />
               </div>
