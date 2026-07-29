@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Diamond, Video, Camera, FolderOpen, CreditCard, Settings, LogOut, Menu, X } from "lucide-react";
+import { Diamond, Video, Camera, FolderOpen, CreditCard, Settings, LogOut, Menu, X, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -14,6 +14,7 @@ const navItems = [
 
 const secondaryItems = [
   { name: "Credits & Plan", href: "/dashboard/billing", icon: CreditCard },
+  { name: "SuperAdmin Center", href: "/dashboard/admin", icon: ShieldCheck },
   { name: "Atelier Settings", href: "/dashboard/settings", icon: Settings },
 ];
 

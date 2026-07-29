@@ -86,7 +86,47 @@ export interface ImageModeInputState {
 export const STRICT_IMAGE_JEWELRY_GUARDRAIL =
   "GLOBAL PRODUCT PRESERVATION DIRECTIVE: The uploaded jewelry image is the single source of truth. Never redesign or modify the jewelry. Never regenerate a different version of the jewelry. Never add extra chains, stones, pendants, layers, or decorative elements. Never remove visible details. Preserve the exact geometry, proportions, materials, and craftsmanship. Generate one cohesive campaign world rather than unrelated backgrounds. Apply brand guidelines to the environment and lighting—not the jewelry.";
 
+function interpolateImagePromptVariables(template: string, inputs: ImageModeInputState): string {
+  const {
+    jewelry_images = [],
+    brand_guideline_images = [],
+    gender = "Female",
+    age = "25-35",
+    country = "France",
+    ethnicity = "Caucasian",
+    fantasy_theme = "dramatic coastal marble cliffs overlooking a calm crystal azure ocean",
+    animal = "a regal Black Panther",
+    creative_prompt = "Paris Fashion Week High Jewelry Gala",
+    aspect_ratio = "1:1",
+  } = inputs;
+
+  const productImageRef = jewelry_images.length > 0 ? "the uploaded product image" : "the uploaded jewelry reference image";
+  const brandGuideRef = brand_guideline_images.length > 0 ? "the uploaded brand guideline color palette image" : "the brand guideline image";
+
+  return template
+    .replace(/\{PRODUCT_IMAGE\}/g, productImageRef)
+    .replace(/\{BRAND_GUIDELINE_IMAGE\}/g, brandGuideRef)
+    .replace(/\{IMAGE_ASPECT_RATIO\}/g, aspect_ratio)
+    .replace(/\{ASPECT_RATIO\}/g, aspect_ratio)
+    .replace(/\{GENDER\}/g, gender)
+    .replace(/\{AGE_RANGE\}/g, age)
+    .replace(/\{COUNTRY_ORIGIN\}/g, country)
+    .replace(/\{ETHNICITY\}/g, ethnicity)
+    .replace(/\{EPIC_ENVIRONMENT\}/g, fantasy_theme)
+    .replace(/\{FANTASY_THEME\}/g, fantasy_theme)
+    .replace(/\{COMPANION_ANIMAL\}/g, animal)
+    .replace(/\{USER_CREATIVE_IDEA\}/g, creative_prompt)
+    .replace(/\{CREATIVE_PROMPT\}/g, creative_prompt)
+    .replace(/\{OUTPUT_QUALITY\}/g, "8K Ultra-Photorealistic Commercial Masterpiece");
+}
+
 export function buildImageMasterPrompt(inputs: ImageModeInputState): string {
+  const cacheKey = `image_${inputs.mode}`;
+  const customOverride = globalThis.__MASTER_PROMPTS_CACHE__?.get(cacheKey);
+  if (customOverride) {
+    return `${interpolateImagePromptVariables(customOverride, inputs)} ${STRICT_IMAGE_JEWELRY_GUARDRAIL}`;
+  }
+
   const {
     mode,
     jewelry_images = [],

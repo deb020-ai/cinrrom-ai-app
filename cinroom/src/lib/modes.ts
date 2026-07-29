@@ -87,7 +87,47 @@ export interface ModeInputState {
 export const STRICT_JEWELRY_GUARDRAIL =
   "CRITICAL PRODUCT INTEGRITY REQUIREMENT: The uploaded jewelry images are the single source of truth for the product's appearance. Preserve the uploaded jewelry EXACTLY as provided across all angles, with no redesign, no additional jewelry pieces, no extra gemstones, no metal changes, and no structural alterations. Only the camera motion, lighting, environment, characters, and atmosphere are generated around the exact jewelry piece.";
 
+function interpolatePromptVariables(template: string, inputs: ModeInputState): string {
+  const {
+    jewelry_images = [],
+    brand_guideline_images = [],
+    gender = "Female",
+    age = "25-35",
+    country = "France",
+    ethnicity = "Caucasian",
+    animal = "a regal Black Panther",
+    creative_prompt = "Paris Fashion Week High Jewelry Gala",
+    duration = "15s",
+    aspect_ratio = "16:9",
+  } = inputs;
+
+  const productImageRef = jewelry_images.length > 0 ? "the uploaded product image" : "the uploaded jewelry reference image";
+  const brandGuideRef = brand_guideline_images.length > 0 ? "the uploaded brand guideline color palette image" : "the brand guideline image";
+
+  return template
+    .replace(/\{PRODUCT_IMAGE\}/g, productImageRef)
+    .replace(/\{BRAND_GUIDELINE_IMAGE\}/g, brandGuideRef)
+    .replace(/\{VIDEO_DURATION\}/g, duration)
+    .replace(/\{ASPECT_RATIO\}/g, aspect_ratio)
+    .replace(/\{GENDER\}/g, gender)
+    .replace(/\{AGE_RANGE\}/g, age)
+    .replace(/\{COUNTRY_ORIGIN\}/g, country)
+    .replace(/\{ETHNICITY\}/g, ethnicity)
+    .replace(/\{MODEL_GENDER\}/g, gender)
+    .replace(/\{MODEL_AGE\}/g, age)
+    .replace(/\{MODEL_ETHNICITY\}/g, ethnicity)
+    .replace(/\{MODEL_COUNTRY\}/g, country)
+    .replace(/\{COMPANION_ANIMAL\}/g, animal)
+    .replace(/\{USER_CREATIVE_VISION\}/g, creative_prompt);
+}
+
 export function buildMasterPrompt(inputs: ModeInputState): string {
+  const cacheKey = `video_${inputs.mode}`;
+  const customOverride = globalThis.__MASTER_PROMPTS_CACHE__?.get(cacheKey);
+  if (customOverride) {
+    return `${interpolatePromptVariables(customOverride, inputs)} ${STRICT_JEWELRY_GUARDRAIL}`;
+  }
+
   const {
     mode,
     jewelry_images = [],
