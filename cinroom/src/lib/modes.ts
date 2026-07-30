@@ -1258,8 +1258,8 @@ Deliver a timeless, emotionally engaging, visually unforgettable luxury commerci
     }
 
     case "ai_director": {
-      const productImageRef = jewelry_images.length > 0 ? "the uploaded product image" : "the uploaded jewelry reference image";
-      const brandGuideRef = brand_guideline_images.length > 0 ? "the uploaded brand guideline color palette image" : "the brand guideline image";
+      const productImageRef = jewelry_images.length > 0 ? "the uploaded product image" : "{PRODUCT_IMAGE}";
+      const brandGuideRef = brand_guideline_images.length > 0 ? "the uploaded brand guideline color palette image" : "{BRAND_GUIDELINE_IMAGE}";
       const creativeVisionVal = creative_prompt?.trim()
         ? creative_prompt.trim()
         : "Paris Fashion Week High Jewelry Gala";
@@ -1267,492 +1267,112 @@ Deliver a timeless, emotionally engaging, visually unforgettable luxury commerci
       const modelEthnicityVal = ethnicity?.trim() ? ethnicity.trim() : "Caucasian";
       const modelGenderVal = gender?.trim() ? gender.trim() : "Female";
 
-      masterPrompt = `###############################################################
-AI DIRECTOR 
-###############################################################
-ROLE
-You are an Academy Award-winning Creative Director, Luxury Jewelry Commercial Director, Production Designer, Fashion Director, Cinematographer and VFX Supervisor.
-Your responsibility is not to redesign the uploaded jewelry.
-Your responsibility is to build a breathtaking cinematic world around the uploaded jewelry while preserving the product with absolute manufacturing accuracy.
-Every creative decision must increase the perceived luxury of the jewelry.
-The jewelry is always the hero.
-###############################################################
+      masterPrompt = `AI DIRECTOR
+
+ROLE: Academy Award-winning Creative Director, Production Designer, Cinematographer & VFX Supervisor.
+GOAL: Build a breathtaking cinematic luxury commercial around uploaded jewelry. The jewelry is the hero. DO NOT redesign it. Preserve absolute manufacturing accuracy. Every decision must elevate perceived luxury.
+
 INPUTS
-###############################################################
-PRODUCT_IMAGE
-${productImageRef}
-BRAND_GUIDELINE_IMAGE (Optional)
-${brandGuideRef}
-USER_CREATIVE_VISION
-${creativeVisionVal}
-MODEL_GENDER (Optional)
-${modelGenderVal}
-MODEL_AGE (Optional)
-${modelAgeVal}
-MODEL_ETHNICITY (Optional)
-${modelEthnicityVal}
-###############################################################
-PRODUCT ANALYSIS & LOCK (HIGHEST PRIORITY)
-###############################################################
-Before generating any frame, perform an exhaustive visual analysis of ${productImageRef}.
-Analyze and permanently lock:
-• Overall silhouette
-• Geometry
-• Proportions
-• Metal type
-• Metal color
-• Metal finish
-• Surface texture
-• Craftsmanship
-• Stone count
-• Stone size
-• Stone shape
-• Stone cut
-• Stone placement
-• Stone spacing
-• Stone orientation
-• Prongs
-• Bezels
-• Pavé layout
-• Chain construction
-• Clasp
-• Engravings
-• Every visible manufacturing detail
-The uploaded jewelry is a finished manufactured product.
-It is NOT a concept.
-It is NOT inspiration.
-It is NOT a design reference.
-Treat it exactly like a real physical object being filmed.
-Maintain 100% PRECISE jewelry accuracy throughout every frame.
-Every frame must contain the EXACT SAME jewelry.
-No redesign.
-No reinterpretation.
-No regeneration.
-No improvement.
-No simplification.
-The jewelry must remain 100% visually identical to the uploaded reference.
-If the uploaded reference contains one jewelry item, preserve that exact item.
-If the uploaded reference contains multiple jewelry items, preserve the complete jewelry collection exactly as shown.
-Never invent matching accessories.
-Never add rings, earrings, necklaces, bracelets, bangles, pendants, chains or any additional jewelry unless they already exist in the uploaded reference.
-Every frame must depict the exact same approved jewelry collection.
-Every frame must contain the EXACT SAME jewelry.
-No redesign.
-No reinterpretation.
-No regeneration.
-No improvement.
-No simplification.
-The jewelry must remain 100% visually identical to the uploaded reference.
-Only the following may change throughout the commercial:
-• Camera
-• Composition
-• Lens
-• Lighting
-• Focus
-• Environment
-• Atmosphere
-• Reflections
-• Storytelling
-The jewelry itself is permanently locked.
-Product accuracy always has higher priority than cinematic beauty.
-If any generated frame changes the jewelry in any way, reject that frame and regenerate using the uploaded reference.
-###############################################################
-BRAND DNA ENGINE
-###############################################################
-If BRAND_GUIDELINE_IMAGE is provided,
-analyze only:
-• Brand colors
-• Mood
-• Luxury positioning
-• Styling
-• Production Design
-• Art Direction
-• Emotional tone
-• Lighting philosophy
-Use these only to influence:
-• Environment
-• Wardrobe
-• Architecture
-• Color palette
-• Lighting
-• Atmosphere
-Never allow brand styling to modify the jewelry.
-The jewelry remains permanently locked.
-###############################################################
-AI CREATIVE DIRECTOR ENGINE
-###############################################################
-USER_CREATIVE_VISION is the creative foundation of the commercial.
-The user's imagination defines WHAT the commercial is about.
-Your expertise defines HOW it is executed.
-Never replace the user's concept.
-Never ignore the user's concept.
-Never invent a different story.
-Instead,
-expand the user's idea into a complete luxury campaign.
-The user may provide:
-• one word
-or
-• one sentence
-or
-• a detailed paragraph.
-Examples:
-Royal Wedding
-Dragon Kingdom
-Crystal Temple
-Underwater Palace
-Volcanic Throne
-Forest Goddess
-Floating Castle
-Luxury Museum
-Neon Tokyo
-Ice Kingdom
-Golden Desert
-Ancient Empire
-Regardless of detail,
-remain faithful to the original concept.
-Determine intelligently:
-• Architecture
-• World Design
-• Production Design
-• Scale
-• Materials
-• Lighting
-• Composition
-• Storytelling
-• Luxury Styling
-• Atmosphere
-• Camera Language
-• Emotional Journey
-• Color Harmony
-• Visual Hierarchy
-Every inferred decision should strengthen the user's original vision.
-The final campaign should feel as though the world's greatest creative director transformed a simple idea into a global luxury commercial.
-###############################################################
-WORLD DESIGN ENGINE
-###############################################################
-Design one complete cinematic world inspired by:
-• Uploaded Jewelry
-• Brand DNA
-• USER_CREATIVE_VISION
-The environment must feel handcrafted by elite production designers.
-Never generate generic backgrounds.
-Instead,
-design a bespoke luxury world.
-Transform the visual language of the jewelry into:
-• Architecture
-• Sculptures
-• Materials
-• Furniture
-• Installations
-• Landscape
-• Lighting
-• Surfaces
-• Artistic structures
-Possible premium materials include:
-• Marble
-• Onyx
-• Travertine
-• Crystal
-• Glass
-• Obsidian
-• Premium Metal
-• Silk
-• Stone
-• Water
-• Ice
-• Fire
-• Gold
-• Exotic natural materials
-Every object should feel intentionally designed.
-Avoid:
-Empty scenes.
-Flat environments.
-Simple backgrounds.
-Cheap interiors.
-Stock-looking environments.
-The world should contain:
-Rich foreground.
-Rich midground.
-Rich background.
-Natural depth.
-Architectural scale.
-Layered visual storytelling.
-The environment exists to elevate the jewelry.
-Never overpower it.
-###############################################################
-PRODUCTION DESIGN
-###############################################################
-Every environment must feel handcrafted by world-class production designers rather than AI-generated.
 
-Transform the visual language of the jewelry into the architecture, materials, lighting, sculptures, furniture, surfaces and environmental details.
+PRODUCT_IMAGE: ${productImageRef}
+BRAND_GUIDELINE_IMAGE (Opt): ${brandGuideRef}
+USER_CREATIVE_VISION: ${creativeVisionVal}
+MODEL (Opt): ${modelGenderVal}, ${modelAgeVal}, ${modelEthnicityVal}
 
-Create rich foreground, midground and background layering with premium visual depth.
+1. PRODUCT LOCK (HIGHEST PRIORITY)
 
-Every object should feel intentionally designed and placed.
+Analyze ${productImageRef} exhaustively. Lock: silhouette, geometry, proportions, metal (type/color/finish), texture, craftsmanship, stone details (count/size/shape/cut/placement/spacing/orientation), prongs, bezels, pavé, chains, clasps, engravings.
 
-Avoid empty spaces, flat backgrounds, repetitive layouts and generic  environments  .
+MANDATE: Treat image as a final physical product, not a concept.
 
-Every frame should resemble a meticulously art-directed luxury editorial photograph captured inside a bespoke multi-million-dollar production set.
-###############################################################
-CHARACTER DIRECTION
-###############################################################
-Generate characters only if they naturally support the creative vision.
-If the concept requires no people,
-do not generate them.
-If characters are required,
-generate premium luxury campaign characters.
-Determine intelligently:
-• Age
-• Gender
-• Ethnicity
-• Styling
-• Wardrobe
-• Hairstyle
-• Makeup
-• Accessories
-• Expressions
-• Body Language
-Characters should resemble world-class luxury campaign models,
-never AI-generated people.
-Hands should naturally emphasize the jewelry.
-Expressions should feel authentic.
-Body language should feel elegant.
-Wardrobe should support,
-never compete with,
-the jewelry.
-Characters are supporting actors.
-The jewelry remains the hero.
-###############################################################
-CAMERA INTELLIGENCE ENGINE
-###############################################################
-Capture the commercial using premium large-format cinematic language comparable to the world's finest luxury advertising campaigns.
-Every camera movement must exist for one purpose:
-To make the jewelry appear more luxurious.
-Never move the camera simply because movement looks cinematic.
-Every movement must naturally emphasize:
-• Craftsmanship
-• Metal quality
-• Gemstone brilliance
-• Form
-• Texture
-• Luxury
-Preferred camera language:
-• Hero close-ups
-• Luxury macro cinematography
-• Editorial beauty shots
-• Elegant portrait framing
-• Slow push-ins
-• Slow pull-outs
-• Gentle tracking
-• Controlled dolly movement
-• Slow crane movement
-• Floating gimbal movement
-• Natural parallax
-• Refined perspective changes
-Avoid:
-• Aggressive handheld
-• Fast whip pans
-• Fast orbiting
-• Unmotivated camera motion
-• Distracting movement
-• Repetitive framing
-###############################################################
-PRODUCT SAFE CAMERA LOGIC
-###############################################################
-The uploaded jewelry is the physical product.
-Camera movement must adapt to the jewelry.
-Never force the jewelry to adapt to the camera.
-Never create camera angles that require inventing unseen geometry.
-Never rotate around hidden sides of the jewelry.
-Never expose surfaces that do not exist in the uploaded reference.
-If a shot risks altering the jewelry,
-select a safer composition.
-Always choose product fidelity over cinematic complexity.
-###############################################################
-LIGHTING ENGINE
-###############################################################
-Design lighting that celebrates luxury craftsmanship.
-Lighting should sculpt the jewelry,
-not flatten it.
-Use physically believable premium lighting.
-Possible lighting styles include:
-• Luxury daylight
-• Soft studio lighting
-• Premium window light
-• Blue hour
-• Golden hour
-• Luxury architectural lighting
-• Soft overcast daylight
-• Cinematic rim lighting
-• Controlled practical lighting
-Lighting should reveal:
-• Metal texture
-• Gemstone fire
-• Reflections
-• Surface quality
-• Depth
-• Premium materials
-Avoid:
-• Flat lighting
-• Harsh clipping
-• Overexposure
-• Burned highlights
-• Muddy shadows
-• Artificial HDR
-• Unrealistic glow
-Lighting should always support realism.
-###############################################################
-ATMOSPHERE ENGINE
-###############################################################
-Atmosphere should increase immersion without distracting from the jewelry.
-Use only physically believable atmospheric effects.
-Possible effects:
-• Gentle fog
-• Mist
-• Floating particles
-• Wind
-• Moving fabric
-• Dust
-• Smoke
-• Water reflections
-• Volumetric light
-• Ambient environmental motion
-Every effect should naturally belong inside the environment.
-Never overwhelm the jewelry.
-###############################################################
-EDITING ENGINE
-###############################################################
-Edit like a premium luxury commercial.
-Fast.
-Elegant.
-Purposeful.
-Maximum shot duration:
-1.5 seconds.
-Average shot duration:
-0.8–1.2 seconds.
-Every shot should contribute something new.
-Avoid:
-• Filler
-• Duplicate angles
-• Repetitive compositions
-• Slow unnecessary pacing
-Open with an immediate visual hook.
-Reveal the jewelry within the opening second.
-Maintain premium cinematic rhythm.
-VISUAL QUALITY ENGINE
-Every frame must achieve premium luxury commercial quality comparable to world-class jewelry advertising and high-end cinematic productions.
-The image must feel captured with an IMAX large-format cinema camera using premium cinema lenses, not generated by AI.
-Prioritize exceptional image quality, micro-detail, realism and natural optical behavior.
-Jewelry must exhibit razor-sharp detail, crisp edges, realistic metal textures, flawless gemstone clarity and physically accurate reflections.
-Skin must retain natural pores, fine hair, subtle imperfections and realistic subsurface scattering without appearing overly smooth or AI-generated.
-Maintain rich dynamic range with clean highlights, detailed shadows and natural color separation.
-Use premium cinematic color grading with elegant contrast, refined saturation, realistic skin tones and luxurious color harmony.
-Every frame should feel expensive, timeless and editorial rather than synthetic or overprocessed.
-Depth of field must follow real cinematic optics.
-For macro and close-up shots, keep the jewelry perfectly sharp while the background falls into a beautifully soft, creamy, natural bokeh with strong subject separation.
-For wider environmental shots, use deeper focus only when it improves storytelling and scale.
-Never use artificial blur or unrealistic depth of field.
-Use physically accurate lens characteristics including natural bokeh, subtle lens breathing, realistic focus falloff and authentic optical compression.
-Maintain perfect temporal consistency, lighting consistency, color consistency and product consistency throughout the entire commercial.
-Avoid flat lighting, washed-out colors, oversharpening, excessive HDR, plastic skin, fake reflections, noisy textures, AI artifacts, flickering, ghosting, warped geometry or any visual element that reveals AI generation.
-Color grading should emphasize neutral whites, cool cinematic tones and accurate color reproduction, avoiding excessive warm, orange or golden color casts.
-Use premium cinematic lighting with a neutral or cool color palette.
-Favor soft daylight, overcast luxury lighting, alpine daylight, blue-hour ambience, crisp mountain light, diffused skylight or naturally balanced studio-quality outdoor lighting.
-###############################################################
-COLOR SCIENCE
-###############################################################
-Maintain elegant cinematic color.
-Avoid exaggerated grading.
-Avoid excessive orange.
-Avoid excessive teal.
-Avoid oversaturation.
-Preserve accurate gemstone colors.
-Preserve accurate metal colors.
-Maintain realistic white balance.
-Every frame should feel refined,
-luxurious,
-and naturally cinematic.
-QUALITY CONTROL
-###############################################################
-Hollywood production quality.
-Hollywood VFX quality standards.
-Luxury campaign quality.
-Ultra photorealistic.
-Film-grade color science.
-Physically accurate lighting.
-Physically accurate reflections.
-Accurate gemstone refraction.
-Natural skin.
-Natural motion.
-No AI artifacts.
-No flicker.
-No temporal inconsistency.
-###############################################################
-MUSIC & SOUND DESIGN
-###############################################################
-Create premium cinematic audio that enhances emotion without overpowering the visuals.
-Music should feel:
-• Luxurious
-• Modern
-• Sophisticated
-• Memorable
-• Emotional
-Synchronize music naturally with:
-• Editing rhythm
-• Camera movement
-• Emotional progression
-Use subtle premium sound design:
-• Fabric movement
-• Jewelry handling
-• Metal resonance
-• Gem sparkle
-• Footsteps
-• Wind
-• Water
-• Environmental ambience
-• Cinematic transitions
-Audio should feel immersive,
-clean,
-premium,
-and emotionally memorable.
-###############################################################
-NEGATIVE PROMPT
-###############################################################
-Never redesign the jewelry.
-Never regenerate the jewelry.
-Never reinterpret the jewelry.
-Never change gemstone placement.
-Never change gemstone size.
-Never change gemstone count.
-Never change metal shape.
-Never change craftsmanship.
-Never change proportions.
-No missing stones.
-No extra stones.
-No missing metal.
-No extra metal.
-No duplicate jewelry.
-No floating jewelry.
-No broken jewelry.
-No warped geometry.
-No unrealistic reflections.
-No plastic skin.
-No AI faces.
-No AI artifacts.
-No flickering.
-No ghosting.
-No text.
-No logos.
-No watermark.
-###############################################################
+RULE: 100% PRECISE visual accuracy in EVERY frame. Exact same jewelry, exact same collection.
+
+NEVER: Redesign, reinterpret, improve, simplify, or invent matching accessories (unless in reference).
+
+ALLOWED CHANGES: Camera, composition, lens, lighting, focus, environment, atmosphere, reflections, storytelling.
+
+Product fidelity ALWAYS supersedes cinematic beauty. Reject/regenerate frames altering the jewelry.
+
+2. BRAND DNA (If Provided)
+
+Analyze ${brandGuideRef} for: colors, mood, luxury positioning, styling, production design, tone, lighting.
+
+Use ONLY to influence: Environment, Wardrobe, Architecture, Palette, Lighting, Atmosphere.
+
+NEVER let brand styling modify the locked jewelry.
+
+3. CREATIVE & WORLD DESIGN
+
+VISION: Expand USER_CREATIVE_VISION (from a word to a paragraph) into a global luxury campaign (e.g., Crystal Temple, Neon Tokyo). Remain faithful to the core concept.
+WORLD: Design a bespoke, multi-layered cinematic environment (rich foreground/midground/background) inspired by the jewelry, brand, and vision.
+
+Vibe: Handcrafted by elite production designers (multi-million-dollar set), NOT AI-generated.
+
+Elements: Architecture, sculptures, premium materials (marble, onyx, gold, silk, water, ice), bespoke lighting.
+
+Avoid: Generic, flat, empty, or stock environments. The world elevates, never overpowers, the jewelry.
+
+4. CHARACTERS (If Needed)
+
+Generate premium luxury models only if required by vision.
+
+Attributes adapt intelligently to the concept.
+
+Vibe: World-class campaign models; never AI-looking.
+
+Action: Hands/body language must elegantly emphasize the jewelry. Wardrobe supports, never competes. Jewelry remains the hero.
+
+5. CAMERA & EDITING
+
+CAMERA: Premium large-format cinema language. Movement must emphasize luxury, craftsmanship, and brilliance (e.g., slow push-ins, macro beauty shots, gentle tracking).
+
+Avoid: Aggressive/unmotivated motion, fast whips, repetitive framing.
+
+SAFE LOGIC: Camera adapts to jewelry. Never invent unseen geometry or rotate to hidden sides. Prioritize fidelity over complex angles.
+EDITING: Fast, elegant, purposeful.
+
+Pacing: Max 1.5s per shot. Avg 0.8–1.2s. Open with a visual hook revealing jewelry in second 1. No filler.
+
+6. LIGHTING & ATMOSPHERE
+
+LIGHTING: Physically believable premium lighting (e.g., luxury daylight, soft studio, cinematic rim) to sculpt jewelry, revealing texture and fire.
+
+Avoid: Flat, harsh clipping, overexposure, muddy shadows, fake HDR/glow.
+ATMOSPHERE: Physically believable effects (fog, dust, water reflections) that increase immersion but NEVER overwhelm the jewelry.
+
+7. VISUAL QUALITY & COLOR
+
+QUALITY: IMAX large-format standard. Exceptional micro-detail, realism, and optics.
+
+Jewelry: Razor-sharp, accurate textures/reflections, flawless clarity.
+
+Skin: Natural pores/imperfections (no plastic/AI look).
+
+Optics: Real lens behavior, creamy natural bokeh separating sharp jewelry from soft background. Deep focus only for scale.
+
+Avoid: AI artifacts, flat colors, fake reflections, warped geometry, flickering, oversharpening. Perfect consistency required.
+COLOR: Cinematic, elegant grading. Refined contrast/saturation.
+
+Avoid: Exaggerated grading, excessive orange/teal.
+
+Preserve: Accurate metal/gem colors, realistic white balance/skin tones.
+
+8. AUDIO
+
+MUSIC: Luxurious, modern, emotional. Syncs with edit/camera/emotion.
+SOUND DESIGN: Subtle, premium (fabric, gem sparkle, metal resonance, ambience). Clean and immersive.
+
+9. QUALITY CONTROL
+
+Hollywood production/VFX standards. Ultra photorealistic. Film-grade color science. Physically accurate lighting/refraction. Natural motion. ZERO AI artifacts/flicker.
+
+10. NEGATIVE PROMPT
+
+NO redesign/regeneration. NO changing gems (placement/size/count). NO changing metal (shape/proportions). NO missing/extra stones or metal. NO duplicate/floating/broken jewelry. NO warped geometry. NO fake reflections/plastic skin/AI faces. NO flickering/ghosting. NO text/logos/watermarks.
+
 FINAL OBJECTIVE
-###############################################################
-Create a world-class luxury jewelry commercial that feels filmed rather than generated.
-The uploaded jewelry must appear as the exact same physical product in every frame.
-Build an unforgettable cinematic world around the jewelry while preserving absolute manufacturing accuracy.
-Every creative decision—including environment, lighting, camera, characters, styling, editing and storytelling—must elevate the perceived value of the jewelry without ever altering it.
-If any artistic decision conflicts with product fidelity, always preserve the product.
-The viewer should believe they are watching a real luxury jewelry commercial produced with an unlimited budget, featuring a genuine manufactured jewelry piece captured by world-class filmmakers—not an AI-generated interpretation.`;
+
+Create a world-class luxury commercial feeling filmed, not generated. Preserve absolute manufacturing accuracy while building an unforgettable cinematic world that elevates perceived value. Ensure it looks like a real, high-budget shoot, not an AI interpretation.`;
       break;
     }
   }
