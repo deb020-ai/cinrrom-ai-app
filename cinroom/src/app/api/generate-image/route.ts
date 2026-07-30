@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { buildImageMasterPrompt } from "@/lib/image_modes";
 import { uploadUserAssetToR2 } from "@/lib/r2";
+import { generateSeedream5ProImage } from "@/lib/byteplus";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
 const supabaseServiceKey =
@@ -65,16 +66,43 @@ export async function POST(req: Request) {
       creative_prompt: creativePrompt,
     });
 
-    const apiKey = process.env.OPENAI_API_KEY;
-
     let outputImageUrl = "";
 
-    if (apiKey) {
+    // 3. Execute ByteDance Seedream 5 Pro AI Image Generation API
+    try {
+      const seedreamRes = await generateSeedream5ProImage({
+        prompt: masterPrompt,
+        aspectRatio,
+        imageUrl: jewelryImages[0],
+        brandImageUrl: brandGuidelineImages[0],
+      });
+
+      if (seedreamRes.success && seedreamRes.imageUrl) {
+        const tempUrl = seedreamRes.imageUrl;
+        // Download image buffer and save into Cloudflare R2 permanent storage
+        const imgRes = await fetch(tempUrl);
+        const imgBuffer = Buffer.from(await imgRes.arrayBuffer());
+        outputImageUrl = await uploadUserAssetToR2(
+          userId,
+          "outputs",
+          imgBuffer,
+          `seedream5pro_${Date.now()}.png`,
+          "image/png"
+        );
+      } else {
+        console.warn("BytePlus Seedream 5 Pro primary image generation notice:", seedreamRes.error);
+      }
+    } catch (err) {
+      console.error("BytePlus Seedream 5 Pro Image API error:", err);
+    }
+
+    // Fallback: If OpenAI API key is configured as secondary backup
+    if (!outputImageUrl && process.env.OPENAI_API_KEY) {
       try {
         const response = await fetch("https://api.openai.com/v1/images/generations", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${apiKey}`,
+            "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -89,7 +117,6 @@ export async function POST(req: Request) {
         const openAiData = await response.json();
         if (openAiData?.data?.[0]?.url) {
           const tempUrl = openAiData.data[0].url;
-          // Download image buffer and save into Cloudflare R2
           const imgRes = await fetch(tempUrl);
           const imgBuffer = Buffer.from(await imgRes.arrayBuffer());
           outputImageUrl = await uploadUserAssetToR2(
@@ -100,20 +127,18 @@ export async function POST(req: Request) {
             "image/png"
           );
         }
-      } catch (err) {
-        console.error("OpenAI Image API error:", err);
-      }
+      } catch (e) {}
     }
 
     // If AI generation failed, return error without deducting credits
     if (!outputImageUrl) {
       return NextResponse.json(
-        { error: "AI Image Generation engine temporary failure. No credits were deducted." },
+        { error: "BytePlus Seedream 5 Pro AI Image Generation temporary failure. No credits were deducted." },
         { status: 500 }
       );
     }
 
-    // 3. Deduct Credits
+    // 4. Deduct Credits
     const newBalance = currentBalance - creditCost;
     await supabase
       .from("user_wallets")
@@ -126,11 +151,11 @@ export async function POST(req: Request) {
       balance_before: currentBalance,
       balance_after: newBalance,
       type: "deduction",
-      description: `Render Image Mode: ${mode} (${aspectRatio})`,
+      description: `Render Image Mode: ${mode} (${aspectRatio}) [BytePlus Seedream 5 Pro]`,
       created_at: new Date().toISOString(),
     });
 
-    // 4. Create Generation History Record
+    // 5. Create Generation History Record
     const { data: genRecord } = await supabase
       .from("generation_history")
       .insert({
@@ -152,6 +177,7 @@ export async function POST(req: Request) {
       output_url: outputImageUrl,
       credits_consumed: creditCost,
       new_balance: newBalance,
+      engine: "BytePlus Seedream 5 Pro",
     });
   } catch (err: any) {
     console.error("Image Generation API Error:", err);

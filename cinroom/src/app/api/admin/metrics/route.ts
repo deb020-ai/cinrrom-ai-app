@@ -28,30 +28,52 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Database unavailable" }, { status: 500 });
     }
 
-    // 1. Total Accounts / Users
-    const { count: totalUsersCount } = await supabase
+    // 1. Total Accounts / Users (Real Live Query)
+    const { count: walletsCount } = await supabase
       .from("user_wallets")
       .select("*", { count: "exact", head: true });
 
-    let totalAccounts = totalUsersCount || 0;
+    let totalAccounts = walletsCount || 0;
     if (totalAccounts === 0) {
       const { count: usersCount } = await supabase
         .from("users")
         .select("*", { count: "exact", head: true });
-      totalAccounts = usersCount || 1;
+      totalAccounts = usersCount || 0;
     }
 
-    // 2. Total Video Render Tasks
-    const { count: videoRendersCount } = await supabase
-      .from("render_tasks")
-      .select("*", { count: "exact", head: true });
+    // 2. Total Video Render Tasks (Real Live Query)
+    let totalVideos = 0;
+    const { count: genVideoCount } = await supabase
+      .from("generation_history")
+      .select("*", { count: "exact", head: true })
+      .or("asset_type.eq.COMMERCIAL_VIDEO,asset_type.eq.VIDEO");
 
-    // 3. Total Image Generations
-    const { count: imageRendersCount } = await supabase
-      .from("image_generations")
-      .select("*", { count: "exact", head: true });
+    if (typeof genVideoCount === "number" && genVideoCount > 0) {
+      totalVideos = genVideoCount;
+    } else {
+      const { count: renderTaskCount } = await supabase
+        .from("render_tasks")
+        .select("*", { count: "exact", head: true });
+      totalVideos = renderTaskCount || 0;
+    }
 
-    // 4. Subscriptions & Plan Breakdown
+    // 3. Total Image Generations (Real Live Query)
+    let totalImages = 0;
+    const { count: genImageCount } = await supabase
+      .from("generation_history")
+      .select("*", { count: "exact", head: true })
+      .or("asset_type.eq.EDITORIAL_IMAGE,asset_type.eq.IMAGE");
+
+    if (typeof genImageCount === "number" && genImageCount > 0) {
+      totalImages = genImageCount;
+    } else {
+      const { count: imageGenCount } = await supabase
+        .from("image_generations")
+        .select("*", { count: "exact", head: true });
+      totalImages = imageGenCount || 0;
+    }
+
+    // 4. Subscriptions & Plan Breakdown (Real Live Query)
     const { data: subscriptions } = await supabase.from("subscriptions").select("*");
 
     let starterCount = 0;
@@ -82,10 +104,7 @@ export async function GET(req: Request) {
       });
     }
 
-    const totalVideos = videoRendersCount || 18;
-    const totalImages = imageRendersCount || 42;
-    
-    const finalMRR = calculatedMRR > 0 ? calculatedMRR : (starterCount * 149 + proCount * 499 + enterpriseCount * 1999);
+    const finalMRR = calculatedMRR;
     const finalARR = finalMRR * 12;
 
     // 5. Credit Transactions / Recent Revenue
@@ -99,7 +118,7 @@ export async function GET(req: Request) {
       success: true,
       userEmail,
       metrics: {
-        totalAccounts: Math.max(totalAccounts, 1),
+        totalAccounts,
         totalVideos,
         totalImages,
         mrr: finalMRR,

@@ -167,8 +167,10 @@ export default function SuperAdminDashboardPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  // Fetch Metrics & Prompts on mount
+  // Fetch Metrics & Prompts on mount and setup live polling
   useEffect(() => {
+    let intervalId: any;
+
     async function initAdminSession() {
       try {
         const { createClient } = await import("@/lib/supabase/client");
@@ -179,6 +181,11 @@ export default function SuperAdminDashboardPage() {
 
         fetchMetrics(email);
         fetchPrompts(email);
+
+        // 🟢 Live 5-Second Auto-Polling for Real-Time Executive Analytics
+        intervalId = setInterval(() => {
+          fetchMetrics(email);
+        }, 5000);
       } catch (err) {
         fetchMetrics();
         fetchPrompts();
@@ -186,6 +193,10 @@ export default function SuperAdminDashboardPage() {
     }
 
     initAdminSession();
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
 
   // Update editor text when selected prompt changes
@@ -514,7 +525,7 @@ export default function SuperAdminDashboardPage() {
                   {loadingMetrics ? "..." : (metrics?.totalImages || 0).toLocaleString()} <span className="text-xs text-neutral-400 font-sans font-normal">campaign stills</span>
                 </div>
                 <p className="text-[11px] text-neutral-400 mt-2 font-sans">
-                  Total DALL-E 3 image generation completions.
+                  Total BytePlus Seedream 5 Pro image generation completions.
                 </p>
               </div>
 
