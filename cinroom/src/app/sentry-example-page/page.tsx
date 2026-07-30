@@ -5,6 +5,9 @@ import * as Sentry from "@sentry/nextjs";
 
 export default function SentryExamplePage() {
   useEffect(() => {
+    // 🪵 Send verbatim Sentry test log on page load
+    Sentry.logger.info("User triggered test log", { log_source: "sentry_test" });
+
     // Send a performance trace transaction on mount
     Sentry.startSpan(
       {
