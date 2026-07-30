@@ -24,6 +24,7 @@ export const metadata: Metadata = {
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 import { CookieBanner } from "@/components/shared/cookie-banner";
 
 export default function RootLayout({
@@ -37,12 +38,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} dark antialiased`}
     >
       <body className="min-h-screen bg-background text-foreground flex flex-col font-sans">
-        <SmoothScrollProvider>
-          <TooltipProvider>
-            {children}
-            <CookieBanner />
-          </TooltipProvider>
-        </SmoothScrollProvider>
+        <PostHogProvider>
+          <SmoothScrollProvider>
+            <TooltipProvider>
+              {children}
+              <CookieBanner />
+            </TooltipProvider>
+          </SmoothScrollProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
