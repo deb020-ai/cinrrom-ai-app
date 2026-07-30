@@ -6,11 +6,11 @@ import { z } from "zod";
 export const imageGenerationSchema = z.object({
   userId: z.string().min(1, "User ID is required").max(128, "Invalid User ID length"),
   mode: z.enum([
-    "outdoor_campaign",
-    "model_showcase",
-    "ai_director",
+    "product_hero",
+    "model_campaign",
     "fantasy_world",
     "animal_campaign",
+    "ai_director",
   ], { message: "Invalid campaign mode" }),
   jewelryImages: z.array(z.string()).min(1, "At least 1 jewelry reference image is required").max(10, "Maximum 10 images allowed"),
   brandGuidelineImages: z.array(z.string()).max(5, "Maximum 5 brand images allowed").optional().default([]),
