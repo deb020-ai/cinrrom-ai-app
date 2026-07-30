@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { buildImageMasterPrompt } from "@/lib/image_modes";
 import { uploadUserAssetToR2 } from "@/lib/r2";
 import { generateSeedream5ProImage } from "@/lib/byteplus";
+import * as Sentry from "@sentry/nextjs";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
 const supabaseServiceKey =
@@ -32,6 +33,10 @@ export async function POST(req: Request) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized: User session required" }, { status: 401 });
     }
+
+    // 🤖 Sentry GenAI & Agent Monitoring: Set User & Conversation ID
+    Sentry.setUser({ id: userId });
+    Sentry.setConversationId(`img_gen_${userId}_${Date.now()}`);
 
     const creditCost = 0.2; // 0.2 Credits per Editorial Image Render
 

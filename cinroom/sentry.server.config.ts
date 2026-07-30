@@ -9,6 +9,9 @@ Sentry.init({
   profileLifecycle: "trace",
   debug: false,
   enableLogs: true,
+  dataCollection: {
+    genAI: { inputs: true, outputs: true },
+  },
   integrations: [
     nodeProfilingIntegration(),
     Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }),

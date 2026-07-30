@@ -7,6 +7,9 @@ Sentry.init({
   profileSessionSampleRate: 1.0,
   debug: false,
   enableLogs: true,
+  dataCollection: {
+    genAI: { inputs: true, outputs: true },
+  },
   replaysOnErrorSampleRate: 1.0,
   replaysSessionSampleRate: 0.1,
   tracePropagationTargets: ["localhost", /^https:\/\/cinroom\.com\/api/, /^https:\/\/www\.cinroom\.com\/api/],

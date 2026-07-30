@@ -17,6 +17,26 @@ export default function SentryExamplePage() {
     );
   }, []);
 
+  const triggerAgentTrace = () => {
+    Sentry.setUser({ id: "demo_user_101", email: "director@cinroom.com", username: "CinroomDirector" });
+    Sentry.setConversationId("cinroom_ai_director_conv_889");
+
+    Sentry.startSpan(
+      {
+        name: "Cinroom AI Director Agent Trace",
+        op: "gen_ai.chat",
+        attributes: {
+          "gen_ai.model": "Doubao-Seedream-5-Pro",
+          "gen_ai.system": "BytePlus-Ark-SeaDance",
+        },
+      },
+      () => {
+        Sentry.logger.info("Cinroom AI Director Agent active", { conversation_id: "cinroom_ai_director_conv_889" });
+        alert("GenAI Agent & Conversation Trace sent to Sentry Agent Monitoring!");
+      }
+    );
+  };
+
   const triggerMetrics = () => {
     Sentry.metrics.count("test_metric", 1);
     Sentry.metrics.count("user_action_render_click", 1);
@@ -62,14 +82,22 @@ export default function SentryExamplePage() {
       <div className="p-8 rounded-2xl bg-neutral-900 border border-white/10 text-center space-y-4 max-w-md shadow-2xl">
         <h1 className="text-2xl font-bold font-serif text-amber-200">Sentry Verification & Suite</h1>
         <p className="text-xs text-neutral-400">
-          Test live metrics, logs, performance tracing & error monitoring on (<span className="text-amber-200">cinroom.com</span>).
+          Test live GenAI Agent monitoring, metrics, logs & tracing on (<span className="text-amber-200">cinroom.com</span>).
         </p>
 
         <div className="space-y-3 pt-2">
           <button
             type="button"
+            onClick={triggerAgentTrace}
+            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-mono text-xs font-bold transition-all shadow-lg cursor-pointer"
+          >
+            Trigger GenAI Agent & Conversation Trace 🤖
+          </button>
+
+          <button
+            type="button"
             onClick={triggerMetrics}
-            className="w-full py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold transition-all shadow-lg cursor-pointer"
+            className="w-full py-3 px-4 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-mono text-xs font-bold transition-all shadow-lg cursor-pointer"
           >
             Send Custom Metrics Event 📈
           </button>

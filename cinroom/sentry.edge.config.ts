@@ -5,4 +5,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
   debug: false,
   enableLogs: true,
+  dataCollection: {
+    genAI: { inputs: true, outputs: true },
+  },
 });
