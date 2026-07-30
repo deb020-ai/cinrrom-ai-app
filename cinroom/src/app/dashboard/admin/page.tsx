@@ -243,9 +243,9 @@ export default function SuperAdminDashboardPage() {
             updated_at: new Date().toISOString(),
           },
         }));
-        showToast({ type: "success", text: `Prompt "${currentConfig.name}" updated platform-wide!` });
+        showToast({ type: "success", text: data.message || `Prompt "${currentConfig.name}" updated platform-wide!` });
       } else {
-        showToast({ type: "error", text: data.error || "Failed to save prompt" });
+        showToast({ type: "error", text: data.error || data.message || "Failed to save prompt" });
       }
     } catch (err: any) {
       showToast({ type: "error", text: err.message || "Exception saving prompt" });
