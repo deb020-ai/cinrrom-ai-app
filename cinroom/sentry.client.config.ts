@@ -6,7 +6,9 @@ Sentry.init({
   debug: false,
   replaysOnErrorSampleRate: 1.0,
   replaysSessionSampleRate: 0.1,
+  tracePropagationTargets: ["localhost", /^https:\/\/cinroom\.com\/api/, /^https:\/\/www\.cinroom\.com\/api/],
   integrations: [
+    Sentry.browserTracingIntegration(),
     Sentry.replayIntegration({
       maskAllText: false,
       blockAllMedia: false,
