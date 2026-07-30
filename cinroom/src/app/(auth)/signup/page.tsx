@@ -22,6 +22,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otpCode, setOtpCode] = useState("");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -87,6 +88,11 @@ export default function SignupPage() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!agreedToTerms) {
+      setError("You must agree to the Terms of Service and Privacy Policy to create an account.");
+      return;
+    }
+
     if (!isPasswordStrong) {
       setError("Password must be at least 8 characters long and contain a number.");
       return;
@@ -286,10 +292,33 @@ export default function SignupPage() {
                 )}
               </div>
 
+              {/* Mandatory Terms & Conditions Checkbox */}
+              <div className="flex items-start gap-2.5 pt-2 pb-1">
+                <input
+                  type="checkbox"
+                  id="terms-checkbox"
+                  required
+                  checked={agreedToTerms}
+                  onChange={(e) => setAgreedToTerms(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded border-white/20 bg-black/60 text-amber-500 focus:ring-amber-500/40 cursor-pointer shrink-0"
+                />
+                <label htmlFor="terms-checkbox" className="text-[11px] font-sans text-neutral-400 leading-snug cursor-pointer select-none">
+                  I agree to Cinroom's{" "}
+                  <Link href="/terms" target="_blank" className="text-amber-200 underline font-medium hover:text-white">
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link href="/privacy" target="_blank" className="text-amber-200 underline font-medium hover:text-white">
+                    Privacy Policy
+                  </Link>
+                  .
+                </label>
+              </div>
+
               <Button
                 type="submit"
-                disabled={loading}
-                className="w-full h-12 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] transition-all duration-300 rounded-xl mt-4 cursor-pointer"
+                disabled={loading || !agreedToTerms}
+                className="w-full h-12 text-xs font-mono tracking-[0.15em] uppercase bg-gradient-to-r from-[#E5D5C5] via-[#C5A880] to-[#A38257] text-black font-semibold shadow-[0_0_25px_rgba(197,168,128,0.25)] hover:shadow-[0_0_35px_rgba(197,168,128,0.4)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 rounded-xl mt-3 cursor-pointer"
               >
                 {loading ? "Creating Workspace..." : "Create Atelier & Claim Credits"}
                 <ArrowRight className="w-4 h-4 ml-2" />

@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { Diamond, FileText, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Diamond, FileText, ArrowLeft, CheckCircle2, ShieldCheck, Lock } from "lucide-react";
 
 export const metadata = {
   title: "Terms of Service | Cinroom AI",
-  description: "Terms of Service, Commercial Usage Rights, and License Agreement for Cinroom AI.",
+  description: "Terms of Service, Commercial Usage Rights, Account Consent, and Licensing Agreement for Cinroom AI.",
 };
 
 export default function TermsOfServicePage() {
@@ -49,10 +49,10 @@ export default function TermsOfServicePage() {
           
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white font-mono border-b border-white/10 pb-2">
-              1. Acceptance of Terms
+              1. Acceptance of Terms & Mandatory Account Agreement
             </h2>
             <p>
-              By creating an account, accessing, or using the Cinroom AI platform (&quot;Service&quot;), you agree to be bound by these Terms of Service (&quot;Terms&quot;). If you are accessing the Service on behalf of a company or luxury maison, you represent that you have full legal authority to bind that entity to these Terms.
+              By creating an account (via Work Email OTP verification or Google Single Sign-On), accessing, or using the Cinroom AI platform (&quot;Service&quot;), you explicitly agree to be legally bound by these Terms of Service (&quot;Terms&quot;) and our Privacy Policy. Account creation requires checking the mandatory agreement box confirming that you have read, understood, and accepted these Terms. If you are accessing the Service on behalf of a luxury maison, brand, or agency, you represent and warrant that you possess full legal authority to bind that entity.
             </p>
           </section>
 
@@ -69,21 +69,41 @@ export default function TermsOfServicePage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white font-mono border-b border-white/10 pb-2">
-              2. Intellectual Property & Uploaded Assets
+              2. Intellectual Property & Uploaded Product Assets
             </h2>
             <ul className="list-disc pl-5 space-y-2 text-neutral-300">
               <li>
                 <strong className="text-white">Uploaded Jewelry Ownership:</strong> You retain complete, uncompromised intellectual property rights and copyrights over all uploaded jewelry photographs, CAD files, brand guidelines, and product references.
               </li>
               <li>
-                <strong className="text-white">Platform Technology:</strong> Cinroom AI retains all rights, title, and interest in and to the platform, proprietary master prompt algorithms, AI orchestration engine, software code, and visual interface.
+                <strong className="text-white">File Upload Limit:</strong> High-resolution photos up to <strong className="text-white">20 MB per file</strong> (PNG, JPG, WEBP) are supported to accommodate direct mobile camera shots from luxury ateliers.
+              </li>
+              <li>
+                <strong className="text-white">Platform Technology & Prompt Engine:</strong> Cinroom AI retains all rights, title, and interest in and to the platform, proprietary master prompt algorithms, AI orchestration engine, software code, and visual interface.
               </li>
             </ul>
           </section>
 
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white font-mono border-b border-white/10 pb-2">
-              3. Subscriptions, Credits & Billing
+              3. Rate Limiting & Concurrency Security Policy
+            </h2>
+            <p>
+              To ensure platform stability and prevent infrastructure abuse, the following security constraints apply:
+            </p>
+            <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+              <li>
+                <strong className="text-white">Concurrency Locks:</strong> A single account may run a maximum of <strong className="text-white">2 active video commercial renders</strong> and <strong className="text-white">2 active image renders</strong> simultaneously.
+              </li>
+              <li>
+                <strong className="text-white">API Rate Limiting:</strong> Generation and status endpoints are rate-limited (max 10-15 requests per minute). Automated script spamming or bot scraping is strictly prohibited.
+              </li>
+            </ul>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-lg font-bold text-white font-mono border-b border-white/10 pb-2">
+              4. Subscriptions, Credits & Billing
             </h2>
             <ul className="list-disc pl-5 space-y-2 text-neutral-300">
               <li>
@@ -100,21 +120,21 @@ export default function TermsOfServicePage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white font-mono border-b border-white/10 pb-2">
-              4. Refund Policy
+              5. Refund Policy & Failure Protections
             </h2>
             <p>
               Due to the significant cloud GPU compute resources consumed immediately upon rendering AI commercials:
             </p>
             <ul className="list-disc pl-5 space-y-2 text-neutral-300">
               <li>Completed video and image renders are generally non-refundable once processed.</li>
-              <li>If a technical system failure occurs during rendering (e.g. GPU crash or server timeout), your credits will be automatically refunded back to your wallet balance.</li>
+              <li>If a technical system failure occurs during rendering (e.g. GPU crash or provider timeout), your credits will be automatically refunded back to your wallet balance.</li>
               <li>Subscription cancellation stops future renewal charges; current billing period access remains active until the end of the period.</li>
             </ul>
           </section>
 
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white font-mono border-b border-white/10 pb-2">
-              5. Acceptable Use Policy
+              6. Acceptable Use Policy
             </h2>
             <p>You agree NOT to use the Service to:</p>
             <ul className="list-disc pl-5 space-y-2 text-neutral-300">
@@ -127,7 +147,7 @@ export default function TermsOfServicePage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white font-mono border-b border-white/10 pb-2">
-              6. Limitation of Liability
+              7. Limitation of Liability
             </h2>
             <p>
               To the maximum extent permitted by applicable law, Cinroom AI shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your access to or use of the Service. In no event shall Cinroom AI&apos;s total aggregate liability exceed the total amount paid by you to Cinroom in the twelve (12) months preceding the claim.
@@ -136,7 +156,7 @@ export default function TermsOfServicePage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white font-mono border-b border-white/10 pb-2">
-              7. Governing Law & Contact
+              8. Governing Law & Legal Contact
             </h2>
             <p>
               These Terms shall be governed by and construed in accordance with applicable commercial contract law. For legal inquiries or licensing questions:
