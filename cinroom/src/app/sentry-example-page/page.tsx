@@ -17,6 +17,13 @@ export default function SentryExamplePage() {
     );
   }, []);
 
+  const triggerMetrics = () => {
+    Sentry.metrics.count("test_metric", 1);
+    Sentry.metrics.count("user_action_render_click", 1);
+    Sentry.metrics.distribution("api_response_time", 145);
+    alert("Sentry Custom Metrics (count: test_metric, distribution: 145ms) sent to Sentry!");
+  };
+
   const triggerLog = () => {
     Sentry.logger.info("User triggered test log from Cinroom Studio", { log_source: "sentry_test" });
     console.log("[Cinroom Console Log Test] console.log captured by Sentry consoleLoggingIntegration");
@@ -53,12 +60,20 @@ export default function SentryExamplePage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 space-y-6">
       <div className="p-8 rounded-2xl bg-neutral-900 border border-white/10 text-center space-y-4 max-w-md shadow-2xl">
-        <h1 className="text-2xl font-bold font-serif text-amber-200">Sentry Verification & Tracing</h1>
+        <h1 className="text-2xl font-bold font-serif text-amber-200">Sentry Verification & Suite</h1>
         <p className="text-xs text-neutral-400">
-          Test live logs, performance tracing & error monitoring on (<span className="text-amber-200">cinroom.com</span>).
+          Test live metrics, logs, performance tracing & error monitoring on (<span className="text-amber-200">cinroom.com</span>).
         </p>
 
         <div className="space-y-3 pt-2">
+          <button
+            type="button"
+            onClick={triggerMetrics}
+            className="w-full py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold transition-all shadow-lg cursor-pointer"
+          >
+            Send Custom Metrics Event 📈
+          </button>
+
           <button
             type="button"
             onClick={triggerLog}
