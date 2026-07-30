@@ -130,18 +130,19 @@ export async function getMasterPromptTemplate(
   defaultText: string
 ): Promise<string> {
   const cacheKey = `${studioType}_${modeId}`;
-  const cache = getCache();
 
-  if (cache.has(cacheKey)) {
-    return cache.get(cacheKey)!;
-  }
-
-  // Check Disk Storage
+  // 1. Check Disk & DB Overrides dynamically live
   const allPrompts = await getAllSavedMasterPrompts();
   if (allPrompts[cacheKey]?.template_text) {
     const val = allPrompts[cacheKey].template_text;
-    cache.set(cacheKey, val);
+    getCache().set(cacheKey, val);
     return val;
+  }
+
+  // 2. Check RAM Cache
+  const cache = getCache();
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey)!;
   }
 
   cache.set(cacheKey, defaultText);
