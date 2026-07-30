@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import fs from "fs";
+import path from "path";
 
 export interface MasterPromptTemplateRecord {
   id: string;
@@ -16,8 +18,68 @@ declare global {
 function getCache(): Map<string, string> {
   if (!globalThis.__MASTER_PROMPTS_CACHE__) {
     globalThis.__MASTER_PROMPTS_CACHE__ = new Map<string, string>();
+    // Load disk persistent file into RAM cache on boot
+    loadDiskPromptsIntoCache();
   }
   return globalThis.__MASTER_PROMPTS_CACHE__;
+}
+
+function getDiskFilePath(): string {
+  return path.join(process.cwd(), "src", "lib", "saved_prompts.json");
+}
+
+function loadDiskPromptsIntoCache() {
+  try {
+    const filePath = getDiskFilePath();
+    if (fs.existsSync(filePath)) {
+      const raw = fs.readFileSync(filePath, "utf8");
+      if (raw.trim()) {
+        const json = JSON.parse(raw);
+        const cache = globalThis.__MASTER_PROMPTS_CACHE__ || new Map<string, string>();
+        Object.keys(json).forEach((key) => {
+          if (json[key]?.template_text) {
+            cache.set(key, json[key].template_text);
+          }
+        });
+        globalThis.__MASTER_PROMPTS_CACHE__ = cache;
+      }
+    }
+  } catch (err) {
+    console.warn("[DynamicPrompts] Error reading disk saved_prompts.json:", err);
+  }
+}
+
+function saveDiskPrompt(record: MasterPromptTemplateRecord) {
+  try {
+    const filePath = getDiskFilePath();
+    let currentData: Record<string, MasterPromptTemplateRecord> = {};
+    if (fs.existsSync(filePath)) {
+      const raw = fs.readFileSync(filePath, "utf8");
+      if (raw.trim()) {
+        currentData = JSON.parse(raw);
+      }
+    }
+    currentData[record.id] = record;
+    fs.writeFileSync(filePath, JSON.stringify(currentData, null, 2), "utf8");
+  } catch (err) {
+    console.warn("[DynamicPrompts] Error writing to disk saved_prompts.json:", err);
+  }
+}
+
+function deleteDiskPrompt(id: string) {
+  try {
+    const filePath = getDiskFilePath();
+    if (fs.existsSync(filePath)) {
+      const raw = fs.readFileSync(filePath, "utf8");
+      if (raw.trim()) {
+        const currentData = JSON.parse(raw);
+        delete currentData[id];
+        fs.writeFileSync(filePath, JSON.stringify(currentData, null, 2), "utf8");
+      }
+    }
+  } catch (err) {
+    console.warn("[DynamicPrompts] Error deleting from disk saved_prompts.json:", err);
+  }
 }
 
 function getSupabaseAdmin() {
@@ -25,6 +87,41 @@ function getSupabaseAdmin() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
   if (!url || !key) return null;
   return createClient(url, key);
+}
+
+export async function getAllSavedMasterPrompts(): Promise<Record<string, MasterPromptTemplateRecord>> {
+  const result: Record<string, MasterPromptTemplateRecord> = {};
+
+  // 1. Read Disk JSON storage
+  try {
+    const filePath = getDiskFilePath();
+    if (fs.existsSync(filePath)) {
+      const raw = fs.readFileSync(filePath, "utf8");
+      if (raw.trim()) {
+        const json = JSON.parse(raw);
+        Object.assign(result, json);
+      }
+    }
+  } catch (err) {
+    console.warn("[DynamicPrompts] Error reading disk file in getAllSavedMasterPrompts:", err);
+  }
+
+  // 2. Read Supabase DB overrides
+  try {
+    const supabase = getSupabaseAdmin();
+    if (supabase) {
+      const { data, error } = await supabase.from("master_prompt_templates").select("*");
+      if (!error && data) {
+        data.forEach((row) => {
+          result[row.id] = row;
+        });
+      }
+    }
+  } catch (err) {
+    console.warn("[DynamicPrompts] DB lookup error in getAllSavedMasterPrompts:", err);
+  }
+
+  return result;
 }
 
 export async function getMasterPromptTemplate(
@@ -39,22 +136,12 @@ export async function getMasterPromptTemplate(
     return cache.get(cacheKey)!;
   }
 
-  try {
-    const supabase = getSupabaseAdmin();
-    if (supabase) {
-      const { data, error } = await supabase
-        .from("master_prompt_templates")
-        .select("template_text")
-        .eq("id", cacheKey)
-        .maybeSingle();
-
-      if (!error && data?.template_text) {
-        cache.set(cacheKey, data.template_text);
-        return data.template_text;
-      }
-    }
-  } catch (err) {
-    console.warn(`[DynamicPrompts] DB lookup warning for ${cacheKey}, using default:`, err);
+  // Check Disk Storage
+  const allPrompts = await getAllSavedMasterPrompts();
+  if (allPrompts[cacheKey]?.template_text) {
+    const val = allPrompts[cacheKey].template_text;
+    cache.set(cacheKey, val);
+    return val;
   }
 
   cache.set(cacheKey, defaultText);
@@ -70,29 +157,31 @@ export async function updateMasterPromptTemplate(
   const cacheKey = `${studioType}_${modeId}`;
   const cache = getCache();
 
-  // 1. ALWAYS update Server RAM Cache immediately (0ms overhead, instant platform-wide update)
+  const record: MasterPromptTemplateRecord = {
+    id: cacheKey,
+    studio_type: studioType,
+    mode_id: modeId,
+    name: name,
+    template_text: templateText,
+    updated_at: new Date().toISOString(),
+  };
+
+  // 1. Update RAM Cache
   cache.set(cacheKey, templateText);
 
-  // 2. Persist to Supabase DB if table exists
+  // 2. Save to Disk JSON file (Permanent server persistence across reloads)
+  saveDiskPrompt(record);
+
+  // 3. Persist to Supabase DB if table exists
   try {
     const supabase = getSupabaseAdmin();
     if (supabase) {
       const { error } = await supabase
         .from("master_prompt_templates")
-        .upsert(
-          {
-            id: cacheKey,
-            studio_type: studioType,
-            mode_id: modeId,
-            name: name,
-            template_text: templateText,
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: "id" }
-        );
+        .upsert(record, { onConflict: "id" });
 
       if (error) {
-        console.warn(`[DynamicPrompts] DB sync notice (${error.message}). Prompt is active in server RAM cache!`);
+        console.warn(`[DynamicPrompts] DB sync notice (${error.message}). Saved persistently to server disk & RAM!`);
       }
     }
   } catch (err: any) {
@@ -101,7 +190,7 @@ export async function updateMasterPromptTemplate(
 
   return {
     success: true,
-    message: `Prompt template "${name}" updated in RAM cache & applied platform-wide!`,
+    message: `Prompt template "${name}" saved persistently & applied platform-wide!`,
   };
 }
 
@@ -112,6 +201,8 @@ export async function resetMasterPromptTemplate(
   const cacheKey = `${studioType}_${modeId}`;
   const cache = getCache();
   cache.delete(cacheKey);
+
+  deleteDiskPrompt(cacheKey);
 
   try {
     const supabase = getSupabaseAdmin();

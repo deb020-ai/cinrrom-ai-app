@@ -1,14 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import { updateMasterPromptTemplate, resetMasterPromptTemplate } from "@/lib/dynamic_prompts";
+import { updateMasterPromptTemplate, resetMasterPromptTemplate, getAllSavedMasterPrompts } from "@/lib/dynamic_prompts";
 import { isUserSuperAdmin } from "@/lib/admin_auth";
-
-function getSupabaseAdmin() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-  if (!url || !key) return null;
-  return createClient(url, key);
-}
 
 export async function GET(req: Request) {
   try {
@@ -24,21 +16,11 @@ export async function GET(req: Request) {
       );
     }
 
-    const supabase = getSupabaseAdmin();
-    let dbPrompts: Record<string, any> = {};
-
-    if (supabase) {
-      const { data, error } = await supabase.from("master_prompt_templates").select("*");
-      if (!error && data) {
-        data.forEach((row) => {
-          dbPrompts[row.id] = row;
-        });
-      }
-    }
+    const overrides = await getAllSavedMasterPrompts();
 
     return NextResponse.json({
       success: true,
-      overrides: dbPrompts,
+      overrides: overrides || {},
     });
   } catch (err: any) {
     console.error("[AdminPrompts] Error fetching prompts:", err);
