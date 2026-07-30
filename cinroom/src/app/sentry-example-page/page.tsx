@@ -17,6 +17,12 @@ export default function SentryExamplePage() {
     );
   }, []);
 
+  const triggerLog = () => {
+    Sentry.logger.info("User triggered test log from Cinroom Studio", { log_source: "sentry_test" });
+    console.log("[Cinroom Console Log Test] console.log captured by Sentry consoleLoggingIntegration");
+    alert("Structured Test Log sent to Sentry Logs!");
+  };
+
   const triggerTrace = () => {
     Sentry.startSpan(
       {
@@ -49,10 +55,18 @@ export default function SentryExamplePage() {
       <div className="p-8 rounded-2xl bg-neutral-900 border border-white/10 text-center space-y-4 max-w-md shadow-2xl">
         <h1 className="text-2xl font-bold font-serif text-amber-200">Sentry Verification & Tracing</h1>
         <p className="text-xs text-neutral-400">
-          Test live performance tracing & error monitoring on your production site (<span className="text-amber-200">cinroom.com</span>).
+          Test live logs, performance tracing & error monitoring on (<span className="text-amber-200">cinroom.com</span>).
         </p>
 
         <div className="space-y-3 pt-2">
+          <button
+            type="button"
+            onClick={triggerLog}
+            className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-bold transition-all shadow-lg cursor-pointer"
+          >
+            Send Structured Test Log 🪵
+          </button>
+
           <button
             type="button"
             onClick={triggerTrace}
