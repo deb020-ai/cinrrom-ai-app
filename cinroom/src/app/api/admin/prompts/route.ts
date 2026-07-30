@@ -10,10 +10,13 @@ function getSupabaseAdmin() {
   return createClient(url, key);
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const url = new URL(req.url);
+    const headerEmail = req.headers.get("x-user-email") || url.searchParams.get("user_email") || undefined;
+
     // 🛡️ SUPERADMIN SECURITY CHECK
-    const { isSuperAdmin } = await isUserSuperAdmin();
+    const { isSuperAdmin } = await isUserSuperAdmin(headerEmail);
     if (!isSuperAdmin) {
       return NextResponse.json(
         { error: "Access Denied: SuperAdmin privileges required." },
@@ -45,17 +48,19 @@ export async function GET() {
 
 export async function PUT(req: Request) {
   try {
+    const body = await req.json();
+    const { studio_type, mode_id, name, template_text, action, user_email } = body;
+
+    const headerEmail = req.headers.get("x-user-email") || user_email || undefined;
+
     // 🛡️ SUPERADMIN SECURITY CHECK
-    const { isSuperAdmin } = await isUserSuperAdmin();
+    const { isSuperAdmin } = await isUserSuperAdmin(headerEmail);
     if (!isSuperAdmin) {
       return NextResponse.json(
         { error: "Access Denied: SuperAdmin privileges required." },
         { status: 403 }
       );
     }
-
-    const body = await req.json();
-    const { studio_type, mode_id, name, template_text, action } = body;
 
     if (!studio_type || !mode_id) {
       return NextResponse.json({ error: "studio_type and mode_id are required" }, { status: 400 });

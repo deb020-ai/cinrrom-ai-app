@@ -157,6 +157,7 @@ export default function SuperAdminDashboardPage() {
 
   // Security & Metrics State
   const [isUnauthorized, setIsUnauthorized] = useState(false);
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
   const [metrics, setMetrics] = useState<AdminMetrics | null>(null);
   const [loadingMetrics, setLoadingMetrics] = useState(true);
 
@@ -168,8 +169,23 @@ export default function SuperAdminDashboardPage() {
 
   // Fetch Metrics & Prompts on mount
   useEffect(() => {
-    fetchMetrics();
-    fetchPrompts();
+    async function initAdminSession() {
+      try {
+        const { createClient } = await import("@/lib/supabase/client");
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        const email = user?.email || "";
+        if (email) setCurrentUserEmail(email);
+
+        fetchMetrics(email);
+        fetchPrompts(email);
+      } catch (err) {
+        fetchMetrics();
+        fetchPrompts();
+      }
+    }
+
+    initAdminSession();
   }, []);
 
   // Update editor text when selected prompt changes
@@ -183,10 +199,14 @@ export default function SuperAdminDashboardPage() {
     }
   }, [selectedPromptKey, promptOverrides]);
 
-  const fetchMetrics = async () => {
+  const fetchMetrics = async (email?: string) => {
     setLoadingMetrics(true);
     try {
-      const res = await fetch("/api/admin/metrics");
+      const targetEmail = email || currentUserEmail;
+      const headers: Record<string, string> = {};
+      if (targetEmail) headers["x-user-email"] = targetEmail;
+
+      const res = await fetch(`/api/admin/metrics${targetEmail ? `?user_email=${encodeURIComponent(targetEmail)}` : ""}`, { headers });
       if (res.status === 403) {
         setIsUnauthorized(true);
         return;
@@ -202,9 +222,13 @@ export default function SuperAdminDashboardPage() {
     }
   };
 
-  const fetchPrompts = async () => {
+  const fetchPrompts = async (email?: string) => {
     try {
-      const res = await fetch("/api/admin/prompts");
+      const targetEmail = email || currentUserEmail;
+      const headers: Record<string, string> = {};
+      if (targetEmail) headers["x-user-email"] = targetEmail;
+
+      const res = await fetch(`/api/admin/prompts${targetEmail ? `?user_email=${encodeURIComponent(targetEmail)}` : ""}`, { headers });
       const data = await res.json();
       if (data.success && data.overrides) {
         setPromptOverrides(data.overrides);
@@ -222,14 +246,18 @@ export default function SuperAdminDashboardPage() {
     showToast(null);
 
     try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (currentUserEmail) headers["x-user-email"] = currentUserEmail;
+
       const res = await fetch("/api/admin/prompts", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({
           studio_type: currentConfig.studio_type,
           mode_id: currentConfig.mode_id,
           name: currentConfig.name,
           template_text: editorText,
+          user_email: currentUserEmail,
         }),
       });
 
@@ -264,13 +292,17 @@ export default function SuperAdminDashboardPage() {
 
     setIsSaving(true);
     try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (currentUserEmail) headers["x-user-email"] = currentUserEmail;
+
       const res = await fetch("/api/admin/prompts", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({
           studio_type: currentConfig.studio_type,
           mode_id: currentConfig.mode_id,
           action: "reset",
+          user_email: currentUserEmail,
         }),
       });
 

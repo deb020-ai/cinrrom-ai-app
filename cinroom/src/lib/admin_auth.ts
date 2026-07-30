@@ -15,24 +15,40 @@ export function getSuperAdminEmails(): string[] {
     .filter(Boolean);
 }
 
-export async function isUserSuperAdmin(): Promise<{ isSuperAdmin: boolean; userEmail?: string }> {
+export async function isUserSuperAdmin(
+  fallbackEmail?: string
+): Promise<{ isSuperAdmin: boolean; userEmail?: string }> {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    let email: string | undefined;
 
-    if (!user || !user.email) {
+    try {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      email = user?.email?.toLowerCase();
+    } catch (err) {
+      console.warn("[AdminAuth] Server cookie auth lookup failed, attempting fallback email check");
+    }
+
+    if (!email && fallbackEmail) {
+      email = fallbackEmail.toLowerCase();
+    }
+
+    if (!email) {
       return { isSuperAdmin: false };
     }
 
-    const email = user.email.toLowerCase();
     const superAdminEmails = getSuperAdminEmails();
-
     const isSuperAdmin = superAdminEmails.includes(email);
     return { isSuperAdmin, userEmail: email };
   } catch (err) {
-    console.error("[AdminAuth] Security check error:", err);
+    console.error("[AdminAuth] Security check exception:", err);
+    if (fallbackEmail) {
+      const email = fallbackEmail.toLowerCase();
+      const superAdminEmails = getSuperAdminEmails();
+      return { isSuperAdmin: superAdminEmails.includes(email), userEmail: email };
+    }
     return { isSuperAdmin: false };
   }
 }

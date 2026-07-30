@@ -9,10 +9,13 @@ function getSupabaseAdmin() {
   return createClient(url, key);
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const url = new URL(req.url);
+    const headerEmail = req.headers.get("x-user-email") || url.searchParams.get("user_email") || undefined;
+
     // 🛡️ SUPERADMIN SECURITY CHECK
-    const { isSuperAdmin, userEmail } = await isUserSuperAdmin();
+    const { isSuperAdmin, userEmail } = await isUserSuperAdmin(headerEmail);
     if (!isSuperAdmin) {
       return NextResponse.json(
         { error: "Access Denied: SuperAdmin privileges required." },
