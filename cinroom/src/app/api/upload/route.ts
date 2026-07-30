@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { uploadUserAssetToR2 } from "@/lib/r2";
+import { validateUploadFile } from "@/lib/validations";
 
 export async function POST(req: Request) {
   try {
@@ -9,6 +10,12 @@ export async function POST(req: Request) {
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    // 🛡️ SECURITY: 20MB File Upload Security & MIME Validation
+    const valResult = validateUploadFile({ size: file.size, type: file.type, name: file.name });
+    if (!valResult.valid) {
+      return NextResponse.json({ error: valResult.error || "Invalid file" }, { status: 400 });
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());

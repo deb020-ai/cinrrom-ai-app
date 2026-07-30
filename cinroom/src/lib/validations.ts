@@ -53,7 +53,7 @@ export const videoGenerationSchema = z.object({
  * Strict File Upload Security Validation
  */
 export const fileUploadValidation = {
-  maxSizeBytes: 10 * 1024 * 1024, // 10 MB Max
+  maxSizeBytes: 20 * 1024 * 1024, // 20 MB Max
   allowedMimeTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp"],
   allowedExtensions: [".png", ".jpg", ".jpeg", ".webp"],
 };
@@ -64,7 +64,7 @@ export const fileUploadValidation = {
 export function validateUploadFile(file: { size: number; type: string; name: string }): { valid: boolean; error?: string } {
   if (!file) return { valid: false, error: "No file provided" };
   if (file.size > fileUploadValidation.maxSizeBytes) {
-    return { valid: false, error: "File size exceeds 10MB limit." };
+    return { valid: false, error: "File size exceeds 20MB limit." };
   }
   const mimeType = file.type.toLowerCase();
   if (!fileUploadValidation.allowedMimeTypes.includes(mimeType)) {

@@ -460,7 +460,7 @@ export default function GeneratePage() {
                   {jewelryItems.length > 0 ? "+ Click to Upload Additional Angles / Views" : "Drop Your Jewelry Photo Here"}
                 </div>
                 <div className="text-[10px] text-neutral-400 font-light">
-                  Supports PNG, JPG, WEBP. Preserved 100% exactly.
+                  Supports High-Res PNG, JPG, WEBP (up to 20MB per photo). Preserved 100% exactly.
                 </div>
               </div>
 
