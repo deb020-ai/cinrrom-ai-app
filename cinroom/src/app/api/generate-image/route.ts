@@ -6,6 +6,7 @@ import { generateSeedream5ProImage } from "@/lib/byteplus";
 import * as Sentry from "@sentry/nextjs";
 
 import { checkRateLimit, checkImageConcurrency, sanitizeInput } from "@/lib/rate_limiter";
+import { imageGenerationSchema } from "@/lib/validations";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
 const supabaseServiceKey =
@@ -16,13 +17,21 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const rawBody = await req.json();
+
+    // 🛡️ SECURITY 0: Strict Zod Input Schema Validation
+    const validationResult = imageGenerationSchema.safeParse(rawBody);
+    if (!validationResult.success) {
+      const errorMsg = validationResult.error.issues.map((e) => e.message).join(", ");
+      return NextResponse.json({ error: `Validation Error: ${errorMsg}` }, { status: 400 });
+    }
+
     const {
       userId,
       mode,
-      jewelryImages = [],
-      brandGuidelineImages = [],
-      aspectRatio = "16:9",
+      jewelryImages,
+      brandGuidelineImages,
+      aspectRatio,
       gender,
       age,
       country,
@@ -30,7 +39,7 @@ export async function POST(req: Request) {
       fantasyTheme,
       animal,
       creativePrompt,
-    } = body;
+    } = validationResult.data;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized: User session required" }, { status: 401 });
