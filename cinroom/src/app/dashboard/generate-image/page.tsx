@@ -340,18 +340,18 @@ export default function GenerateImagePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* LEFT COLUMN: HERO DRAG AND DROP UPLOAD ZONE */}
         <div className="lg:col-span-5 space-y-4">
-          <Card className="glass-panel border-white/10 bg-[#0a0a0d] p-5 rounded-2xl">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-sans uppercase tracking-widest text-amber-200 font-medium">
-                2. Upload Jewelry
+          <Card className="glass-panel border-white/10 bg-[#0a0a0d] p-5 rounded-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-sans uppercase tracking-widest text-amber-200 font-semibold">
+                2. Upload Jewelry (1 or More Images)
               </span>
-              <span className="text-[9px] text-neutral-400 font-mono bg-white/5 px-2 py-0.5 rounded">
-                {jewelryItems.length} {jewelryItems.length === 1 ? "File" : "Files"}
+              <span className="text-[9px] text-neutral-300 font-mono bg-white/10 px-2 py-0.5 rounded border border-white/10">
+                {jewelryItems.length} {jewelryItems.length === 1 ? "Image" : "Images"}
               </span>
             </div>
 
             {/* MASSIVE DROP ZONE HERO */}
-            <label className="border border-dashed border-white/20 hover:border-amber-200/50 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer bg-white/[0.01] hover:bg-amber-400/[0.03] transition-all group relative overflow-hidden">
+            <label className="border border-dashed border-white/20 hover:border-amber-200/60 rounded-2xl p-5 flex flex-col items-center justify-center cursor-pointer bg-white/[0.01] hover:bg-amber-400/[0.03] transition-all group relative overflow-hidden">
               {jewelryItems.length > 0 && jewelryItems[0].previewUrl ? (
                 <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black border border-white/10 mb-3">
                   <img
@@ -359,8 +359,8 @@ export default function GenerateImagePage() {
                     alt="Primary Jewelry View"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 text-[9px] font-mono text-amber-200">
-                    Primary Image
+                  <div className="absolute top-2 left-2 px-2.5 py-0.5 rounded-full bg-black/90 border border-amber-400/40 text-[9px] font-mono text-amber-200 shadow">
+                    ★ Primary Hero Image
                   </div>
                 </div>
               ) : (
@@ -371,7 +371,7 @@ export default function GenerateImagePage() {
 
               <div className="text-center">
                 <div className="text-xs font-medium text-white mb-0.5">
-                  {jewelryItems.length > 0 ? "Click or Drag to Add More Angles" : "Drop Your Jewelry Photo Here"}
+                  {jewelryItems.length > 0 ? "+ Click to Upload Additional Angles / Views" : "Drop Your Jewelry Photo Here"}
                 </div>
                 <div className="text-[10px] text-neutral-400 font-light">
                   Supports PNG, JPG, WEBP. Preserved 100% exactly.
@@ -387,52 +387,76 @@ export default function GenerateImagePage() {
               />
             </label>
 
-            {/* Thumbnails list */}
-            {jewelryItems.length > 1 && (
-              <div className="grid grid-cols-4 gap-2 pt-3">
-                {jewelryItems.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="relative aspect-square rounded-lg overflow-hidden border border-white/15 bg-black group"
-                  >
-                    <img
-                      src={item.previewUrl}
-                      alt={`Angle ${idx + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeJewelryItem(idx)}
-                      className="absolute top-1 right-1 w-4 h-4 rounded-full bg-black/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 cursor-pointer"
+            {/* Thumbnails grid for all uploaded jewelry angles */}
+            {jewelryItems.length > 0 && (
+              <div className="space-y-2 pt-1 border-t border-white/[0.06]">
+                <span className="text-[10px] font-sans uppercase tracking-wider text-neutral-400 block">
+                  Uploaded Jewelry Angles & References ({jewelryItems.length})
+                </span>
+                <div className="grid grid-cols-4 gap-2">
+                  {jewelryItems.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="relative aspect-square rounded-xl overflow-hidden border border-white/20 bg-black group shadow"
                     >
-                      <X className="w-2.5 h-2.5" />
-                    </button>
-                  </div>
-                ))}
+                      <img
+                        src={item.previewUrl}
+                        alt={`Angle ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute bottom-0 inset-x-0 bg-black/80 text-[8px] text-neutral-300 font-mono px-1 py-0.5 text-center truncate">
+                        {idx === 0 ? "★ Primary" : `Angle #${idx + 1}`}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeJewelryItem(idx)}
+                        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-600 text-white flex items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity hover:bg-red-500 cursor-pointer shadow"
+                        title="Remove angle"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Add More Tile */}
+                  <label className="aspect-square rounded-xl border border-dashed border-white/20 hover:border-amber-200/60 bg-white/[0.02] hover:bg-white/[0.05] flex flex-col items-center justify-center cursor-pointer transition-colors group">
+                    <Plus className="w-4 h-4 text-amber-200 group-hover:scale-110 transition-transform" />
+                    <span className="text-[8px] text-neutral-400 font-mono mt-1">+ Add Angle</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleJewelryUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
               </div>
             )}
           </Card>
 
-          {/* OPTIONAL BRAND GUIDELINE UPLOAD */}
-          <Card className="glass-panel border-white/10 bg-[#0a0a0d] p-4 rounded-2xl">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-sans uppercase tracking-wider text-neutral-400">
-                Brand Colors (Optional)
+          {/* OPTIONAL BRAND GUIDELINE UPLOAD WITH PREVIEW GRID */}
+          <Card className="glass-panel border-white/10 bg-[#0a0a0d] p-4 rounded-2xl space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-sans uppercase tracking-wider text-amber-200 font-semibold">
+                Brand Colors / Palette (Optional)
               </span>
-              <span className="text-[9px] text-neutral-500">
+              <span className="text-[9px] font-mono text-neutral-400 bg-white/5 px-2 py-0.5 rounded">
                 {brandItems.length > 0 ? `${brandItems.length} Attached` : "OPTIONAL"}
               </span>
             </div>
 
-            <label className="border border-dashed border-white/15 hover:border-amber-200/40 rounded-xl p-3 flex items-center gap-3 cursor-pointer bg-white/[0.01] hover:bg-white/[0.03] transition-all">
-              <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-amber-200 shrink-0">
-                <Plus className="w-3.5 h-3.5" />
+            <label className="border border-dashed border-amber-400/30 hover:border-amber-400/80 rounded-xl p-3.5 flex items-center gap-3 cursor-pointer bg-amber-950/[0.05] hover:bg-amber-950/[0.15] transition-all group">
+              <div className="w-8 h-8 rounded-lg bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-200 shrink-0 group-hover:scale-110 transition-transform">
+                <Plus className="w-4 h-4" />
               </div>
-              <div>
+              <div className="flex-1">
                 <div className="text-xs text-white font-medium">
-                  {brandItems.length > 0 ? "+ Add Brand Color File" : "Upload Brand Palette"}
+                  {brandItems.length > 0 ? "+ Add More Brand Palette Images" : "Upload Brand Palette Image"}
                 </div>
-                <div className="text-[9px] text-neutral-500">Applies to background & lighting</div>
+                <div className="text-[9px] text-neutral-400">
+                  Applies your brand color guidelines to background & lighting
+                </div>
               </div>
               <input
                 type="file"
@@ -442,6 +466,35 @@ export default function GenerateImagePage() {
                 className="hidden"
               />
             </label>
+
+            {/* BRAND PALETTE THUMBNAIL PREVIEW GRID */}
+            {brandItems.length > 0 && (
+              <div className="grid grid-cols-4 gap-2 pt-1 border-t border-white/[0.06]">
+                {brandItems.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="relative aspect-square rounded-xl overflow-hidden border border-amber-400/30 bg-black group shadow"
+                  >
+                    <img
+                      src={item.previewUrl}
+                      alt={`Brand Palette ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute bottom-0 inset-x-0 bg-black/80 text-[8px] text-amber-200 font-mono px-1 py-0.5 text-center truncate">
+                      Palette #{idx + 1}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeBrandItem(idx)}
+                      className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-600 text-white flex items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity hover:bg-red-500 cursor-pointer shadow"
+                      title="Remove brand image"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </Card>
         </div>
 
