@@ -4,6 +4,8 @@ import { executeVideoGenerationWithRetry } from "@/lib/byteplus";
 import { saveGeneratedVideoToR2 } from "@/lib/r2";
 import { buildMasterPrompt } from "@/lib/modes";
 
+import { checkRateLimit } from "@/lib/rate_limiter";
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
 const supabaseServiceKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -28,6 +30,15 @@ export async function POST(req: Request) {
 
     if (fetchErr || !record) {
       return NextResponse.json({ error: "Generation record not found" }, { status: 404 });
+    }
+
+    // 🛡️ SECURITY: Endpoint Rate Limit Check
+    const rateCheck = checkRateLimit(`render_process_${record.user_id}`, 15, 60000);
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: "Too Many Requests: Render polling rate limit exceeded. Please wait a moment." },
+        { status: 429 }
+      );
     }
 
     // If already COMPLETED or FAILED, return current status

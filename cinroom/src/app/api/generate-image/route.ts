@@ -5,6 +5,8 @@ import { uploadUserAssetToR2 } from "@/lib/r2";
 import { generateSeedream5ProImage } from "@/lib/byteplus";
 import * as Sentry from "@sentry/nextjs";
 
+import { checkRateLimit, checkImageConcurrency, sanitizeInput } from "@/lib/rate_limiter";
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pwtxdpgbggzgmscspepe.supabase.co";
 const supabaseServiceKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -33,6 +35,29 @@ export async function POST(req: Request) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized: User session required" }, { status: 401 });
     }
+
+    // 🛡️ SECURITY 1: Endpoint Rate Limit Check (Max 10 per minute per user)
+    const rateCheck = checkRateLimit(`generate_image_${userId}`, 10, 60000);
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: "Too Many Requests: Generation rate limit exceeded (max 10 per minute). Please wait a moment." },
+        { status: 429 }
+      );
+    }
+
+    // 🛡️ SECURITY 2: Concurrency Lock Check (Max 2 concurrent image generations per user)
+    const concurrencyCheck = await checkImageConcurrency(supabase, userId, 2);
+    if (!concurrencyCheck.allowed) {
+      return NextResponse.json(
+        { error: `Concurrent Limit Exceeded: You currently have ${concurrencyCheck.activeCount} active image generation(s) in progress. Maximum allowed is 2 at once. Please wait for an active image to finish.` },
+        { status: 429 }
+      );
+    }
+
+    // 🛡️ SECURITY 3: Input Sanitization & Injection Guard
+    const cleanPrompt = sanitizeInput(creativePrompt || "", 1000);
+    const cleanFantasy = sanitizeInput(fantasyTheme || "", 500);
+    const cleanAnimal = sanitizeInput(animal || "", 200);
 
     // 🤖 Sentry GenAI & Agent Monitoring: Set User & Conversation ID
     Sentry.setUser({ id: userId });

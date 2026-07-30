@@ -254,6 +254,21 @@ export default function GeneratePage() {
         creative_prompt: creativePrompt,
       });
 
+      // 🛡️ SECURITY: Concurrency Check (Max 2 Active Video Renders per user)
+      const { count: activeVideoCount } = await supabase
+        .from("generation_history")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .or("asset_type.eq.COMMERCIAL_VIDEO,asset_type.eq.VIDEO")
+        .in("status", ["RENDERING", "PROCESSING", "PENDING"]);
+
+      if (activeVideoCount && activeVideoCount >= 2) {
+        toast.error("Concurrency Limit: You already have 2 active video commercials rendering. Please wait for one to finish.");
+        setIsSubmitting(false);
+        setIsUploading(false);
+        return;
+      }
+
       // 5. Deduct Credits dynamically based on duration (2 credits for 10s, 3 credits for 15s)
       const { data: rpcRes, error: rpcErr } = await supabase.rpc("deduct_user_credits", {
         p_user_id: userId,
